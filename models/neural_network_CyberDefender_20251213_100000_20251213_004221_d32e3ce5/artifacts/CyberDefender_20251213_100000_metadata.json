@@ -1,0 +1,24 @@
+{
+    "input_dim": 10,
+    "hidden_layers": [
+        256,
+        128,
+        64,
+        32
+    ],
+    "dropout_rate": 0.3,
+    "l2_reg": 0.001,
+    "learning_rate": 0.001,
+    "activation": "relu",
+    "output_activation": "softmax",
+    "num_classes": 6,
+    "class_names": [
+        "Brute Force",
+        "DDoS",
+        "Malware",
+        "Port Scan",
+        "SQL Injection",
+        "XSS"
+    ],
+    "saved_at": "2025-12-13T00:48:09.359650"
+}

@@ -1,0 +1,598 @@
+{
+  "models": [
+    {
+      "id": "neural_network_CyberDefender_20251213_100000_20251213_004221_d32e3ce5",
+      "model_id": "neural_network_CyberDefender_20251213_100000_20251213_004221_d32e3ce5",
+      "name": "CyberDefender_20251213_100000",
+      "model_name": "CyberDefender_20251213_100000",
+      "model_type": "neural_network",
+      "framework": "tensorflow",
+      "version": 1,
+      "status": "deployed",
+      "hyperparameters": {
+        "epochs": 50,
+        "batch_size": 32,
+        "hidden_layers": [
+          256,
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001
+      },
+      "training_config": {
+        "train_samples": 70000,
+        "val_samples": 10000,
+        "optimizer": "adam"
+      },
+      "tags": [
+        "deep_learning",
+        "cyber_security"
+      ],
+      "description": "100000",
+      "created_at": "2025-12-13T00:42:21.104701",
+      "directory": "neural_network_CyberDefender_20251213_100000_20251213_004221_d32e3ce5",
+      "metrics": {
+        "accuracy": 0.96665,
+        "precision": 0.9692978416143482,
+        "recall": 0.96665,
+        "f1_score": 0.966576748328828,
+        "roc_auc": 0.9985468994953821
+      },
+      "updated_at": "2025-12-13T00:48:09.218780"
+    },
+    {
+      "id": "neural_network_CyberThreat_20251213_20251213_131608_9dc41b3f",
+      "model_id": "neural_network_CyberThreat_20251213_20251213_131608_9dc41b3f",
+      "name": "CyberThreat_20251213",
+      "model_name": "CyberThreat_20251213",
+      "model_type": "neural_network",
+      "framework": "tensorflow",
+      "version": 1,
+      "status": "deployed",
+      "hyperparameters": {
+        "epochs": 50,
+        "batch_size": 32,
+        "hidden_layers": [
+          256,
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001
+      },
+      "training_config": {
+        "train_samples": 140000,
+        "val_samples": 20000,
+        "optimizer": "adam"
+      },
+      "tags": [
+        "deep_learning",
+        "cyber_security"
+      ],
+      "description": "TensorFlow Deep Learning Model for Cyber Threat Detection",
+      "created_at": "2025-12-13T13:16:08.241933",
+      "directory": "neural_network_CyberThreat_20251213_20251213_131608_9dc41b3f",
+      "metrics": {
+        "accuracy": 0.966775,
+        "precision": 0.9694573705628291,
+        "recall": 0.966775,
+        "f1_score": 0.9667063045074977,
+        "roc_auc": 0.9986121340173848
+      },
+      "updated_at": "2025-12-13T13:25:31.706665"
+    },
+    {
+      "id": "neural_network_CyberDefender_20251213_20000_20251213_141322_9c619a05",
+      "model_id": "neural_network_CyberDefender_20251213_20000_20251213_141322_9c619a05",
+      "name": "CyberDefender_20251213_20000",
+      "model_name": "CyberDefender_20251213_20000",
+      "model_type": "neural_network",
+      "framework": "tensorflow",
+      "version": 1,
+      "status": "deployed",
+      "hyperparameters": {
+        "epochs": 50,
+        "batch_size": 32,
+        "hidden_layers": [
+          256,
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001
+      },
+      "training_config": {
+        "train_samples": 14000,
+        "val_samples": 2000,
+        "optimizer": "adam"
+      },
+      "tags": [
+        "deep_learning",
+        "cyber_security"
+      ],
+      "description": "20000",
+      "created_at": "2025-12-13T14:13:22.694275",
+      "directory": "neural_network_CyberDefender_20251213_20000_20251213_141322_9c619a05",
+      "metrics": {
+        "accuracy": 0.963,
+        "precision": 0.9632698621676026,
+        "recall": 0.963,
+        "f1_score": 0.9629951269633545,
+        "roc_auc": 0.998344087347738
+      },
+      "updated_at": "2025-12-13T14:15:18.746344"
+    },
+    {
+      "id": "neural_network_CyberDefender_20251229_50000_20251229_170408_082c38a6",
+      "model_id": "neural_network_CyberDefender_20251229_50000_20251229_170408_082c38a6",
+      "name": "CyberDefender_20251229_50000",
+      "model_name": "CyberDefender_20251229_50000",
+      "model_type": "neural_network",
+      "framework": "tensorflow",
+      "version": 1,
+      "status": "deployed",
+      "hyperparameters": {
+        "epochs": 50,
+        "batch_size": 32,
+        "hidden_layers": [
+          256,
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001
+      },
+      "training_config": {
+        "train_samples": 35000,
+        "val_samples": 5000,
+        "optimizer": "adam"
+      },
+      "tags": [
+        "deep_learning",
+        "cyber_security"
+      ],
+      "description": "Deep Learning model for threat detection",
+      "created_at": "2025-12-29T17:04:08.473887",
+      "directory": "neural_network_CyberDefender_20251229_50000_20251229_170408_082c38a6",
+      "metrics": {
+        "accuracy": 0.9691,
+        "precision": 0.970517933611714,
+        "recall": 0.9691,
+        "f1_score": 0.9690273712662784,
+        "roc_auc": 0.9985897351704789
+      },
+      "updated_at": "2025-12-29T17:06:46.068815"
+    },
+    {
+      "id": "neural_network_CyberDefender_20251230_LTSM_20251230_231527_5a5e47fe",
+      "model_id": "neural_network_CyberDefender_20251230_LTSM_20251230_231527_5a5e47fe",
+      "name": "CyberDefender_20251230_LTSM",
+      "model_name": "CyberDefender_20251230_LTSM",
+      "model_type": "neural_network",
+      "framework": "tensorflow",
+      "version": 1,
+      "status": "deployed",
+      "hyperparameters": {
+        "epochs": 150,
+        "batch_size": 64,
+        "hidden_layers": [
+          256,
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001
+      },
+      "training_config": {
+        "train_samples": 35000,
+        "val_samples": 5000,
+        "optimizer": "adam"
+      },
+      "tags": [
+        "deep_learning",
+        "cyber_security"
+      ],
+      "description": "Deep Learning model for threat detection 50000 LTSM",
+      "created_at": "2025-12-30T23:15:27.179589",
+      "directory": "neural_network_CyberDefender_20251230_LTSM_20251230_231527_5a5e47fe",
+      "metrics": {
+        "accuracy": 0.9687,
+        "precision": 0.970994623936284,
+        "recall": 0.9687,
+        "f1_score": 0.9686389668053811,
+        "roc_auc": 0.9986944302629056
+      },
+      "updated_at": "2025-12-30T23:18:50.153360"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_20260105_200929",
+      "name": "SSA-LSTMIDS_NSL-KDD",
+      "model_type": "ssa_lstmids",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_20260105_200929.keras",
+      "metrics": {
+        "accuracy": 0.7853087295954577,
+        "precision": 0.8297062814151523,
+        "recall": 0.7853087295954577,
+        "f1_score": 0.7513601415551823
+      },
+      "training_config": {
+        "train_samples": 125973,
+        "test_samples": 22544,
+        "epochs": 7,
+        "train_time_seconds": 77.66505169868469
+      },
+      "created_at": "2026-01-05T20:09:29.640654"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_20260105_201212",
+      "name": "SSA-LSTMIDS_NSL-KDD",
+      "model_type": "ssa_lstmids",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_20260105_201212.keras",
+      "metrics": {
+        "accuracy": 0.7703601845280341,
+        "precision": 0.8128244953887069,
+        "recall": 0.7703601845280341,
+        "f1_score": 0.7261779377225627
+      },
+      "training_config": {
+        "train_samples": 125973,
+        "test_samples": 22544,
+        "epochs": 8,
+        "train_time_seconds": 93.46314930915833
+      },
+      "created_at": "2026-01-05T20:12:12.676059"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_20260105_201510",
+      "name": "SSA-LSTMIDS_NSL-KDD",
+      "model_type": "ssa_lstmids",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_20260105_201510.keras",
+      "metrics": {
+        "accuracy": 0.7748403122782115,
+        "precision": 0.8255004884569519,
+        "recall": 0.7748403122782115,
+        "f1_score": 0.741533280640708
+      },
+      "training_config": {
+        "train_samples": 125973,
+        "test_samples": 22544,
+        "epochs": 6,
+        "train_time_seconds": 61.70235872268677
+      },
+      "created_at": "2026-01-05T20:15:10.725121"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_20260105_201740",
+      "name": "SSA-LSTMIDS_NSL-KDD",
+      "model_type": "ssa_lstmids",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_20260105_201740.keras",
+      "metrics": {
+        "accuracy": 0.7693399574166075,
+        "precision": 0.8236986770803427,
+        "recall": 0.7693399574166075,
+        "f1_score": 0.7298870438301599
+      },
+      "training_config": {
+        "train_samples": 125973,
+        "test_samples": 22544,
+        "epochs": 6,
+        "train_time_seconds": 61.883071422576904
+      },
+      "created_at": "2026-01-05T20:17:40.824977"
+    },
+    {
+      "id": "ssa_lstmids_cicids2017_20260105_202005",
+      "name": "SSA-LSTMIDS_CICIDS2017",
+      "model_type": "ssa_lstmids",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_cicids2017_20260105_202005.keras",
+      "metrics": {
+        "accuracy": 0.9977582065652522,
+        "precision": 0.9976696242085431,
+        "recall": 0.9977582065652522,
+        "f1_score": 0.9975367537057425
+      },
+      "training_config": {
+        "train_samples": 49956,
+        "test_samples": 12490,
+        "epochs": 32,
+        "train_time_seconds": 135.9125394821167
+      },
+      "created_at": "2026-01-05T20:20:05.945350"
+    },
+    {
+      "id": "bilstm_attention_cicids2017_20260105_202300",
+      "name": "BiLSTM_Attention",
+      "model_type": "bilstm_attention",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\bilstm_attention_cicids2017_20260105_202300.keras",
+      "metrics": {
+        "accuracy": 0.9976981585268214,
+        "precision": 0.9975182583194642,
+        "recall": 0.9976981585268214,
+        "f1_score": 0.9973881402685073
+      },
+      "training_config": {
+        "train_samples": 39968,
+        "test_samples": 9992,
+        "epochs": 38,
+        "train_time_seconds": 163.7526364326477
+      },
+      "created_at": "2026-01-05T20:23:00.380596"
+    },
+    {
+      "id": "gru_ids_cicids2017_20260105_202555",
+      "name": "GRU_IDS",
+      "model_type": "gru_ids",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\gru_ids_cicids2017_20260105_202555.keras",
+      "metrics": {
+        "accuracy": 0.9975980784627703,
+        "precision": 0.9974214110897133,
+        "recall": 0.9975980784627703,
+        "f1_score": 0.9972886480565539
+      },
+      "training_config": {
+        "train_samples": 39968,
+        "test_samples": 9992,
+        "epochs": 50,
+        "train_time_seconds": 174.12916779518127
+      },
+      "created_at": "2026-01-05T20:25:55.662553"
+    },
+    {
+      "id": "transformer_ids_cicids2017_20260105_202736",
+      "name": "Transformer_IDS",
+      "model_type": "transformer_ids",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\transformer_ids_cicids2017_20260105_202736.keras",
+      "metrics": {
+        "accuracy": 0.9977982385908727,
+        "precision": 0.9978025100389617,
+        "recall": 0.9977982385908727,
+        "f1_score": 0.9974719299039218
+      },
+      "training_config": {
+        "train_samples": 39968,
+        "test_samples": 9992,
+        "epochs": 22,
+        "train_time_seconds": 100.07527041435242
+      },
+      "created_at": "2026-01-05T20:27:36.722355"
+    },
+    {
+      "id": "cnn_transformer_cicids2017_20260105_202830",
+      "name": "CNN_Transformer",
+      "model_type": "cnn_transformer",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\cnn_transformer_cicids2017_20260105_202830.keras",
+      "metrics": {
+        "accuracy": 0.9977982385908727,
+        "precision": 0.9978019993692969,
+        "recall": 0.9977982385908727,
+        "f1_score": 0.997396716925441
+      },
+      "training_config": {
+        "train_samples": 39968,
+        "test_samples": 9992,
+        "epochs": 13,
+        "train_time_seconds": 53.126546144485474
+      },
+      "created_at": "2026-01-05T20:28:30.823845"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_paper_20260105_205644",
+      "name": "SSA-LSTMIDS_NSL-KDD_Paper",
+      "model_type": "ssa_lstmids",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_paper_20260105_205644.keras",
+      "metrics": {
+        "accuracy": 0.7858410220014195,
+        "precision": 0.8308655884598025,
+        "recall": 0.7858410220014195,
+        "f1_score": 0.7525722482731533
+      },
+      "training_config": {
+        "epochs": 23,
+        "batch_size": 120,
+        "paper_params": true
+      },
+      "created_at": "2026-01-05T20:56:44.494908"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_improved_binary_20260105_220739",
+      "name": "SSA-LSTMIDS_NSL-KDD_Improved_binary",
+      "model_type": "ssa_lstmids_improved",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_improved_binary_20260105_220739.keras",
+      "metrics": {
+        "accuracy": 0.9966263147449891,
+        "precision": 0.9966275397352703,
+        "recall": 0.9966263147449891,
+        "f1_score": 0.9966264714231636
+      },
+      "training_config": {
+        "epochs": 45,
+        "mode": "binary",
+        "improvements": [
+          "stratified_split",
+          "smote",
+          "bilstm",
+          "batch_norm",
+          "l2_reg"
+        ]
+      },
+      "created_at": "2026-01-05T22:07:39.529553"
+    },
+    {
+      "id": "ssa_lstmids_nsl_kdd_improved_multiclass_20260105_221900",
+      "name": "SSA-LSTMIDS_NSL-KDD_Improved_multiclass",
+      "model_type": "ssa_lstmids_improved",
+      "dataset": "nsl_kdd",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_nsl_kdd_improved_multiclass_20260105_221900.keras",
+      "metrics": {
+        "accuracy": 0.9959118872792221,
+        "precision": 0.9958608103355999,
+        "recall": 0.9959118872792221,
+        "f1_score": 0.9958739078678183
+      },
+      "training_config": {
+        "epochs": 58,
+        "mode": "multiclass",
+        "improvements": [
+          "stratified_split",
+          "smote",
+          "bilstm",
+          "batch_norm",
+          "l2_reg"
+        ]
+      },
+      "created_at": "2026-01-05T22:19:00.232756"
+    },
+    {
+      "id": "ssa_lstmids_botiot_20260107_174348",
+      "name": "SSA-LSTMIDS_BoT-IoT",
+      "model_type": "ssa_lstmids",
+      "dataset": "bot_iot",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\ssa_lstmids_botiot_20260107_174348.keras",
+      "metrics": {
+        "accuracy": 0.9996666666666667,
+        "precision": 0.9996667799488139,
+        "recall": 0.9996666666666667,
+        "f1_score": 0.9996666095045351
+      },
+      "training_config": {
+        "epochs": 44,
+        "best_val_accuracy": 0.999833345413208
+      },
+      "created_at": "2026-01-07T17:43:48.333510"
+    },
+    {
+      "id": "ensemble_voting_ensemble_20260107_175607",
+      "name": "Voting_Ensemble",
+      "model_type": "ensemble",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "metrics": {
+        "accuracy": 0.9851160944631872,
+        "precision": 0.9852538666749445,
+        "recall": 0.9851160944631872,
+        "f1_score": 0.9851058524830694
+      },
+      "created_at": "2026-01-07T17:56:07.868077"
+    },
+    {
+      "id": "ensemble_weighted_ensemble_20260107_175611",
+      "name": "Weighted_Ensemble",
+      "model_type": "ensemble",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "metrics": {
+        "accuracy": 0.9853145465370113,
+        "precision": 0.9854461580571183,
+        "recall": 0.9853145465370113,
+        "f1_score": 0.9853046915806037
+      },
+      "created_at": "2026-01-07T17:56:11.733833"
+    },
+    {
+      "id": "ensemble_stacking_ensemble_20260107_175619",
+      "name": "Stacking_Ensemble",
+      "model_type": "ensemble",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "metrics": {
+        "accuracy": 0.9884897797181981,
+        "precision": 0.9885092567531435,
+        "recall": 0.9884897797181981,
+        "f1_score": 0.988486835487371
+      },
+      "created_at": "2026-01-07T17:56:19.141135"
+    },
+    {
+      "id": "deep_ssa_lstmids_cicids2017_20260107_192008",
+      "name": "Deep_SSA_LSTMIDS_CICIDS2017",
+      "model_type": "deep_ssa_lstmids",
+      "dataset": "cicids2017",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\deep_ssa_lstmids_cicids2017_20260107_192008.keras",
+      "metrics": {
+        "accuracy": 0.9938479857114507,
+        "precision": 0.9938491869137596,
+        "recall": 0.9938479857114507,
+        "f1_score": 0.9938482324999989
+      },
+      "training_config": {
+        "epochs": 102,
+        "max_epochs": 300,
+        "batch_size": 128,
+        "architecture": "deep_bilstm_attention",
+        "best_val_accuracy": 0.992559552192688
+      },
+      "created_at": "2026-01-07T19:20:08.537874"
+    },
+    {
+      "id": "fast_ssa_lstmids_cicids_20260108_092046",
+      "name": "Fast_SSA_LSTMIDS_CICIDS",
+      "model_type": "ssa_lstmids_fast",
+      "dataset": "cicids2017_500k",
+      "status": "trained",
+      "framework": "tensorflow",
+      "path": "C:\\Gelistirme\\CyberGuard_AI_Antigravity\\models\\fast_ssa_lstmids_cicids_20260108_092046.keras",
+      "metrics": {
+        "accuracy": 0.9839898398983989,
+        "precision": 0.9832956607095075,
+        "recall": 0.9839898398983989,
+        "f1_score": 0.9832434570858537
+      },
+      "training_config": {
+        "samples": 500000,
+        "epochs": 45,
+        "batch_size": 256,
+        "best_val_accuracy": 0.9843249917030334
+      },
+      "created_at": "2026-01-08T09:20:46.402144"
+    }
+  ],
+  "last_updated": "2025-12-30T23:18:50.153360"
+}

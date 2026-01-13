@@ -1,0 +1,9 @@
+{
+  "id": "neural_network_CyberDefender_20251230_LTSM_20251230_231527_5a5e47fe",
+  "name": "CyberDefender_20251230_LTSM",
+  "description": "Deep Learning model for threat detection 50000 LTSM",
+  "type": "Deep Neural Network",
+  "framework": "TensorFlow/Keras",
+  "created_at": "2025-12-30T23:15:27.179083",
+  "status": "training"
+}

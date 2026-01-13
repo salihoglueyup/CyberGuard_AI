@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hp-ssh-01",
+    "name": "SSH Honeypot",
+    "type": "ssh",
+    "port": 2222,
+    "ip": "0.0.0.0",
+    "enabled": true,
+    "created_at": "2026-01-12T14:23:46.353141"
+  },
+  {
+    "id": "hp-http-01",
+    "name": "HTTP Honeypot",
+    "type": "http",
+    "port": 8888,
+    "ip": "0.0.0.0",
+    "enabled": true,
+    "created_at": "2026-01-12T14:23:46.353141"
+  },
+  {
+    "id": "hp-ftp-01",
+    "name": "FTP Honeypot",
+    "type": "ftp",
+    "port": 2121,
+    "ip": "0.0.0.0",
+    "enabled": true,
+    "created_at": "2026-01-12T14:23:46.353141"
+  },
+  {
+    "id": "hp-telnet-01",
+    "name": "Telnet Honeypot",
+    "type": "telnet",
+    "port": 2323,
+    "ip": "0.0.0.0",
+    "enabled": true,
+    "created_at": "2026-01-12T14:23:46.353141"
+  }
+]

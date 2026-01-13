@@ -1,0 +1,9 @@
+{
+  "id": "neural_network_CyberDefender_20251213_100000_20251213_004221_d32e3ce5",
+  "name": "CyberDefender_20251213_100000",
+  "description": "100000",
+  "type": "Deep Neural Network",
+  "framework": "TensorFlow/Keras",
+  "created_at": "2025-12-13T00:42:21.103685",
+  "status": "training"
+}

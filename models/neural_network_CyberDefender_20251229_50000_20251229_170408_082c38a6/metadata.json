@@ -1,0 +1,9 @@
+{
+  "id": "neural_network_CyberDefender_20251229_50000_20251229_170408_082c38a6",
+  "name": "CyberDefender_20251229_50000",
+  "description": "Deep Learning model for threat detection",
+  "type": "Deep Neural Network",
+  "framework": "TensorFlow/Keras",
+  "created_at": "2025-12-29T17:04:08.473887",
+  "status": "training"
+}

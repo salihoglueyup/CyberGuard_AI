@@ -1,0 +1,12 @@
+{
+  "transformer": {
+    "final_accuracy": 0.9943638443946838,
+    "final_loss": 0.01641697809100151,
+    "epochs_trained": 10,
+    "final_val_accuracy": 0.995501697063446,
+    "train_time": 104.45310258865356,
+    "accuracy": 0.995501697063446,
+    "test_accuracy": 0.9941257408975445,
+    "test_f1": 0.9939315997024034
+  }
+}

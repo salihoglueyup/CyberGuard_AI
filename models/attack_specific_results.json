@@ -1,0 +1,35 @@
+{
+  "ddos": {
+    "attack_type": "ddos",
+    "accuracy": 0.9962415434728138,
+    "precision": 0.9962540896363092,
+    "recall": 0.9962415434728138,
+    "f1_score": 0.9962400992411791,
+    "train_samples": 15991,
+    "test_samples": 3991,
+    "epochs_trained": 30,
+    "trained_at": "2026-01-04T17:18:44.539761"
+  },
+  "portscan": {
+    "attack_type": "portscan",
+    "accuracy": 0.9962415434728138,
+    "precision": 0.9962498977700107,
+    "recall": 0.9962415434728138,
+    "f1_score": 0.9962405887436299,
+    "train_samples": 15991,
+    "test_samples": 3991,
+    "epochs_trained": 28,
+    "trained_at": "2026-01-04T17:19:44.219026"
+  },
+  "webattacks": {
+    "attack_type": "webattacks",
+    "accuracy": 0.994316282179873,
+    "precision": 0.9943257542308857,
+    "recall": 0.994316282179873,
+    "f1_score": 0.9943112983483889,
+    "train_samples": 11991,
+    "test_samples": 2991,
+    "epochs_trained": 20,
+    "trained_at": "2026-01-04T17:45:40.118440"
+  }
+}

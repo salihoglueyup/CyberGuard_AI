@@ -1,0 +1,230 @@
+# config.yaml
+
+# ====================================
+# APPLICATION CONFIG
+# ====================================
+app:
+  name: "CyberGuard AI"
+  version: "1.0.0"
+  description: "AI-Powered Cybersecurity Platform"
+  author: "Your Name"
+  
+# ====================================
+# NETWORK DETECTION MODEL (Makale: SSA-LSTMIDS)
+# Ref: Scientific Reports (2025) 15:1554
+# ====================================
+network_detection:
+  model:
+    type: "LSTM"
+    architecture: "Conv1D-LSTM"           # Yeni mimari
+    
+    # Conv1D Layer (Pattern Extraction)
+    conv_filters: 30
+    conv_kernel_size: 5
+    conv_padding: "same"
+    
+    # LSTM Layer (Temporal Learning)
+    lstm_units: 120                       # 64 → 120
+    lstm_dropout: 0.2
+    
+    # Dense Layer (Classification)
+    dense_units: 512                      # 32 → 512
+    
+    # Input/Output
+    sequence_length: 10
+    features: 78
+    num_classes: 15
+    
+  training:
+    batch_size: 120                       # 32 → 120 (makale)
+    epochs: 300                           # 50 → 300 (makale)
+    learning_rate: 0.001
+    validation_split: 0.2
+    
+    # Early Stopping
+    early_stopping:
+      enabled: true
+      patience: 6                         # Makale değeri
+      monitor: "loss"
+    
+  thresholds:
+    normal: 0.85
+    suspicious: 0.70
+    malicious: 0.50
+
+# ====================================
+# MALWARE CLASSIFICATION MODEL
+# ====================================
+malware_detection:
+  model:
+    type: "CNN"
+    base_model: "EfficientNetB0"
+    input_shape: [224, 224, 3]
+    num_classes: 9
+    
+  training:
+    batch_size: 32
+    epochs: 30
+    learning_rate: 0.0001
+    validation_split: 0.2
+    
+  thresholds:
+    malware_threshold: 0.90
+    
+  scan_settings:
+    max_file_size_mb: 100
+    timeout_seconds: 30
+
+# config.yaml
+
+# ====================================
+# AI PROVIDERS
+# ====================================
+ai_providers:
+  default: "groq"                          # Varsayılan: groq (ücretsiz)
+  
+  groq:
+    model: "llama-3.3-70b-versatile"       # En güçlü model
+    temperature: 0.3
+    max_tokens: 4096
+    
+  gemini:
+    model: "gemini-2.0-flash-exp"
+    temperature: 0.2
+    max_tokens: 4096
+
+chatbot:
+  model:
+    name: "gemini-2.0-flash-exp"           # Gemini için (yedek)
+    temperature: 0.2
+    max_output_tokens: 4096
+    top_p: 0.9
+    top_k: 30
+
+  rag:
+    vector_store: "chromadb"
+    embedding_model: "models/embedding-001"
+    chunk_size: 500
+    chunk_overlap: 50
+    retrieval_k: 1                         # 3→1: Daha hızlı yanıt
+
+  memory:
+    max_history: 5                         # 10→5: Daha az context
+    save_to_database: true
+
+# ====================================
+# DATABASE
+# ====================================
+database:
+  type: "sqlite"
+  path: "src/database/cyberguard.db"
+  
+  tables:
+    - attacks
+    - network_logs
+    - scan_results
+    - chat_history
+    - system_metrics
+    
+  retention:
+    attacks_days: 90
+    logs_days: 30
+    chat_history_days: 30
+    
+  max_records:
+    attacks: 100000
+    logs: 500000
+
+# ====================================
+# LOGGING
+# ====================================
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  handlers:
+    console: true
+    file: true
+    
+  file:
+    path: "data/logs/app.log"
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+
+# ====================================
+# SECURITY
+# ====================================
+security:
+  rate_limiting:
+    enabled: true
+    max_requests_per_minute: 60
+    
+  ip_blacklist:
+    enabled: true
+    auto_blacklist_threshold: 10  # 10 saldırıdan sonra otomatik engel
+    
+  file_scanning:
+    max_concurrent_scans: 5
+    quarantine_path: "data/quarantine/"
+
+# ====================================
+# MONITORING & ALERTS
+# ====================================
+monitoring:
+  real_time_analysis: true
+  update_interval_seconds: 5
+  
+  alerts:
+    enabled: true
+    
+    severity_levels:
+      critical: 
+        notify: true
+        log: true
+      high:
+        notify: true
+        log: true
+      medium:
+        notify: false
+        log: true
+      low:
+        notify: false
+        log: true
+        
+  metrics:
+    save_interval_minutes: 5
+    retention_hours: 168  # 7 gün
+
+# ====================================
+# VISUALIZATION
+# ====================================
+visualization:
+  dashboard:
+    refresh_rate_seconds: 10
+    max_points_on_chart: 100
+    
+  maps:
+    default_zoom: 2
+    marker_cluster: true
+    
+  charts:
+    theme: "plotly_dark"
+    color_scheme: "viridis"
+
+# ====================================
+# DATA SOURCES
+# ====================================
+data:
+  network_dataset:
+    name: "CICIDS2017"
+    url: "https://www.unb.ca/cic/datasets/ids-2017.html"
+    local_path: "data/raw/CICIDS2017/"
+    
+  malware_dataset:
+    name: "MalImg"
+    url: "https://vision.ee.ccu.edu.tw/aerodio/malimg/"
+    local_path: "data/raw/MalImg/"
+    
+  security_docs:
+    path: "data/docs/"
+    formats: [".txt", ".pdf", ".md"]

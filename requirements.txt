@@ -1,0 +1,73 @@
+# CyberGuard AI - Requirements
+# Python 3.10+
+
+# ============================================
+# Web Framework (FastAPI Backend)
+# ============================================
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+pydantic>=2.0.0
+
+# ============================================
+# Data Processing & Analysis
+# ============================================
+pandas
+numpy
+
+# ============================================
+# Visualization
+# ============================================
+plotly
+matplotlib
+seaborn
+
+# ============================================
+# Machine Learning
+# ============================================
+scikit-learn
+tensorflow
+tf-keras
+
+# ============================================
+# AI & LLM
+# ============================================
+google-generativeai
+
+# ============================================
+# RAG & Vector Store
+# ============================================
+langchain-core
+langchain-text-splitters
+langchain-huggingface
+langchain-chroma
+chromadb
+sentence-transformers
+
+# ============================================
+# PDF Processing
+# ============================================
+pypdf2
+reportlab
+pillow
+
+# ============================================
+# Utilities
+# ============================================
+python-dotenv
+pyyaml
+requests
+httpx
+psutil
+
+# ============================================
+# Database
+# ============================================
+# SQLite (built-in with Python)
+
+# ============================================
+# Optional (for advanced features)
+# ============================================
+email-validator
+python-docx
+openpyxl

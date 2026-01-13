@@ -1,0 +1,11 @@
+{
+  "conv_filters": 30,
+  "kernel_size": 5,
+  "lstm_units": 120,
+  "dense_units": 512,
+  "dropout_rate": 0.2,
+  "batch_size": 120,
+  "epochs": 300,
+  "early_stopping_patience": 6,
+  "learning_rate": 0.001
+}
