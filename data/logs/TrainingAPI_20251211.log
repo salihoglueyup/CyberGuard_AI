@@ -1,0 +1,44 @@
+2025-12-11 11:32:32 - [INFO] - TrainingAPI - info:154 - ✅ Training API initialized
+2025-12-11 11:34:10 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_113410_CyberDefender_20251211_500000
+2025-12-11 11:34:41 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_113441_CyberDefender_20251211_500000
+2025-12-11 11:39:06 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_113906_CyberDefender_20251211_500000
+2025-12-11 11:39:18 - [ERROR] - TrainingAPI - error:162 - ❌ Training failed: train_20251211_113906_CyberDefender_20251211_500000 - 'charmap' codec can't decode byte 0x81 in position 69: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\training_api.py", line 175, in _run_training
+    for line in process.stdout:
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1254.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 69: character maps to <undefined>
+2025-12-11 11:40:51 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_114051_CyberDefender_20251211_500000
+2025-12-11 11:40:59 - [ERROR] - TrainingAPI - error:162 - ❌ Training failed: train_20251211_114051_CyberDefender_20251211_500000 - 'charmap' codec can't decode byte 0x81 in position 69: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\training_api.py", line 175, in _run_training
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1254.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 69: character maps to <undefined>
+2025-12-11 11:42:51 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_114251_CyberDefender_20251211_20000
+2025-12-11 11:43:02 - [ERROR] - TrainingAPI - error:162 - ❌ Training failed: train_20251211_114251_CyberDefender_20251211_20000 - 'charmap' codec can't decode byte 0x81 in position 69: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\training_api.py", line 175, in _run_training
+    """Byte'ları güvenli şekilde decode et"""
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1254.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 69: character maps to <undefined>
+2025-12-11 11:56:06 - [INFO] - TrainingAPI - info:154 - ✅ Training API initialized
+2025-12-11 11:56:24 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_115624_CyberDefender_20251211_20000
+2025-12-11 11:57:47 - [INFO] - TrainingAPI - info:154 - Training completed: train_20251211_115624_CyberDefender_20251211_20000
+2025-12-11 11:58:37 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_115837_CyberDefender_20251211_1000000
+2025-12-11 11:59:56 - [INFO] - TrainingAPI - info:154 - Training completed: train_20251211_115837_CyberDefender_20251211_1000000
+2025-12-11 19:28:03 - [INFO] - TrainingAPI - info:154 - ✅ Training API initialized
+2025-12-11 19:28:24 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_192824_CyberDefender_20251211_50000
+2025-12-11 19:28:32 - [INFO] - TrainingAPI - info:154 - Training completed: train_20251211_192824_CyberDefender_20251211_50000
+2025-12-11 19:33:58 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_193358_CyberDefender_20251211
+2025-12-11 19:34:18 - [INFO] - TrainingAPI - info:154 - Training completed: train_20251211_193358_CyberDefender_20251211
+2025-12-11 23:33:29 - [INFO] - TrainingAPI - info:154 - ✅ Training API initialized
+2025-12-11 23:33:53 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_233353_Deneme05
+2025-12-11 23:34:00 - [INFO] - TrainingAPI - info:154 - Training completed: train_20251211_233353_Deneme05
+2025-12-11 23:34:16 - [INFO] - TrainingAPI - info:154 - 🚀 Training started: train_20251211_233416_CyberDefender_20251211
+2025-12-11 23:34:24 - [INFO] - TrainingAPI - info:154 - Training completed: train_20251211_233416_CyberDefender_20251211

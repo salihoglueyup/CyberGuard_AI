@@ -1,0 +1,28 @@
+{
+  "cicids2017": {
+    "accuracy": 0.9995665221740581,
+    "precision": 0.9995665362375116,
+    "recall": 0.9995665221740581,
+    "f1_score": 0.9995665124271593,
+    "params": {
+      "conv_filters": 30,
+      "kernel_size": 5,
+      "lstm_units": 120,
+      "dense_units": 512,
+      "dropout_rate": 0.2,
+      "batch_size": 120,
+      "epochs": 300,
+      "learning_rate": 0.001,
+      "validation_split": 0.1,
+      "ssa_population": 40,
+      "ssa_iterations": 36,
+      "n_folds": 10,
+      "sequence_length": 10
+    },
+    "class_names": [
+      "BENIGN",
+      "ATTACK"
+    ],
+    "trained_at": "2026-01-04T17:36:51.731549"
+  }
+}

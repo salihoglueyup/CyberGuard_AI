@@ -1,0 +1,226 @@
+2025-12-09 09:03:38 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:03:38 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 09:03:55 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:03:55 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 09:05:08 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:05:08 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 09:05:39 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:07:05 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:07:05 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 09:07:16 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:07:16 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 09:07:41 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:07:41 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 09:07:53 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 09:07:53 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 11:00:04 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:00:04 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 11:00:28 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:03:08 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 11:46:01 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:46:01 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:46:01 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 11:46:47 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:49:32 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:49:32 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 11:50:39 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:52:11 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 11:52:51 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 12:38:26 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 12:38:28 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 12:38:28 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 12:38:39 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 12:38:39 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\src\api\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-09 23:56:39 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-09 23:58:29 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-09 23:58:29 - [WARNING] - MLPredictionAPI - warning:158 - Model features boş, default kullanılıyor
+2025-12-09 23:58:29 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 8)
+2025-12-09 23:58:29 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (100.00%)
+2025-12-09 23:59:06 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-09 23:59:06 - [WARNING] - MLPredictionAPI - warning:158 - Model features boş, default kullanılıyor
+2025-12-09 23:59:06 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 8)
+2025-12-09 23:59:07 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (100.00%)
+2025-12-10 00:01:12 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-10 00:11:22 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized

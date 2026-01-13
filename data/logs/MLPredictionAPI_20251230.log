@@ -1,0 +1,48 @@
+2025-12-30 12:39:45 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 12:39:45 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 12:39:45 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 12:39:45 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 12:39:45 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 12:39:46 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (96.19%)
+2025-12-30 23:26:37 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:37 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:37 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:37 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:37 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:38 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (93.01%)
+2025-12-30 23:26:40 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:41 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:41 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:41 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:41 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:41 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (93.01%)
+2025-12-30 23:26:43 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:43 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:43 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:43 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:43 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:43 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (93.01%)
+2025-12-30 23:26:45 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:45 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:45 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:45 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:45 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:45 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (93.01%)
+2025-12-30 23:26:47 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:47 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:47 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:47 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:47 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:47 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (94.15%)
+2025-12-30 23:26:49 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:49 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:49 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:49 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:49 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:50 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (91.89%)
+2025-12-30 23:26:52 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-30 23:26:52 - [INFO] - MLPredictionAPI - info:154 - Model loaded with compile=False
+2025-12-30 23:26:52 - [INFO] - MLPredictionAPI - info:154 - ✅ Keras model loaded
+2025-12-30 23:26:52 - [INFO] - MLPredictionAPI - info:154 - Metadata found: input_dim=10
+2025-12-30 23:26:52 - [INFO] - MLPredictionAPI - info:154 - Features: shape=(1, 10), input_dim=10
+2025-12-30 23:26:52 - [INFO] - MLPredictionAPI - info:154 - ✅ Prediction: benign (92.24%)

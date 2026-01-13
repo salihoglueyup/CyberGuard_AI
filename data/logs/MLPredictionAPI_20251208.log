@@ -1,0 +1,487 @@
+2025-12-08 09:15:37 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:15:37 - [ERROR] - MLPredictionAPI - error:162 - List models error: 'id'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 445, in get_available_models
+    return [
+           ^
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 447, in <listcomp>
+    'id': m['id'],
+          ~^^^^^^
+KeyError: 'id'
+2025-12-08 09:16:02 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:16:02 - [ERROR] - MLPredictionAPI - error:162 - List models error: 'id'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 445, in get_available_models
+    return [
+           ^
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 447, in <listcomp>
+    'id': m['id'],
+          ~^^^^^^
+KeyError: 'id'
+2025-12-08 09:24:35 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:24:35 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:24:35 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:24:35 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:24:35 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:26:24 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:26:24 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:26:24 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:26:24 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:26:24 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:28:20 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:28:20 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:28:20 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:28:20 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:28:20 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 'ModelManager' object has no attribute 'load_model'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModelManager' object has no attribute 'load_model'
+2025-12-08 09:28:55 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:28:55 - [WARNING] - MLPredictionAPI - warning:158 - Skipping model due to error: 'str' object has no attribute 'get'
+2025-12-08 09:28:55 - [WARNING] - MLPredictionAPI - warning:158 - Skipping model due to error: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [WARNING] - MLPredictionAPI - warning:158 - Skipping model due to error: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [WARNING] - MLPredictionAPI - warning:158 - Skipping model due to error: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [WARNING] - MLPredictionAPI - warning:158 - Skipping model due to error: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [ERROR] - MLPredictionAPI - error:162 - Get best model error: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in _get_best_model_id
+    deployed = [m for m in models if m.get('status') == 'deployed']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in <listcomp>
+    deployed = [m for m in models if m.get('status') == 'deployed']
+                                     ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [ERROR] - MLPredictionAPI - error:162 - Get best model error: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in _get_best_model_id
+    deployed = [m for m in models if m.get('status') == 'deployed']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in <listcomp>
+    deployed = [m for m in models if m.get('status') == 'deployed']
+                                     ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [ERROR] - MLPredictionAPI - error:162 - Get best model error: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in _get_best_model_id
+    deployed = [m for m in models if m.get('status') == 'deployed']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in <listcomp>
+    deployed = [m for m in models if m.get('status') == 'deployed']
+                                     ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-12-08 09:28:56 - [ERROR] - MLPredictionAPI - error:162 - Get best model error: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in _get_best_model_id
+    deployed = [m for m in models if m.get('status') == 'deployed']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 415, in <listcomp>
+    deployed = [m for m in models if m.get('status') == 'deployed']
+                                     ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-12-08 09:36:16 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:36:16 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:36:16 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:36:16 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:36:16 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:37:57 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 09:37:57 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:37:57 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:37:57 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 09:37:57 - [ERROR] - MLPredictionAPI - error:162 - Model load error: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 188, in load_model
+FileNotFoundError: Model dosyası bulunamadı: neural_network_Deneme02_20251205_225015_95a4f527
+2025-12-08 14:19:15 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 14:19:15 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    raise FileNotFoundError(debug_info)
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:19:15 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    raise FileNotFoundError(debug_info)
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:19:15 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    raise FileNotFoundError(debug_info)
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:19:15 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    raise FileNotFoundError(debug_info)
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:20:32 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 14:20:32 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:20:32 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:20:32 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:20:32 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:23:26 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 14:23:26 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:23:26 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:23:26 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 14:23:26 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 268, in _load_model
+    model_info = self.model_manager.load_model(model_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\src\models\model_manager.py", line 297, in load_model
+    debug_info += f"     • {subitem}\n"
+FileNotFoundError: 
+Model dosyası bulunamadı!
+Model ID: neural_network_Deneme02_20251205_225015_95a4f527
+Aranan klasör: C:\Gelistirme\CyberGuard_AI\models\models\neural_network_Deneme02_20251205_225015_95a4f527
+Model adı: Deneme02
+
+
+2025-12-08 15:07:33 - [INFO] - MLPredictionAPI - info:154 - ✅ ML Prediction API initialized
+2025-12-08 15:07:33 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-08 15:07:33 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-08 15:07:33 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
+2025-12-08 15:07:33 - [ERROR] - MLPredictionAPI - error:162 - Model load error: 72
+Traceback (most recent call last):
+  File "C:\Gelistirme\CyberGuard_AI\app\pages\ml_prediction.py", line 273, in _load_model
+    model = joblib.load(model_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+          ^^^^^^^^^^
+  File "C:\Gelistirme\CyberGuard_AI\.venv\Lib\site-packages\joblib\numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\eyupz\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+    ~~~~~~~~^^^^^^^^
+KeyError: 72
