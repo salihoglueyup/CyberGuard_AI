@@ -10,9 +10,9 @@ Anthropic Claude 3.5 Sonnet desteği.
     - Kod yazımında güçlü
 """
 
-import os
 import logging
-from typing import Optional, Dict, List, Any, Generator
+import os
+from collections.abc import Generator
 from datetime import datetime
 
 try:
@@ -65,7 +65,7 @@ class ClaudeHandler:
         model: str = "claude-3-5-sonnet-20241022",
         temperature: float = 0.3,
         max_tokens: int = 4096,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
     ):
         """
         Claude Handler başlat
@@ -94,9 +94,9 @@ class ClaudeHandler:
     def chat(
         self,
         user_message: str,
-        system_prompt: Optional[str] = None,
-        context: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
+        system_prompt: str | None = None,
+        context: str | None = None,
+        history: list[dict] | None = None,
         stream: bool = False,
     ) -> str:
         """
@@ -151,7 +151,7 @@ class ClaudeHandler:
             return f"Üzgünüm, bir hata oluştu: {str(e)}"
 
     def _stream_response(
-        self, messages: List[Dict], system_prompt: str
+        self, messages: list[dict], system_prompt: str
     ) -> Generator[str, None, None]:
         """Streaming response"""
         try:
@@ -186,7 +186,7 @@ class ClaudeHandler:
 
 Şu anki tarih: {datetime.now().strftime('%Y-%m-%d %H:%M')}"""
 
-    def get_model_info(self) -> Dict:
+    def get_model_info(self) -> dict:
         """Model bilgilerini döndür"""
         model_info = self.AVAILABLE_MODELS.get(self.model, {})
         return {
@@ -200,7 +200,7 @@ class ClaudeHandler:
         }
 
     @classmethod
-    def list_models(cls) -> List[Dict]:
+    def list_models(cls) -> list[dict]:
         """Mevcut modelleri listele"""
         return [
             {"id": model_id, **info} for model_id, info in cls.AVAILABLE_MODELS.items()

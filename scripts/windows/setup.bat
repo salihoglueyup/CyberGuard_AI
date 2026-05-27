@@ -82,10 +82,11 @@ if exist .env (
 
 echo.
 echo [7/7] Gerekli klasorler olusturuluyor...
-if not exist logs mkdir logs
+if not exist logs\app mkdir logs\app
+if not exist logs\training mkdir logs\training
+if not exist logs\tensorboard mkdir logs\tensorboard
 if not exist data mkdir data
-if not exist data\logs mkdir data\logs
-if not exist models mkdir models
+if not exist model_artifacts mkdir model_artifacts
 if not exist uploads mkdir uploads
 if not exist reports mkdir reports
 echo [OK] Klasorler olusturuldu

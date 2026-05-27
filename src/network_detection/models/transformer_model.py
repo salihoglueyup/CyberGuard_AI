@@ -14,14 +14,13 @@ Referans:
     "Attention Is All You Need" - Vaswani et al. (2017)
 """
 
+
 import numpy as np
-from typing import Dict, List, Optional, Tuple
-from pathlib import Path
 
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
     from tensorflow.keras.callbacks import (
         EarlyStopping,
         ModelCheckpoint,
@@ -43,7 +42,7 @@ class PositionalEncoding(layers.Layer):
     """
 
     def __init__(self, max_len: int = 100, d_model: int = 128, **kwargs):
-        super(PositionalEncoding, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.max_len = max_len
         self.d_model = d_model
 
@@ -82,7 +81,7 @@ class TransformerBlock(layers.Layer):
         dropout_rate: float = 0.1,
         **kwargs,
     ):
-        super(TransformerBlock, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.d_model = d_model
         self.num_heads = num_heads
         self.ff_dim = ff_dim
@@ -161,7 +160,7 @@ class TransformerIDSModel:
 
     def __init__(
         self,
-        input_shape: Tuple[int, int] = (10, 78),
+        input_shape: tuple[int, int] = (10, 78),
         num_classes: int = 15,
         d_model: int = 128,
         num_heads: int = 8,
@@ -194,7 +193,7 @@ class TransformerIDSModel:
         self.dropout_rate = dropout_rate
         self.model_name = model_name
 
-        self.model: Optional[Model] = None
+        self.model: Model | None = None
         self.history = None
 
         print(f"🤖 {model_name} başlatılıyor...")
@@ -273,18 +272,18 @@ class TransformerIDSModel:
         self,
         X_train: np.ndarray,
         y_train: np.ndarray,
-        X_val: Optional[np.ndarray] = None,
-        y_val: Optional[np.ndarray] = None,
+        X_val: np.ndarray | None = None,
+        y_val: np.ndarray | None = None,
         epochs: int = 100,
         batch_size: int = 64,
         patience: int = 10,
-        model_save_path: Optional[str] = None,
-    ) -> Dict:
+        model_save_path: str | None = None,
+    ) -> dict:
         """Modeli eğit"""
         if self.model is None:
             self.build()
 
-        print(f"\n🏋️ Eğitim başlıyor...")
+        print("\n🏋️ Eğitim başlıyor...")
         print(f"   📊 Train: {X_train.shape}")
 
         callbacks = [
@@ -331,17 +330,17 @@ class TransformerIDSModel:
                 self.history.history["val_accuracy"][-1]
             )
 
-        print(f"\n✅ Eğitim tamamlandı!")
+        print("\n✅ Eğitim tamamlandı!")
         print(f"   📊 Accuracy: {results['final_accuracy']*100:.2f}%")
 
         return results
 
-    def evaluate(self, X_test: np.ndarray, y_test: np.ndarray) -> Dict:
+    def evaluate(self, X_test: np.ndarray, y_test: np.ndarray) -> dict:
         """Model değerlendirmesi"""
         if self.model is None:
             raise ValueError("Model oluşturulmadı!")
 
-        from sklearn.metrics import precision_score, recall_score, f1_score
+        from sklearn.metrics import f1_score, precision_score, recall_score
 
         loss, accuracy = self.model.evaluate(X_test, y_test, verbose=0)
         y_pred = np.argmax(self.model.predict(X_test, verbose=0), axis=1)

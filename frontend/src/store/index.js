@@ -1,14 +1,7 @@
 import { create } from 'zustand';
 
-// Theme Store
-export const useThemeStore = create((set) => ({
-    isDark: true,
-    toggleTheme: () => set((state) => {
-        const newTheme = !state.isDark;
-        document.documentElement.setAttribute('data-theme', newTheme ? 'dark' : 'light');
-        return { isDark: newTheme };
-    })
-}));
+// Theme Store - re-export from hooks/useTheme for backward compat
+export { useThemeStore } from '../hooks/useTheme';
 
 // Dashboard Store
 export const useDashboardStore = create((set) => ({
@@ -48,4 +41,10 @@ export const useModelsStore = create((set) => ({
     setModels: (models) => set({ models }),
     setSelectedModel: (model) => set({ selectedModel: model }),
     setLoading: (loading) => set({ loading })
+}));
+
+// Sidebar Store
+export const useSidebarStore = create((set) => ({
+    collapsed: false,
+    toggleCollapsed: () => set((state) => ({ collapsed: !state.collapsed }))
 }));

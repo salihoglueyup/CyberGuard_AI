@@ -15,13 +15,15 @@ config/production.yaml
 # Çok Büyük Dosyalar (GitHub 100MB limit)
 # ============================================
 src/database/cyberguard.db
-app/src/database/cyberguard.db
 
 # Büyük veri dosyaları (Kaggle'dan indirilebilir)
 data/raw/
 data/processed/
 *.csv.gz
 *.parquet
+
+# Log dosyaları
+logs/
 
 # ============================================
 # Python Cache
@@ -82,3 +84,30 @@ htmlcov/
 *.tmp
 *.temp
 *.bak
+
+# ============================================
+# Claude Code / Yerel Ajan Ayarları
+# ============================================
+.claude/
+
+# ============================================
+# Hassas / Çalışma-Zamanı Veri Dosyaları
+# (Kullanıcılar, oturumlar, runtime state - .example şablonları repo'da)
+# ============================================
+data/users.json
+data/sessions.json
+data/incidents.json
+data/gan_generated.json
+data/siem_config.json
+data/honeypots.json
+data/honeypot_captures.json
+data/threat_hunts.json
+data/geoip_cache.db
+app/data/*.json
+
+# Otomatik üretilen raporlar
+endpoints_report.txt
+
+# Office geçici / kilit dosyaları
+~$*
+*.tmp.docx

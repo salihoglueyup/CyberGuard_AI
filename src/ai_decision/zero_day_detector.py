@@ -14,12 +14,12 @@ Referans:
     was designed to identify both known and zero-day attacks."
 """
 
+import logging
 import os
 import sys
-import numpy as np
-from typing import Dict, List, Optional, Tuple, Union
 from datetime import datetime
-import logging
+
+import numpy as np
 
 # Project imports
 PROJECT_ROOT = os.path.dirname(
@@ -54,10 +54,12 @@ class ZeroDayDetector:
         self,
         input_dim: int = 78,
         latent_dim: int = 32,
-        hidden_layers: List[int] = [128, 64],
+        hidden_layers: list[int] | None = None,
         threshold: float = None,
         sensitivity: int = 3,
     ):
+        if hidden_layers is None:
+            hidden_layers = [128, 64]
         """
         Args:
             input_dim: Feature sayısı
@@ -84,20 +86,20 @@ class ZeroDayDetector:
             5: 85,  # Yüksek hassasiyet (%15 anomali)
         }
 
-        self.encoder: Optional[keras.Model] = None
-        self.decoder: Optional[keras.Model] = None
-        self.vae: Optional[keras.Model] = None
+        self.encoder: keras.Model | None = None
+        self.decoder: keras.Model | None = None
+        self.vae: keras.Model | None = None
 
         self.is_trained = False
         self.training_errors = None
 
-        logger.info(f"🔮 ZeroDayDetector initialized")
+        logger.info("🔮 ZeroDayDetector initialized")
         logger.info(f"   Input dim: {input_dim}, Latent dim: {latent_dim}")
         logger.info(f"   Sensitivity: {sensitivity}/5")
 
     def build(self) -> keras.Model:
         """VAE modelini oluştur"""
-        from tensorflow.keras import layers, Model
+        from tensorflow.keras import Model, layers
 
         # === ENCODER ===
         encoder_inputs = layers.Input(shape=(self.input_dim,), name="encoder_input")
@@ -163,7 +165,7 @@ class ZeroDayDetector:
         batch_size: int = 64,
         validation_split: float = 0.1,
         verbose: int = 1,
-    ) -> Dict:
+    ) -> dict:
         """
         Normal trafik ile VAE'yi eğit
 
@@ -206,7 +208,7 @@ class ZeroDayDetector:
 
         self.is_trained = True
 
-        logger.info(f"✅ VAE trained!")
+        logger.info("✅ VAE trained!")
         logger.info(f"   Threshold: {self.threshold:.4f}")
         logger.info(f"   Mean error: {np.mean(self.training_errors):.4f}")
 
@@ -226,7 +228,7 @@ class ZeroDayDetector:
         errors = np.mean(np.square(X - X_reconstructed), axis=1)
         return errors
 
-    def detect(self, X: np.ndarray) -> Dict:
+    def detect(self, X: np.ndarray) -> dict:
         """
         Zero-day anomali tespiti
 
@@ -261,6 +263,8 @@ class ZeroDayDetector:
 
     def save(self, path: str):
         """Modeli kaydet"""
+        if self.vae is None:
+            raise RuntimeError("Model henüz eğitilmedi, kaydetme yapılamaz")
         os.makedirs(path, exist_ok=True)
 
         self.vae.save(os.path.join(path, "vae_model.h5"))
@@ -286,7 +290,7 @@ class ZeroDayDetector:
         """Modeli yükle"""
         import json
 
-        with open(os.path.join(path, "metadata.json"), "r") as f:
+        with open(os.path.join(path, "metadata.json")) as f:
             metadata = json.load(f)
 
         detector = cls(
@@ -354,7 +358,7 @@ class HybridIDSPipeline:
 
         logger.info("🔥 HybridIDSPipeline initialized")
 
-    def predict(self, X: np.ndarray) -> List[Dict]:
+    def predict(self, X: np.ndarray) -> list[dict]:
         """
         Hybrid prediction
 
@@ -426,12 +430,12 @@ class HybridIDSPipeline:
 
         return results
 
-    def predict_single(self, x: np.ndarray) -> Dict:
+    def predict_single(self, x: np.ndarray) -> dict:
         """Tek örnek için prediction"""
         x = x.reshape(1, -1) if len(x.shape) == 1 else x
         return self.predict(x)[0]
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Pipeline istatistikleri"""
         return {
             "zero_day_threshold": self.zero_day.threshold,
@@ -489,11 +493,13 @@ class BetaVAE(ZeroDayDetector):
         self,
         input_dim: int = 78,
         latent_dim: int = 32,
-        hidden_layers: List[int] = [128, 64],
+        hidden_layers: list[int] | None = None,
         beta: float = 4.0,
         threshold: float = None,
         sensitivity: int = 3,
     ):
+        if hidden_layers is None:
+            hidden_layers = [128, 64]
         """
         Args:
             beta: KL divergence weight (β > 1 = more disentanglement)
@@ -510,7 +516,7 @@ class BetaVAE(ZeroDayDetector):
 
     def build(self) -> keras.Model:
         """Build β-VAE with weighted KL loss"""
-        from tensorflow.keras import layers, Model
+        from tensorflow.keras import Model, layers
 
         # === ENCODER ===
         encoder_inputs = layers.Input(shape=(self.input_dim,), name="encoder_input")
@@ -577,7 +583,7 @@ class BetaVAE(ZeroDayDetector):
         )
         return self.vae
 
-    def get_disentanglement_score(self, X: np.ndarray) -> Dict:
+    def get_disentanglement_score(self, X: np.ndarray) -> dict:
         """
         Latent space disentanglement score
 
@@ -644,7 +650,7 @@ if __name__ == "__main__":
 
     # Test
     zd_result = detector.detect(X_anomaly)
-    print(f"\nAnomaly detection:")
+    print("\nAnomaly detection:")
     print(f"  Detected: {zd_result['num_anomalies']}/100")
     print(f"  Rate: {zd_result['anomaly_rate']*100:.1f}%")
 

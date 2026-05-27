@@ -3,12 +3,18 @@ Feature Extractor - CyberGuard AI
 Saldırı verilerinden ML modeli için özellikler çıkarır
 """
 
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from typing import Dict, Tuple
-import pickle
 import os
+
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+# Project-level path resolution
+_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(_CURRENT_DIR))
+_MODELS_DIR = os.path.join(_PROJECT_ROOT, 'model_artifacts')
+_DB_DIR = os.path.join(_PROJECT_ROOT, 'src', 'database')
 
 class FeatureExtractor:
     """Saldırı verilerinden ML özellikleri çıkarır"""
@@ -37,7 +43,7 @@ class FeatureExtractor:
                    int(parts[1]) * 256**2 +
                    int(parts[2]) * 256 +
                    int(parts[3]))
-        except:
+        except (ValueError, IndexError):
             return 0
 
     def extract_time_features(self, timestamp: pd.Series) -> pd.DataFrame:
@@ -155,17 +161,19 @@ class FeatureExtractor:
         """
         return self.attack_encoder.inverse_transform([encoded_label])[0]
 
-    def save(self, filepath: str = 'models/feature_extractor.pkl'):
+    def save(self, filepath: str = None):
         """
         Feature extractor'ı kaydet
 
         Args:
             filepath (str): Kayıt yolu
         """
+        if filepath is None:
+            filepath = os.path.join(_MODELS_DIR, 'feature_extractor.pkl')
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
         with open(filepath, 'wb') as f:
-            pickle.dump({
+            joblib.dump({
                 'attack_encoder': self.attack_encoder,
                 'severity_encoder': self.severity_encoder,
                 'status_encoder': self.status_encoder,
@@ -175,15 +183,25 @@ class FeatureExtractor:
 
         print(f"✅ Feature extractor saved: {filepath}")
 
-    def load(self, filepath: str = 'models/feature_extractor.pkl'):
+    def load(self, filepath: str = None):
         """
         Feature extractor'ı yükle
 
         Args:
             filepath (str): Dosya yolu
         """
-        with open(filepath, 'rb') as f:
-            data = pickle.load(f)
+        if filepath is None:
+            filepath = os.path.join(_MODELS_DIR, 'feature_extractor.pkl')
+        # Validate path is within allowed directories
+        allowed_dirs = [os.path.abspath(_MODELS_DIR), os.path.join(_PROJECT_ROOT, 'data')]
+        abs_path = os.path.abspath(filepath)
+        if not any(abs_path.startswith(d) for d in allowed_dirs):
+            raise ValueError(f"Güvenlik hatası: '{filepath}' izin verilen dizinlerde değil")
+        if not os.path.exists(abs_path):
+            raise FileNotFoundError(f"Dosya bulunamadı: {filepath}")
+
+        with open(abs_path, 'rb') as f:
+            data = joblib.load(f)
 
         self.attack_encoder = data['attack_encoder']
         self.severity_encoder = data['severity_encoder']
@@ -199,7 +217,8 @@ if __name__ == "__main__":
     import sqlite3
 
     # Database'den veri çek
-    conn = sqlite3.connect('src/database/cyberguard.db')
+    db_path = os.path.join(_DB_DIR, 'cyberguard.db')
+    conn = sqlite3.connect(db_path)
     df = pd.read_sql_query("SELECT * FROM attacks LIMIT 10", conn)
     conn.close()
 

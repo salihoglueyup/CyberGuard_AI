@@ -24,7 +24,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 def find_latest_model():
     """En son eğitilmiş modeli bul"""
-    models_dir = PROJECT_ROOT / "models"
+    models_dir = PROJECT_ROOT / "model_artifacts"
 
     # SSA-LSTMIDS modelleri
     models = list(models_dir.glob("ssa_lstmids_*.h5"))

@@ -5,12 +5,11 @@ RAG + ML Model entegrasyonlu chatbot
 Dosya Yolu: src/chatbot/gemini_handler.py
 """
 
+import json
 import os
 import sys
-import json
 import time
 from datetime import datetime
-from typing import Dict, List, Optional, Any
 
 # Path düzeltmesi
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,13 +24,13 @@ except ImportError:
     GEMINI_AVAILABLE = False
     print("⚠️ google-generativeai not installed")
 
-from src.utils import Logger, get_config, DatabaseManager
 from src.chatbot.context_manager import ContextManager
 from src.chatbot.intent_classifier import IntentClassifier
-from src.chatbot.vectorstore.rag_manager import RAGManager
-from src.chatbot.vectorstore.memory_manager import MemoryManager
 from src.chatbot.model_knowledge import ModelKnowledgeManager
 from src.chatbot.vectorstore.attack_vectors import AttackVectorManager
+from src.chatbot.vectorstore.memory_manager import MemoryManager
+from src.chatbot.vectorstore.rag_manager import RAGManager
+from src.utils import DatabaseManager, Logger, get_config
 
 
 class EnhancedGeminiHandler:
@@ -47,7 +46,7 @@ class EnhancedGeminiHandler:
     - Attack vector analysis
     """
 
-    def __init__(self, api_key: Optional[str] = None, user_id: str = "default"):
+    def __init__(self, api_key: str | None = None, user_id: str = "default"):
         """
         Args:
             api_key: Gemini API key
@@ -109,14 +108,14 @@ class EnhancedGeminiHandler:
         # Session ID
         self.session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
-        self.logger.info(f"✅ Enhanced Gemini Handler initialized")
+        self.logger.info("✅ Enhanced Gemini Handler initialized")
 
     # ========================================
     # MAIN CHAT FUNCTION
     # ========================================
 
     def chat(
-        self, user_message: str, save_to_db: bool = True, model_id: Optional[str] = None
+        self, user_message: str, save_to_db: bool = True, model_id: str | None = None
     ) -> str:
         """
         Kullanıcı mesajına akıllı cevap ver
@@ -149,7 +148,7 @@ class EnhancedGeminiHandler:
             # 3. Context oluştur (ML prediction dahil)
             self.logger.info("🔧 Building context...")
             context = self._build_context(user_message, intent, entities)
-            self.logger.info(f"✅ Context built")
+            self.logger.info("✅ Context built")
 
             # 4. ML Model bilgisini context'e ekle
             if model_id:
@@ -179,7 +178,7 @@ class EnhancedGeminiHandler:
             memory_context = self.memory_manager.get_relevant_memory_for_query(
                 user_message, k=2
             )
-            self.logger.info(f"✅ Memory done")
+            self.logger.info("✅ Memory done")
 
             # 7. Prompt oluştur
             full_prompt = self._build_enhanced_prompt(
@@ -224,7 +223,7 @@ class EnhancedGeminiHandler:
             traceback.print_exc()
             return self._get_error_response(str(e))
 
-    def _get_model_info(self, model_id: str) -> Optional[Dict]:
+    def _get_model_info(self, model_id: str) -> dict | None:
         """Model bilgilerini getir"""
         try:
             import json
@@ -238,7 +237,7 @@ class EnhancedGeminiHandler:
             )
 
             if os.path.exists(registry_path):
-                with open(registry_path, "r", encoding="utf-8") as f:
+                with open(registry_path, encoding="utf-8") as f:
                     registry = json.load(f)
 
                 for m in registry.get("models", []):
@@ -258,7 +257,7 @@ class EnhancedGeminiHandler:
             self.logger.error(f"Model info error: {e}")
         return None
 
-    def _get_attacks_for_model(self, model_id: str) -> Optional[Dict]:
+    def _get_attacks_for_model(self, model_id: str) -> dict | None:
         """Model için veritabanından TÜM saldırı verilerini getir"""
         try:
             from src.utils.database import DatabaseManager
@@ -311,7 +310,7 @@ class EnhancedGeminiHandler:
     # CONTEXT BUILDING
     # ========================================
 
-    def _build_context(self, user_message: str, intent: str, entities: Dict) -> Dict:
+    def _build_context(self, user_message: str, intent: str, entities: dict) -> dict:
         """
         Intent ve entity'lere göre context oluştur
 
@@ -409,7 +408,7 @@ class EnhancedGeminiHandler:
         self,
         user_message: str,
         intent: str,
-        context: Dict,
+        context: dict,
         rag_context: str,
         memory_context: str,
     ) -> str:
@@ -539,8 +538,8 @@ Cevap:"""
     # ========================================
 
     def predict_with_model(
-        self, features: Dict, model_id: Optional[str] = None
-    ) -> Dict:
+        self, features: dict, model_id: str | None = None
+    ) -> dict:
         """
         ML modeli ile tahmin yap
 
@@ -554,7 +553,7 @@ Cevap:"""
 
         try:
             # MLPredictionAPI kullan
-            from src.api.ml_prediction import MLPredictionAPI
+            from src.services.ml_prediction import MLPredictionAPI
 
             api = MLPredictionAPI()
 
@@ -590,8 +589,8 @@ Cevap:"""
             return {"success": False, "error": str(e)}
 
     def analyze_ip_with_model(
-        self, ip_address: str, model_id: Optional[str] = None
-    ) -> Dict:
+        self, ip_address: str, model_id: str | None = None
+    ) -> dict:
         """
         IP adresini ML modeli ile analiz et
 
@@ -621,7 +620,7 @@ Cevap:"""
             }
         return result
 
-    def _get_ip_recommendation(self, prediction: Dict) -> str:
+    def _get_ip_recommendation(self, prediction: dict) -> str:
         """Tahmine göre öneri oluştur"""
         risk = prediction.get("risk_level", "UNKNOWN")
         conf = prediction.get("confidence", 0)
@@ -635,10 +634,10 @@ Cevap:"""
         else:
             return f"🟢 Düşük risk. Normal trafik olabilir. (Güvenilirlik: {conf:.0%})"
 
-    def get_available_models(self) -> List[Dict]:
+    def get_available_models(self) -> list[dict]:
         """Kullanılabilir modelleri listele"""
         try:
-            from src.api.ml_prediction import MLPredictionAPI
+            from src.services.ml_prediction import MLPredictionAPI
 
             api = MLPredictionAPI()
             return api.get_available_models()
@@ -655,7 +654,7 @@ Cevap:"""
         user_message: str,
         bot_response: str,
         intent: str,
-        context: Dict,
+        context: dict,
         response_time: float,
     ):
         """Database'e kaydet"""
@@ -695,7 +694,7 @@ Cevap:"""
         self.memory_manager.clear_short_term()
         self.logger.info("🗑️ Memory cleared")
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """İstatistikler"""
         return {
             "session_id": self.session_id,

@@ -12,10 +12,11 @@ Kullanım:
     best_params, best_score = optimizer.optimize()
 """
 
-import numpy as np
-from typing import Dict, Callable, Tuple, List, Any, Optional
-from dataclasses import dataclass
 import warnings
+from collections.abc import Callable
+from dataclasses import dataclass
+
+import numpy as np
 
 warnings.filterwarnings("ignore")
 
@@ -24,9 +25,9 @@ warnings.filterwarnings("ignore")
 class OptimizationResult:
     """Optimizasyon sonucu"""
 
-    best_params: Dict
+    best_params: dict
     best_score: float
-    history: List[Dict]
+    history: list[dict]
     total_evaluations: int
     convergence_epoch: int
 
@@ -49,8 +50,8 @@ class SSABayesianOptimizer:
 
     def __init__(
         self,
-        objective_function: Callable[[Dict], float],
-        search_space: Dict[str, tuple],
+        objective_function: Callable[[dict], float],
+        search_space: dict[str, tuple],
         ssa_iterations: int = 20,
         bayesian_iterations: int = 15,
         population_size: int = 15,
@@ -67,11 +68,11 @@ class SSABayesianOptimizer:
 
         self.param_names = list(search_space.keys())
         self.bounds = self._parse_bounds()
-        self.history: List[Dict] = []
-        self.best_params: Optional[Dict] = None
+        self.history: list[dict] = []
+        self.best_params: dict | None = None
         self.best_score: float = float("inf") if minimize else float("-inf")
 
-    def _parse_bounds(self) -> List[Tuple[float, float, str]]:
+    def _parse_bounds(self) -> list[tuple[float, float, str]]:
         """Sınırları parse et"""
         bounds = []
         for name, spec in self.search_space.items():
@@ -79,7 +80,7 @@ class SSABayesianOptimizer:
             bounds.append((lower, upper, dtype))
         return bounds
 
-    def _decode_params(self, position: np.ndarray) -> Dict:
+    def _decode_params(self, position: np.ndarray) -> dict:
         """Pozisyonu parametrelere dönüştür"""
         params = {}
         for i, (name, (lower, upper, dtype)) in enumerate(
@@ -93,14 +94,14 @@ class SSABayesianOptimizer:
                 params[name] = float(val)
         return params
 
-    def _encode_params(self, params: Dict) -> np.ndarray:
+    def _encode_params(self, params: dict) -> np.ndarray:
         """Parametreleri pozisyona dönüştür"""
         position = np.zeros(len(self.param_names))
         for i, name in enumerate(self.param_names):
             position[i] = params.get(name, 0)
         return position
 
-    def _evaluate(self, params: Dict) -> float:
+    def _evaluate(self, params: dict) -> float:
         """Objective function'ı değerlendir"""
         try:
             score = self.objective(params)
@@ -122,7 +123,7 @@ class SSABayesianOptimizer:
                 print(f"   ⚠️ Evaluation error: {e}")
             return float("inf") if self.minimize else float("-inf")
 
-    def _ssa_phase(self) -> Tuple[np.ndarray, float]:
+    def _ssa_phase(self) -> tuple[np.ndarray, float]:
         """
         SSA (Salp Swarm Algorithm) fazı - Global exploration
         """
@@ -204,7 +205,7 @@ class SSABayesianOptimizer:
 
         return food_pos, food_score
 
-    def _bayesian_phase(self, initial_point: np.ndarray) -> Tuple[Dict, float]:
+    def _bayesian_phase(self, initial_point: np.ndarray) -> tuple[dict, float]:
         """
         Bayesian Optimization fazı - Local refinement
         Gaussian Process tabanlı
@@ -326,7 +327,7 @@ class SSABayesianOptimizer:
         final_params, final_score = self._bayesian_phase(ssa_best_pos)
 
         if self.verbose:
-            print(f"\n🏆 Final En İyi Parametreler:")
+            print("\n🏆 Final En İyi Parametreler:")
             for k, v in final_params.items():
                 print(f"   {k}: {v}")
             print(f"   Score: {final_score:.4f}")
@@ -356,7 +357,7 @@ if __name__ == "__main__":
     print("🧪 SSA + Bayesian Optimizer Test\n")
 
     # Test objective: Sphere function
-    def sphere(params: Dict) -> float:
+    def sphere(params: dict) -> float:
         x = params.get("x", 0)
         y = params.get("y", 0)
         return -(x**2 + y**2)  # Maximize için negatif
@@ -378,7 +379,7 @@ if __name__ == "__main__":
 
     result = optimizer.optimize()
 
-    print(f"\n📊 Sonuç:")
+    print("\n📊 Sonuç:")
     print(f"   Best: {result.best_params}")
     print(f"   Score: {result.best_score}")
     print(f"   Evaluations: {result.total_evaluations}")

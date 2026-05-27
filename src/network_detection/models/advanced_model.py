@@ -15,17 +15,13 @@ Geliştirmeler:
     - Dropout ve BatchNormalization (regularization)
 """
 
-import os
-import sys
 import numpy as np
-from typing import Dict, List, Optional, Tuple
-from pathlib import Path
 
 # TensorFlow import
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
     from tensorflow.keras.callbacks import (
         EarlyStopping,
         ModelCheckpoint,
@@ -47,7 +43,7 @@ class SelfAttention(layers.Layer):
     """
 
     def __init__(self, units: int = 128, **kwargs):
-        super(SelfAttention, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.units = units
         self.W_q = layers.Dense(units, name="query")
         self.W_k = layers.Dense(units, name="key")
@@ -108,7 +104,7 @@ class AdvancedIDSModel:
 
     def __init__(
         self,
-        input_shape: Tuple[int, int] = (10, 78),  # (sequence_length, features)
+        input_shape: tuple[int, int] = (10, 78),  # (sequence_length, features)
         num_classes: int = 15,
         lstm_units: int = 120,
         attention_units: int = 64,
@@ -144,7 +140,7 @@ class AdvancedIDSModel:
         self.use_bidirectional = use_bidirectional
         self.model_name = model_name
 
-        self.model: Optional[Model] = None
+        self.model: Model | None = None
         self.history = None
 
         print(f"🧠 {model_name} başlatılıyor...")
@@ -256,13 +252,13 @@ class AdvancedIDSModel:
         self,
         X_train: np.ndarray,
         y_train: np.ndarray,
-        X_val: Optional[np.ndarray] = None,
-        y_val: Optional[np.ndarray] = None,
+        X_val: np.ndarray | None = None,
+        y_val: np.ndarray | None = None,
         epochs: int = 100,
         batch_size: int = 64,
         patience: int = 10,
-        model_save_path: Optional[str] = None,
-    ) -> Dict:
+        model_save_path: str | None = None,
+    ) -> dict:
         """
         Modeli eğit
 
@@ -282,7 +278,7 @@ class AdvancedIDSModel:
         if self.model is None:
             self.build()
 
-        print(f"\n🏋️ Eğitim başlıyor...")
+        print("\n🏋️ Eğitim başlıyor...")
         print(f"   📊 Train: {X_train.shape}")
         print(f"   📊 Epochs: {epochs}, Batch: {batch_size}")
 
@@ -340,14 +336,14 @@ class AdvancedIDSModel:
             )
             results["final_val_loss"] = float(self.history.history["val_loss"][-1])
 
-        print(f"\n✅ Eğitim tamamlandı!")
+        print("\n✅ Eğitim tamamlandı!")
         print(f"   📊 Accuracy: {results['final_accuracy']*100:.2f}%")
         if "final_val_accuracy" in results:
             print(f"   📊 Val Accuracy: {results['final_val_accuracy']*100:.2f}%")
 
         return results
 
-    def evaluate(self, X_test: np.ndarray, y_test: np.ndarray) -> Dict:
+    def evaluate(self, X_test: np.ndarray, y_test: np.ndarray) -> dict:
         """Model değerlendirmesi"""
         if self.model is None:
             raise ValueError("Model henüz oluşturulmadı!")
@@ -362,10 +358,9 @@ class AdvancedIDSModel:
 
         # Metrics
         from sklearn.metrics import (
+            f1_score,
             precision_score,
             recall_score,
-            f1_score,
-            confusion_matrix,
         )
 
         precision = precision_score(
@@ -384,7 +379,7 @@ class AdvancedIDSModel:
             "f1_score": float(f1),
         }
 
-        print(f"\n📊 Değerlendirme Sonuçları:")
+        print("\n📊 Değerlendirme Sonuçları:")
         print(f"   Accuracy:  {accuracy*100:.2f}%")
         print(f"   Precision: {precision*100:.2f}%")
         print(f"   Recall:    {recall*100:.2f}%")
@@ -415,7 +410,7 @@ class AdvancedIDSModel:
 
 # Factory function
 def create_bilstm_attention_model(
-    input_shape: Tuple[int, int] = (10, 78), num_classes: int = 15, **kwargs
+    input_shape: tuple[int, int] = (10, 78), num_classes: int = 15, **kwargs
 ) -> AdvancedIDSModel:
     """
     BiLSTM + Attention modeli oluştur
@@ -440,7 +435,7 @@ def create_bilstm_attention_model(
 
 
 def build_lstm_model(
-    input_shape: Tuple[int, int], num_classes: int, lstm_units: int = 128
+    input_shape: tuple[int, int], num_classes: int, lstm_units: int = 128
 ) -> Model:
     """
     Basit LSTM modeli oluştur (Keras Model döner)
@@ -485,7 +480,7 @@ def build_lstm_model(
 
 
 def build_bilstm_attention(
-    input_shape: Tuple[int, int], num_classes: int, lstm_units: int = 128
+    input_shape: tuple[int, int], num_classes: int, lstm_units: int = 128
 ) -> Model:
     """
     BiLSTM + Attention modeli oluştur (Keras Model döner)

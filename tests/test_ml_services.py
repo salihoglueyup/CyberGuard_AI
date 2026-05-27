@@ -3,12 +3,9 @@ CyberGuard AI - ML Service Tests
 Tests for ML prediction and model services
 """
 
-import pytest
-import sys
 import os
 
-# Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import pytest
 
 
 class TestMLPredictor:
@@ -17,7 +14,7 @@ class TestMLPredictor:
     def test_import_predictor(self):
         """Test ML predictor can be imported"""
         try:
-            from app.services.ml_predictor import predict_threat, get_prediction_stats
+            from src.services.ml_predictor import get_prediction_stats, predict_threat
 
             assert True
         except ImportError:
@@ -26,7 +23,7 @@ class TestMLPredictor:
     def test_predict_threat(self):
         """Test threat prediction"""
         try:
-            from app.services.ml_predictor import predict_threat
+            from src.services.ml_predictor import predict_threat
 
             sample_attack = {
                 "source": {"country": "CN", "ip": "185.220.101.1"},
@@ -47,7 +44,7 @@ class TestMLPredictor:
     def test_get_prediction_stats(self):
         """Test prediction statistics"""
         try:
-            from app.services.ml_predictor import get_prediction_stats
+            from src.services.ml_predictor import get_prediction_stats
 
             stats = get_prediction_stats()
 
@@ -62,7 +59,7 @@ class TestGeoIPService:
     def test_import_geoip(self):
         """Test GeoIP service can be imported"""
         try:
-            from app.services.geoip import get_ip_location
+            from src.services.geoip import get_ip_location
 
             assert True
         except ImportError:
@@ -71,7 +68,7 @@ class TestGeoIPService:
     def test_get_location_private_ip(self):
         """Test private IP handling"""
         try:
-            from app.services.geoip import get_ip_location
+            from src.services.geoip import get_ip_location
 
             result = get_ip_location("192.168.1.1")
 
@@ -83,7 +80,7 @@ class TestGeoIPService:
     def test_get_location_public_ip(self):
         """Test public IP lookup"""
         try:
-            from app.services.geoip import get_ip_location
+            from src.services.geoip import get_ip_location
 
             # Google DNS as test
             result = get_ip_location("8.8.8.8")
@@ -99,7 +96,7 @@ class TestAttackSimulator:
     def test_generate_simulated_attacks(self):
         """Test attack simulation"""
         try:
-            from app.api.routes.attack_map import generate_simulated_attacks
+            from app.api.routes.threat.attack_map import generate_simulated_attacks
 
             attacks = generate_simulated_attacks(5)
 
@@ -116,7 +113,7 @@ class TestAttackSimulator:
     def test_simulated_attack_structure(self):
         """Test attack data structure"""
         try:
-            from app.api.routes.attack_map import generate_simulated_attacks
+            from app.api.routes.threat.attack_map import generate_simulated_attacks
 
             attacks = generate_simulated_attacks(1)
             attack = attacks[0]
@@ -152,7 +149,7 @@ class TestModelRegistry:
     def test_model_files_exist(self):
         """Test trained model files exist"""
         models_dir = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models"
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "model_artifacts"
         )
 
         assert os.path.exists(models_dir)
@@ -165,14 +162,14 @@ class TestModelRegistry:
         """Test model registry JSON exists"""
         registry_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "models",
+            "model_artifacts",
             "model_registry.json",
         )
 
         if os.path.exists(registry_path):
             import json
 
-            with open(registry_path, "r") as f:
+            with open(registry_path) as f:
                 data = json.load(f)
             assert isinstance(data, (dict, list))
 

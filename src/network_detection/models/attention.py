@@ -11,12 +11,11 @@ Self-Attention ve Multi-Head Attention layerları.
     - LSTM/BiLSTM ile entegrasyon
 """
 
+import logging
+
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers, Model
-from typing import Tuple, Optional, List
-import logging
+from tensorflow.keras import Model, layers
 
 logger = logging.getLogger("Attention")
 
@@ -204,7 +203,7 @@ class AttentionPooling(layers.Layer):
 
 
 def build_attention_lstm(
-    input_shape: Tuple[int, int],
+    input_shape: tuple[int, int],
     num_classes: int,
     lstm_units: int = 128,
     attention_units: int = 64,
@@ -245,7 +244,7 @@ def build_attention_lstm(
 
 
 def build_bilstm_attention(
-    input_shape: Tuple[int, int],
+    input_shape: tuple[int, int],
     num_classes: int,
     lstm_units: int = 128,
     attention_units: int = 64,
@@ -287,7 +286,7 @@ def build_bilstm_attention(
 
 
 def build_cnn_bilstm_attention(
-    input_shape: Tuple[int, int],
+    input_shape: tuple[int, int],
     num_classes: int,
     conv_filters: int = 32,
     lstm_units: int = 128,
@@ -340,7 +339,7 @@ def build_cnn_bilstm_attention(
 
 def get_attention_weights(
     model: Model, inputs: np.ndarray, layer_name: str = None
-) -> Optional[np.ndarray]:
+) -> np.ndarray | None:
     """
     Model'den attention weight'lerini çıkar
 
@@ -385,7 +384,7 @@ def get_attention_weights(
 
 def visualize_attention(
     attention_weights: np.ndarray,
-    feature_names: List[str] = None,
+    feature_names: list[str] = None,
     sample_idx: int = 0,
 ) -> dict:
     """

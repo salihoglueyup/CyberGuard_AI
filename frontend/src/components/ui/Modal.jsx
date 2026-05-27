@@ -50,11 +50,11 @@ export default function Modal({
             >
                 {title && (
                     <div className="modal-header">
-                        <h2 className="text-lg font-semibold text-white">{title}</h2>
+                        <h2 className="text-lg font-semibold text-[var(--hud-text)]">{title}</h2>
                         {showClose && (
                             <button
                                 onClick={onClose}
-                                className="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-[var(--hud-text)] transition-colors"
                             >
                                 <X className="w-5 h-5" />
                             </button>

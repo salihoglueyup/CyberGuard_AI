@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Search, Command, User, ChevronDown, LogOut, Settings, HelpCircle } from 'lucide-react';
+﻿import { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Search, Command, User, ChevronDown, LogOut, Settings, HelpCircle, Activity } from 'lucide-react';
 import NotificationBell from './NotificationBell';
-import { SearchInput } from './ui/Input';
+import ThemeToggle from './shared/ThemeToggle';
+import LanguageSwitcher from './shared/LanguageSwitcher';
 
 const pageTitles = {
     '/': 'Kontrol Paneli',
@@ -11,77 +12,138 @@ const pageTitles = {
     '/assistant': 'AI Asistan',
     '/models': 'ML Modeller',
     '/settings': 'Ayarlar',
+    '/attack-map': 'Saldırı Haritası',
+    '/incidents': 'Olaylar',
+    '/threat-intel': 'Tehdit İstihbaratı',
+    '/analytics': 'Analitik',
+    '/reports': 'Raporlar',
+    '/aiml-hub': 'AI/ML Hub',
+    '/security-hub': 'Güvenlik Merkezi',
+    '/darkweb': 'Dark Web İzleme',
 };
 
 export default function Header() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [clock, setClock] = useState('');
+    const menuRef = useRef(null);
 
     const currentPage = pageTitles[location.pathname] || 'CyberGuard AI';
 
+    // Live clock
+    useEffect(() => {
+        const tick = () => {
+            const now = new Date();
+            setClock(now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        };
+        tick();
+        const id = setInterval(tick, 1000);
+        return () => clearInterval(id);
+    }, []);
+
+    // Close menu on outside click
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setShowUserMenu(false);
+            }
+        };
+        if (showUserMenu) document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showUserMenu]);
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        navigate('/login');
+    };
+
     return (
-        <header className="h-16 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 flex items-center justify-between px-6 sticky top-0 z-40">
-            {/* Left: Page Title */}
-            <div>
-                <h1 className="text-xl font-bold text-white">{currentPage}</h1>
-                <p className="text-xs text-slate-400">Gerçek zamanlı siber güvenlik izleme</p>
+        <header className="h-14 bg-[var(--hud-surface)] border-b border-[var(--hud-border)] flex items-center justify-between px-5 sticky top-0 z-40">
+            {/* Left: Breadcrumb-style title */}
+            <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 text-[13px]">
+                    <span className="text-[var(--hud-text-dim)]">CyberGuard</span>
+                    <span className="text-[var(--hud-border-strong)]">/</span>
+                    <span className="text-[var(--hud-text-bright)] font-medium">{currentPage}</span>
+                </div>
             </div>
 
-            {/* Center: Search */}
-            <div className="flex-1 max-w-md mx-8">
+            {/* Center: Compact search */}
+            <div className="flex-1 max-w-xs mx-6">
                 <div className="relative">
-                    <SearchInput
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--hud-text-dim)]" />
+                    <input
+                        type="text"
                         value={searchQuery}
-                        onChange={setSearchQuery}
-                        placeholder="Tehdit, model, log ara..."
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Ara..."
+                        className="w-full pl-8 pr-14 py-1.5 bg-[var(--hud-bg)] border border-[var(--hud-border)] rounded-lg text-[13px] text-[var(--hud-text)] placeholder:text-[var(--hud-text-dim)] focus:outline-none focus:border-[var(--hud-cyan)] focus:ring-2 focus:ring-[rgba(56,189,248,0.1)] transition-all"
                     />
-                    <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 text-slate-500">
-                        <Command className="w-3 h-3" />
-                        <span className="text-xs">K</span>
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-0.5 text-[var(--hud-text-dim)]">
+                        <kbd className="text-[9px] px-1 py-0.5 bg-[rgba(255,255,255,0.04)] border border-[var(--hud-border)] rounded font-mono">Ctrl</kbd>
+                        <kbd className="text-[9px] px-1 py-0.5 bg-[rgba(255,255,255,0.04)] border border-[var(--hud-border)] rounded font-mono">K</kbd>
                     </div>
                 </div>
             </div>
 
-            {/* Right: Actions */}
+            {/* Right: Status, notifications, user */}
             <div className="flex items-center gap-3">
+                {/* Live clock */}
+                <div className="hidden md:flex items-center gap-1.5 text-[12px] text-[var(--hud-text-muted)] font-mono">
+                    <Activity className="w-3 h-3 text-[var(--hud-emerald)]" />
+                    <span>{clock}</span>
+                </div>
+
+                <div className="w-px h-4 bg-[var(--hud-border)]" />
+
+                {/* Theme Toggle */}
+                <ThemeToggle />
+
+                {/* Language */}
+                <LanguageSwitcher compact />
+
                 {/* Notifications */}
                 <NotificationBell />
 
                 {/* User Menu */}
-                <div className="relative">
+                <div className="relative" ref={menuRef}>
                     <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors"
+                        className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-[var(--hud-cyan-ghost)] transition-colors"
                     >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-                            Y
+                        <div className="w-7 h-7 rounded-lg border border-[var(--hud-border)] flex items-center justify-center bg-[var(--hud-cyan-ghost)]">
+                            <User className="w-3.5 h-3.5 text-[var(--hud-cyan)]" />
                         </div>
                         <div className="hidden md:block text-left">
-                            <p className="text-sm font-medium text-white">Yönetici</p>
-                            <p className="text-xs text-slate-400">Admin</p>
+                            <p className="text-[12px] text-[var(--hud-text)]">Admin</p>
                         </div>
-                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+                        <ChevronDown className={`w-3 h-3 text-[var(--hud-text-dim)] transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
                     </button>
 
                     {showUserMenu && (
-                        <div className="absolute right-0 top-full mt-2 w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-xl overflow-hidden z-50 scale-in">
-                            <div className="p-2">
-                                <a
-                                    href="/settings"
-                                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+                        <div className="absolute right-0 top-full mt-1 w-44 bg-[var(--hud-surface-elevated)] border border-[var(--hud-border)] rounded-lg shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden z-50 scale-in">
+                            <div className="p-1">
+                                <button
+                                    onClick={() => { setShowUserMenu(false); navigate('/settings'); }}
+                                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] text-[var(--hud-text-muted)] hover:bg-[var(--hud-cyan-ghost)] hover:text-[var(--hud-text)] transition-colors"
                                 >
                                     <Settings className="w-4 h-4" />
-                                    <span className="text-sm">Ayarlar</span>
-                                </a>
-                                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
-                                    <HelpCircle className="w-4 h-4" />
-                                    <span className="text-sm">Yardım</span>
+                                    <span>Ayarlar</span>
                                 </button>
-                                <div className="my-2 border-t border-slate-700/50" />
-                                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
+                                <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] text-[var(--hud-text-muted)] hover:bg-[var(--hud-cyan-ghost)] hover:text-[var(--hud-text)] transition-colors">
+                                    <HelpCircle className="w-4 h-4" />
+                                    <span>Yardım</span>
+                                </button>
+                                <div className="my-1 border-t border-[var(--hud-border)]" />
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] text-[var(--hud-red)] hover:bg-[rgba(239,68,68,0.08)] transition-colors"
+                                >
                                     <LogOut className="w-4 h-4" />
-                                    <span className="text-sm">Çıkış Yap</span>
+                                    <span>Çıkış</span>
                                 </button>
                             </div>
                         </div>

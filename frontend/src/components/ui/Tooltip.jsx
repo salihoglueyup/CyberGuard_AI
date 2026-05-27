@@ -18,7 +18,7 @@ export default function Tooltip({ children, text, position = 'top' }) {
             {children}
             <div className={`
         absolute ${positions[position]}
-        px-2.5 py-1.5 text-xs text-white bg-slate-800
+        px-2.5 py-1.5 text-xs text-[var(--hud-text)] bg-slate-800
         rounded-lg whitespace-nowrap z-50
         opacity-0 invisible group-hover:opacity-100 group-hover:visible
         transition-all duration-150

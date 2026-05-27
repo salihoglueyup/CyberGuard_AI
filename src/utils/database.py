@@ -5,18 +5,19 @@ Database yönetimi ve işlemleri
 SQLite kullanarak tüm verileri saklama
 """
 
-import sqlite3
-import os
-from datetime import datetime, timedelta
-from typing import List, Dict, Optional, Tuple
 import json
-import pandas as pd
+import os
+import sqlite3
+import threading
 from contextlib import contextmanager
+from datetime import datetime, timedelta
+
+import pandas as pd
 
 
 class DatabaseManager:
     """
-    CyberGuard AI Database Manager
+    CyberGuard AI Database Manager (Singleton)
 
     Tüm database işlemlerini yönetir:
     - Tablo oluşturma
@@ -25,6 +26,20 @@ class DatabaseManager:
     - Veri temizleme
     """
 
+    _instances: dict[str, "DatabaseManager"] = {}
+    _initialized: dict[str, bool] = {}
+    _lock = threading.Lock()
+
+    def __new__(cls, db_path: str = "src/database/cyberguard.db"):
+        """Singleton pattern: aynı db_path için tek instance"""
+        abs_path = os.path.abspath(db_path)
+        with cls._lock:
+            if abs_path not in cls._instances:
+                instance = super().__new__(cls)
+                cls._instances[abs_path] = instance
+                cls._initialized[abs_path] = False
+            return cls._instances[abs_path]
+
     def __init__(self, db_path: str = "src/database/cyberguard.db"):
         """
         Database manager'ı başlat
@@ -32,6 +47,10 @@ class DatabaseManager:
         Args:
             db_path (str): Database dosya yolu
         """
+        abs_path = os.path.abspath(db_path)
+        if DatabaseManager._initialized.get(abs_path, False):
+            return
+
         self.db_path = db_path
         self.connection = None
         self._tables_created = False
@@ -42,13 +61,15 @@ class DatabaseManager:
             try:
                 os.makedirs(db_dir, exist_ok=True)
             except Exception as e:
-                print(f"⚠️ Database klasörü oluşturulamadı: {e}")
+                print(f"[WARNING] Database klasoru olusturulamadi: {e}")
 
         # Database'i oluştur (yoksa) - hata yakalama ile
         try:
             self.create_tables()
         except Exception as e:
-            print(f"⚠️ Database tabloları oluşturulurken hata (devam ediyor): {e}")
+            print(f"[WARNING] Database tablolari olusturulurken hata (devam ediyor): {e}")
+
+        DatabaseManager._initialized[abs_path] = True
 
     @contextmanager
     def get_connection(self):
@@ -477,13 +498,13 @@ class DatabaseManager:
             )
 
             conn.commit()
-            print("✅ Database tabloları oluşturuldu!")
+            print("[OK] Database tablolari olusturuldu!")
 
     # ========================================
     # ATTACK OPERATIONS
     # ========================================
 
-    def add_attack(self, attack_data: Dict) -> int:
+    def add_attack(self, attack_data: dict) -> int:
         """
         Yeni saldırı kaydı ekle
 
@@ -528,11 +549,11 @@ class DatabaseManager:
 
     def get_attacks(
         self,
-        hours: Optional[int] = 24,
-        attack_type: Optional[str] = None,
-        severity: Optional[str] = None,
+        hours: int | None = 24,
+        attack_type: str | None = None,
+        severity: str | None = None,
         limit: int = 200000,  # Model verisi için yüksek limit
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """
         Saldırıları filtreli olarak getir
 
@@ -581,7 +602,7 @@ class DatabaseManager:
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
 
-    def get_recent_attacks(self, limit: int = 10, hours: int = 24) -> List[Dict]:
+    def get_recent_attacks(self, limit: int = 10, hours: int = 24) -> list[dict]:
         """
         Son saldırıları getir
 
@@ -609,7 +630,7 @@ class DatabaseManager:
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
 
-    def get_attack_stats(self, hours: Optional[int] = 24) -> Dict:
+    def get_attack_stats(self, hours: int | None = 24) -> dict:
         """
         Saldırı istatistikleri
 
@@ -691,7 +712,7 @@ class DatabaseManager:
                 "period_hours": hours if hours else "all",
             }
 
-    def get_top_attackers(self, limit: int = 10, hours: int = 24) -> List[Dict]:
+    def get_top_attackers(self, limit: int = 10, hours: int = 24) -> list[dict]:
         """
         En çok saldırı yapan IP'ler
 
@@ -727,7 +748,7 @@ class DatabaseManager:
     # NETWORK LOG OPERATIONS
     # ========================================
 
-    def add_network_log(self, log_data: Dict) -> int:
+    def add_network_log(self, log_data: dict) -> int:
         """Network log ekle"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -758,7 +779,7 @@ class DatabaseManager:
             conn.commit()
             return cursor.lastrowid
 
-    def get_ip_history(self, ip_address: str, limit: int = 100) -> List[Dict]:
+    def get_ip_history(self, ip_address: str, limit: int = 100) -> list[dict]:
         """Bir IP'nin geçmişini getir"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -780,7 +801,7 @@ class DatabaseManager:
     # SCAN RESULTS OPERATIONS
     # ========================================
 
-    def add_scan_result(self, scan_data: Dict) -> int:
+    def add_scan_result(self, scan_data: dict) -> int:
         """Tarama sonucu ekle"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -813,7 +834,7 @@ class DatabaseManager:
             conn.commit()
             return cursor.lastrowid
 
-    def get_scan_history(self, limit: int = 50) -> List[Dict]:
+    def get_scan_history(self, limit: int = 50) -> list[dict]:
         """Tarama geçmişi"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -830,7 +851,7 @@ class DatabaseManager:
 
             return [dict(row) for row in cursor.fetchall()]
 
-    def check_file_hash(self, file_hash: str) -> Optional[Dict]:
+    def check_file_hash(self, file_hash: str) -> dict | None:
         """Dosya hash'i daha önce tarandı mı?"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -853,7 +874,7 @@ class DatabaseManager:
     # CHAT HISTORY OPERATIONS
     # ========================================
 
-    def add_chat_message(self, chat_data: Dict) -> int:
+    def add_chat_message(self, chat_data: dict) -> int:
         """Chat mesajı ekle"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -878,7 +899,7 @@ class DatabaseManager:
             conn.commit()
             return cursor.lastrowid
 
-    def get_chat_history(self, session_id: str, limit: int = 10) -> List[Dict]:
+    def get_chat_history(self, session_id: str, limit: int = 10) -> list[dict]:
         """Session'a ait chat geçmişi"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -951,7 +972,7 @@ class DatabaseManager:
 
             return cursor.fetchone()["count"] > 0
 
-    def get_blacklist(self) -> List[Dict]:
+    def get_blacklist(self) -> list[dict]:
         """Tüm blacklist'i getir"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -973,7 +994,7 @@ class DatabaseManager:
     # ========================================
 
     def add_metric(
-        self, metric_type: str, value: float, unit: str = "", metadata: Dict = None
+        self, metric_type: str, value: float, unit: str = "", metadata: dict = None
     ) -> int:
         """Sistem metriği ekle"""
         with self.get_connection() as conn:
@@ -990,7 +1011,7 @@ class DatabaseManager:
             conn.commit()
             return cursor.lastrowid
 
-    def get_metrics(self, metric_type: str, hours: int = 24) -> List[Dict]:
+    def get_metrics(self, metric_type: str, hours: int = 24) -> list[dict]:
         """Belirli bir metriğin geçmişi"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -1035,7 +1056,7 @@ class DatabaseManager:
             conn.commit()
             print(f"✅ {days} günden eski veriler temizlendi!")
 
-    def get_database_stats(self) -> Dict:
+    def get_database_stats(self) -> dict:
         """Database istatistikleri"""
         with self.get_connection() as conn:
             cursor = conn.cursor()

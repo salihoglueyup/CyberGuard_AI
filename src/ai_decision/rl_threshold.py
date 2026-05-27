@@ -14,15 +14,15 @@ Action: Alert / Ignore / Request More
 Reward: +1 correct, -10 FP, -100 FN
 """
 
-import os
-import sys
-import numpy as np
-from typing import Dict, List, Optional, Tuple, Union
-from collections import deque
-import random
-from datetime import datetime
-import logging
 import json
+import logging
+import os
+import random
+import sys
+from collections import deque
+from datetime import datetime
+
+import numpy as np
 
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +32,7 @@ sys.path.insert(0, PROJECT_ROOT)
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
 
     TF_AVAILABLE = True
 except ImportError:
@@ -74,7 +74,7 @@ class RLState:
         self,
         model_confidence: float,
         anomaly_score: float,
-        history: Dict = None,
+        history: dict = None,
     ) -> np.ndarray:
         """State vektörü oluştur"""
         history = history or {}
@@ -192,7 +192,7 @@ class RLThresholdAgent:
         self.training_episodes = 0
         self.decision_history = []
 
-        logger.info(f"🎮 RLThresholdAgent initialized")
+        logger.info("🎮 RLThresholdAgent initialized")
         logger.info(f"   State dim: {state_dim}, Action dim: {action_dim}")
         logger.info(f"   Epsilon: {epsilon}, Gamma: {gamma}")
 
@@ -222,7 +222,7 @@ class RLThresholdAgent:
         self,
         model_confidence: float,
         anomaly_score: float,
-        history: Dict = None,
+        history: dict = None,
     ) -> np.ndarray:
         """State vektörü oluştur"""
         return self.state_extractor.extract(model_confidence, anomaly_score, history)
@@ -231,7 +231,7 @@ class RLThresholdAgent:
         self,
         state: np.ndarray,
         training: bool = False,
-    ) -> Tuple[int, str]:
+    ) -> tuple[int, str]:
         """
         Karar ver
 
@@ -333,7 +333,7 @@ class RLThresholdAgent:
         episodes: int = 100,
         steps_per_episode: int = 100,
         target_update_freq: int = 10,
-    ) -> Dict:
+    ) -> dict:
         """
         Training loop
 
@@ -404,8 +404,8 @@ class RLThresholdAgent:
         self,
         model_confidence: float,
         anomaly_score: float,
-        history: Dict = None,
-    ) -> Dict:
+        history: dict = None,
+    ) -> dict:
         """
         Threshold önerisi
 
@@ -421,7 +421,7 @@ class RLThresholdAgent:
         action_idx, action_name = self.decide(state, training=False)
 
         q_values = self.q_network.predict(state.reshape(1, -1), verbose=0)[0]
-        confidence = float(np.max(q_values) / (np.sum(np.abs(q_values)) + 1e-8))
+        confidence = float(np.clip(np.max(q_values) / (np.sum(np.abs(q_values)) + 1e-8), 0.0, 1.0))
 
         # Reasoning
         if action_name == "ALERT":
@@ -445,7 +445,7 @@ class RLThresholdAgent:
             },
         }
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Agent istatistikleri"""
         return {
             "total_steps": self.total_steps,
@@ -482,7 +482,7 @@ class RLThresholdAgent:
     @classmethod
     def load(cls, path: str) -> "RLThresholdAgent":
         """Agent'ı yükle"""
-        with open(os.path.join(path, "metadata.json"), "r") as f:
+        with open(os.path.join(path, "metadata.json")) as f:
             metadata = json.load(f)
 
         agent = cls(
@@ -644,7 +644,7 @@ class DoubleDQNAgent(RLThresholdAgent):
 
         self.target_network.set_weights(new_weights)
 
-    def get_q_value_stats(self, states: np.ndarray) -> Dict:
+    def get_q_value_stats(self, states: np.ndarray) -> dict:
         """
         Q-value statistics for diagnosis
 

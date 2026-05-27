@@ -40,7 +40,7 @@ export default function ThreatMap({ threats = [], height = '400px', className = 
             <div className="absolute top-3 left-3 z-[1000] bg-slate-900/90 backdrop-blur-sm px-3 py-2 rounded-lg border border-slate-700/50">
                 <div className="flex items-center gap-2">
                     <Globe className="w-4 h-4 text-blue-400" />
-                    <span className="text-sm font-medium text-white">Canlı Tehdit Haritası</span>
+                    <span className="text-sm font-medium text-[var(--hud-text)]">Canlı Tehdit Haritası</span>
                     {threats.length > 0 && (
                         <span className="px-2 py-0.5 text-xs bg-red-500/20 text-red-400 rounded-full">
                             {threats.length} tehdit

@@ -5,76 +5,102 @@ Modern REST API for cyber security platform
 Dosya Yolu: app/main.py
 """
 
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-import sys
 import os
 import time
 
-# Path düzeltmesi - ana proje dizinine erişim
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(current_dir)
-sys.path.insert(0, project_root)
-
 # .env dosyasını yükle (ÖNEMLİ: import'lardan önce)
 from dotenv import load_dotenv
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_path = os.path.join(project_root, ".env")
 load_dotenv(env_path, override=True)
-print(f"✅ Environment variables loaded from {env_path}")
+print(f"[OK] Environment variables loaded from {env_path}")
 
-# API routes
-from app.api.routes import dashboard, attacks, models, chat, training
-from app.api.routes import websocket as ws_routes
-from app.api.routes import logs, scanner, network, prediction, auth, database
-from app.api.routes import settings, reports, threat_analysis
-from app.api.routes import advanced_models
-from app.api.routes import attack_training
-from app.api.routes import advanced_ml
-from app.api.routes import ai_decision
+# Yapılandırılmış loglama — diğer import'lardan önce başlat
+from app.utils.logging import RequestIDMiddleware, setup_logging
 
-# New routes - Faz 2-6
-from app.api.routes import xai, adversarial, federated, automl
-
-# New routes - Additional Features
-from app.api.routes import (
-    threat_intel,
-    alerts,
-    pdf_reports,
-    comparison,
-    anomaly,
-    security_advanced,
+setup_logging(
+    level=os.environ.get("LOG_LEVEL", "INFO"),
+    log_file="cyberguard.log",
+    json_console=os.environ.get("JSON_CONSOLE_LOG", "").lower() in ("1", "true"),
 )
 
-# New routes - Latest Features
-from app.api.routes import vulnerability, log_analyzer, incidents, api_keys
-
-# New routes - Mega Update (25 New Features)
-from app.api.routes import (
-    realtime,
-    darkweb,
-    container_security,
-    zeroday,
-    threat_hunting,
-    playbooks,
-    drift_detection,
+# API routes - Core
+# API routes - Standalone
+from app.api.routes import auth
+from app.api.routes import websocket as ws_routes
+from app.api.routes.core import (
+    api_keys,
+    dashboard,
+    database,
+    log_analyzer,
+    logs,
     notifications,
-    attack_map,
+    pdf_reports,
+    reports,
+    settings,
+)
+
+# API routes - ML
+from app.api.routes.ml import (
+    advanced_ml,
+    advanced_models,
+    ai_decision,
+    automl,
+    comparison,
+    drift_detection,
+    models,
+    prediction,
+    training,
+    xai,
+)
+
+# API routes - Monitoring
+from app.api.routes.monitoring import (
+    alerts,
+    anomaly,
+    incidents,
+    network,
+    realtime,
+    security_advanced,
     siem,
-    sandbox,
-    attack_surface,
-    blockchain_audit,
-    stix_taxii,
-    deception,
+)
+
+# API routes - Security
+from app.api.routes.security import (
+    adversarial,
+    container_security,
     gan_synthesis,
     hsm,
+    sandbox,
+    scanner,
+    vulnerability,
+    zeroday,
 )
+
+# API routes - Threat
+from app.api.routes.threat import (
+    attack_map,
+    attack_surface,
+    attack_training,
+    attacks,
+    darkweb,
+    deception,
+    threat_analysis,
+    threat_hunting,
+    threat_intel,
+)
+
+# API routes - Tools
+from app.api.routes.tools import blockchain_audit, chat, federated, playbooks, stix_taxii
 
 # Rate Limiting
 try:
     from slowapi import Limiter, _rate_limit_exceeded_handler
-    from slowapi.util import get_remote_address
     from slowapi.errors import RateLimitExceeded
+    from slowapi.util import get_remote_address
 
     limiter = Limiter(key_func=get_remote_address)
     HAS_RATE_LIMIT = True
@@ -82,11 +108,19 @@ except ImportError:
     HAS_RATE_LIMIT = False
     print("[Warning] slowapi not installed, rate limiting disabled")
 
+# Prometheus metrics
+try:
+    from prometheus_fastapi_instrumentator import Instrumentator
+    HAS_PROMETHEUS = True
+except ImportError:
+    HAS_PROMETHEUS = False
+    print("[Warning] prometheus-fastapi-instrumentator not installed, metrics disabled")
+
 # FastAPI app
 app = FastAPI(
     title="CyberGuard AI API",
     description="Siber güvenlik platformu için REST API",
-    version="2.0.0",
+    version="3.3.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
 )
@@ -97,12 +131,14 @@ if HAS_RATE_LIMIT:
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS - Frontend erişimi için
+# CORS - Frontend erişimi için
+_cors_origins = os.environ.get("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "*"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "X-Requested-With"],
 )
 
 
@@ -114,6 +150,13 @@ async def add_process_time_header(request: Request, call_next):
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = str(round(process_time * 1000, 2)) + "ms"
     return response
+
+# Request-ID middleware (yapılandırılmış loglama)
+app.add_middleware(RequestIDMiddleware)
+
+# Prometheus /metrics endpoint'i aç
+if HAS_PROMETHEUS:
+    Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 
 # Routers - Core
@@ -210,15 +253,12 @@ app.include_router(deception.router, prefix="/api/deception", tags=["Deception T
 app.include_router(gan_synthesis.router, prefix="/api/gan", tags=["GAN Synthesis"])
 app.include_router(hsm.router, prefix="/api/hsm", tags=["HSM"])
 
-# WebSocket routes (no prefix - /ws, /ws/attacks, etc.)
-app.include_router(ws_routes.router, tags=["WebSocket"])
-
 
 @app.get("/")
 async def root():
     return {
         "message": "🛡️ CyberGuard AI API",
-        "version": "2.0.0",
+        "version": "3.3.0",
         "docs": "/api/docs",
         "endpoints": {
             "dashboard": "/api/dashboard",
@@ -239,7 +279,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "CyberGuard AI API",
-        "version": "2.0.0",
+        "version": "3.3.0",
         "rate_limiting": HAS_RATE_LIMIT,
     }
 

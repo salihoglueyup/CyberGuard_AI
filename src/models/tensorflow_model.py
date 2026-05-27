@@ -3,35 +3,26 @@ TensorFlow Deep Learning Model - CyberGuard AI
 Daha yüksek doğruluk için neural network kullanır
 """
 
-import sys
-import io
+import os
 
-# Windows console encoding fix
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+# Windows console encoding fix — use env var instead of overriding sys.stdout
+os.environ.setdefault("PYTHONIOENCODING", "utf-8")
 
-import numpy as np
-import pandas as pd
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers, callbacks, regularizers
-from tensorflow.keras.models import Sequential, load_model
-from sklearn.metrics import (
-    classification_report,
-    confusion_matrix,
-    accuracy_score,
-    precision_recall_fscore_support,
-    roc_auc_score,
-    roc_curve,
-)
-import matplotlib.pyplot as plt
-import seaborn as sns
 import json
 import os
-from datetime import datetime
-from typing import Dict, List, Tuple, Optional
 import warnings
+from datetime import datetime
+
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import tensorflow as tf
+from sklearn.metrics import (
+    confusion_matrix,
+)
+from tensorflow import keras
+from tensorflow.keras import callbacks, layers, regularizers
+from tensorflow.keras.models import Sequential, load_model
 
 warnings.filterwarnings("ignore")
 
@@ -61,7 +52,7 @@ class CyberThreatNeuralNetwork:
     def __init__(
         self,
         input_dim: int = 8,
-        hidden_layers: List[int] = [256, 128, 64, 32],
+        hidden_layers: list[int] | None = None,
         dropout_rate: float = 0.3,
         l2_reg: float = 0.001,
         learning_rate: float = 0.001,
@@ -79,7 +70,7 @@ class CyberThreatNeuralNetwork:
             output_activation: Çıktı aktivasyonu
         """
         self.input_dim = input_dim
-        self.hidden_layers = hidden_layers
+        self.hidden_layers = hidden_layers if hidden_layers is not None else [256, 128, 64, 32]
         self.dropout_rate = dropout_rate
         self.l2_reg = l2_reg
         self.learning_rate = learning_rate
@@ -158,7 +149,7 @@ class CyberThreatNeuralNetwork:
 
     def build_lstm_model(
         self,
-        input_shape: Tuple[int, int] = (1, 78),
+        input_shape: tuple[int, int] = (1, 78),
         num_classes: int = 15,
         conv_filters: int = 30,
         lstm_units: int = 120,
@@ -233,7 +224,7 @@ class CyberThreatNeuralNetwork:
         print("🏗️  OPTIMIZED LSTM-IDS MİMARİSİ")
         print("=" * 70)
         print(f"   📊 Conv1D: {conv_filters} filters, kernel=5, ReLU")
-        print(f"   📊 MaxPooling: pool_size=2")
+        print("   📊 MaxPooling: pool_size=2")
         print(f"   📊 LSTM: {lstm_units} units, dropout=0.2")
         print(f"   📊 Dense: {dense_units} units, sigmoid")
         print(f"   📊 Output: {num_classes} classes, softmax")
@@ -248,7 +239,7 @@ class CyberThreatNeuralNetwork:
         model_path: str = "models/best_model.h5",
         tensorboard_dir: str = "logs/tensorboard",
         patience: int = 15,
-    ) -> List[callbacks.Callback]:
+    ) -> list[callbacks.Callback]:
         """
         Training callbacks oluştur
 
@@ -285,7 +276,7 @@ class CyberThreatNeuralNetwork:
             ),
             # CSV Logger - Metrikleri kaydet
             callbacks.CSVLogger(
-                filename="logs/training_log.csv", separator=",", append=False
+                filename="logs/training/training_log.csv", separator=",", append=False
             ),
         ]
 
@@ -299,9 +290,9 @@ class CyberThreatNeuralNetwork:
         y_val: np.ndarray = None,
         epochs: int = 100,
         batch_size: int = 32,
-        class_names: List[str] = None,
+        class_names: list[str] = None,
         verbose: int = 1,
-    ) -> Dict:
+    ) -> dict:
         """
         Modeli eğit (Thread-safe version)
 
@@ -425,7 +416,7 @@ class CyberThreatNeuralNetwork:
 
         return np.argmax(predictions, axis=1)
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> Dict:
+    def evaluate(self, X: np.ndarray, y: np.ndarray) -> dict:
         """
         Modeli değerlendir
 
@@ -444,7 +435,7 @@ class CyberThreatNeuralNetwork:
         # Keras model.evaluate [loss, accuracy, ...] döner
         metrics = {"loss": float(results[0]), "accuracy": float(results[1])}
 
-        print(f"📊 Evaluation Results:")
+        print("📊 Evaluation Results:")
         print(f"   Loss:     {metrics['loss']:.4f}")
         print(f"   Accuracy: {metrics['accuracy']*100:.2f}%")
 
@@ -453,7 +444,7 @@ class CyberThreatNeuralNetwork:
     def plot_training_history(
         self,
         save_path: str = "models/training_history.png",
-        figsize: Tuple[int, int] = (15, 10),
+        figsize: tuple[int, int] = (15, 10),
     ):
         """
         Eğitim geçmişini görselleştir
@@ -525,7 +516,7 @@ class CyberThreatNeuralNetwork:
         y_true: np.ndarray,
         y_pred: np.ndarray,
         save_path: str = "models/confusion_matrix.png",
-        figsize: Tuple[int, int] = (10, 8),
+        figsize: tuple[int, int] = (10, 8),
     ):
         """
         Confusion matrix görselleştir
@@ -607,7 +598,7 @@ class CyberThreatNeuralNetwork:
         """
         # Metadata yükle
         metadata_path = model_path.replace(".h5", "_metadata.json")
-        with open(metadata_path, "r") as f:
+        with open(metadata_path) as f:
             metadata = json.load(f)
 
         # Instance oluştur

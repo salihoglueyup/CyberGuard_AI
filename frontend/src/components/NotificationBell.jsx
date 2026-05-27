@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, X, Check, Trash2 } from 'lucide-react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Notification Store
 export const useNotificationStore = create(
@@ -12,7 +13,7 @@ export const useNotificationStore = create(
 
             addNotification: (notification) => {
                 const newNotification = {
-                    id: Date.now(),
+                    id: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
                     read: false,
                     ...notification,
@@ -114,17 +115,22 @@ export default function NotificationBell() {
             >
                 <Bell className="w-5 h-5 text-slate-400" />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                    <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-[var(--hud-text)] text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
                         {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                 )}
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-xl overflow-hidden z-50 scale-in">
-                    {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-80 bg-[var(--hud-surface-elevated)] backdrop-blur-xl border border-[var(--hud-border)] rounded-xl shadow-xl overflow-hidden z-50"
+                >                    {/* Header */}
                     <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700/50">
-                        <h3 className="font-semibold text-white">Bildirimler</h3>
+                        <h3 className="font-semibold text-[var(--hud-text)]">Bildirimler</h3>
                         <div className="flex items-center gap-2">
                             {unreadCount > 0 && (
                                 <button
@@ -167,7 +173,7 @@ export default function NotificationBell() {
                                         {typeIcons[notification.type]}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className={`text-sm font-medium ${!notification.read ? 'text-white' : 'text-slate-300'}`}>
+                                        <p className={`text-sm font-medium ${!notification.read ? 'text-[var(--hud-text)]' : 'text-slate-300'}`}>
                                             {notification.title}
                                         </p>
                                         {notification.message && (
@@ -188,7 +194,7 @@ export default function NotificationBell() {
                             ))
                         )}
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

@@ -11,12 +11,12 @@ Transformer tabanlı Intrusion Detection System.
     - Time-Series Transformer
 """
 
+import logging
+
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import layers, Model
-from typing import Tuple, Optional, List
-import logging
+from tensorflow.keras import Model, layers
 
 logger = logging.getLogger("TransformerIDS")
 
@@ -142,10 +142,12 @@ class TransformerClassifier(layers.Layer):
     def __init__(
         self,
         num_classes: int,
-        mlp_units: List[int] = [256, 128],
+        mlp_units: list[int] | None = None,
         dropout_rate: float = 0.2,
         **kwargs,
     ):
+        if mlp_units is None:
+            mlp_units = [256, 128]
         super().__init__(**kwargs)
         self.num_classes = num_classes
 
@@ -168,7 +170,7 @@ class TransformerClassifier(layers.Layer):
 
 
 def build_transformer_ids(
-    input_shape: Tuple[int, int],
+    input_shape: tuple[int, int],
     num_classes: int,
     d_model: int = 64,
     num_heads: int = 4,
@@ -221,7 +223,7 @@ def build_transformer_ids(
 
 
 def build_hybrid_cnn_transformer(
-    input_shape: Tuple[int, int],
+    input_shape: tuple[int, int],
     num_classes: int,
     conv_filters: int = 32,
     d_model: int = 64,
@@ -270,7 +272,7 @@ def build_hybrid_cnn_transformer(
 
 
 def build_informer_ids(
-    input_shape: Tuple[int, int],
+    input_shape: tuple[int, int],
     num_classes: int,
     d_model: int = 64,
     num_heads: int = 4,
@@ -321,7 +323,7 @@ def build_informer_ids(
 
 
 def create_transformer_model(
-    model_type: str, input_shape: Tuple[int, int], num_classes: int, **kwargs
+    model_type: str, input_shape: tuple[int, int], num_classes: int, **kwargs
 ) -> Model:
     """
     Transformer model factory

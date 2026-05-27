@@ -11,10 +11,11 @@ PSO:
 Ref: Makaledeki PSO-LSTMIDS yaklaşımı
 """
 
-import numpy as np
-from typing import Dict, List, Callable, Tuple, Optional
 import random
 import time
+from collections.abc import Callable
+
+import numpy as np
 
 
 class PSOOptimizer:
@@ -35,7 +36,7 @@ class PSOOptimizer:
     def __init__(
         self,
         objective_function: Callable,
-        search_space: Optional[Dict] = None,
+        search_space: dict | None = None,
         n_particles: int = 20,
         max_iterations: int = 30,
         w: float = 0.7,  # Inertia weight
@@ -64,15 +65,15 @@ class PSOOptimizer:
             [self.search_space[p][1] for p in self.param_names]
         )
 
-        self.best_params: Dict = {}
+        self.best_params: dict = {}
         self.best_score: float = float("-inf") if not minimize else float("inf")
-        self.history: List[Dict] = []
+        self.history: list[dict] = []
 
         if verbose:
             print("🐦 PSO Optimizer başlatıldı")
             print(f"   Particles: {n_particles}, Iterations: {max_iterations}")
 
-    def _decode(self, position: np.ndarray) -> Dict:
+    def _decode(self, position: np.ndarray) -> dict:
         params = {}
         for i, name in enumerate(self.param_names):
             _, _, dtype = self.search_space[name]
@@ -82,7 +83,7 @@ class PSOOptimizer:
                 params[name] = float(position[i])
         return params
 
-    def optimize(self) -> Tuple[Dict, float]:
+    def optimize(self) -> tuple[dict, float]:
         print("\n🚀 PSO Optimizasyonu başlıyor...")
         start_time = time.time()
 
@@ -107,7 +108,7 @@ class PSOOptimizer:
             params = self._decode(positions[i])
             try:
                 score = self.objective_function(params)
-            except:
+            except Exception:
                 score = float("-inf") if not self.minimize else float("inf")
 
             if self.minimize:
@@ -147,7 +148,7 @@ class PSOOptimizer:
                 params = self._decode(positions[i])
                 try:
                     score = self.objective_function(params)
-                except:
+                except Exception:
                     continue
 
                 # Update personal best
@@ -199,7 +200,7 @@ class JAYAOptimizer:
     def __init__(
         self,
         objective_function: Callable,
-        search_space: Optional[Dict] = None,
+        search_space: dict | None = None,
         population_size: int = 20,
         max_iterations: int = 30,
         minimize: bool = False,
@@ -222,13 +223,13 @@ class JAYAOptimizer:
             [self.search_space[p][1] for p in self.param_names]
         )
 
-        self.best_params: Dict = {}
+        self.best_params: dict = {}
         self.best_score: float = float("-inf") if not minimize else float("inf")
 
         if verbose:
             print("🎯 JAYA Optimizer başlatıldı (parametresiz!)")
 
-    def _decode(self, solution: np.ndarray) -> Dict:
+    def _decode(self, solution: np.ndarray) -> dict:
         params = {}
         for i, name in enumerate(self.param_names):
             _, _, dtype = self.search_space[name]
@@ -238,7 +239,7 @@ class JAYAOptimizer:
                 params[name] = float(solution[i])
         return params
 
-    def optimize(self) -> Tuple[Dict, float]:
+    def optimize(self) -> tuple[dict, float]:
         print("\n🚀 JAYA Optimizasyonu başlıyor...")
         start_time = time.time()
 
@@ -253,7 +254,7 @@ class JAYAOptimizer:
             params = self._decode(population[i])
             try:
                 fitness[i] = self.objective_function(params)
-            except:
+            except Exception:
                 fitness[i] = float("-inf") if not self.minimize else float("inf")
 
         # Main loop
@@ -288,7 +289,7 @@ class JAYAOptimizer:
                 params = self._decode(new_solution)
                 try:
                     new_fitness = self.objective_function(params)
-                except:
+                except Exception:
                     continue
 
                 # Greedy selection
@@ -345,6 +346,6 @@ if __name__ == "__main__":
     jaya = JAYAOptimizer(test_func, space, population_size=10, max_iterations=10)
     jaya_params, jaya_score = jaya.optimize()
 
-    print(f"\n📊 Sonuçlar:")
+    print("\n📊 Sonuçlar:")
     print(f"   PSO:  {pso_params} → {pso_score}")
     print(f"   JAYA: {jaya_params} → {jaya_score}")

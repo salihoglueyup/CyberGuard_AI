@@ -161,7 +161,7 @@ def load_bot_iot(data_dir: Path, max_samples: int = 50000):
             df = pd.read_csv(f, low_memory=False, nrows=max_samples // 5)
             df["label"] = 0 if label == "benign" else 1
             dfs.append(df)
-        except:
+        except Exception:
             continue
 
     if not dfs:

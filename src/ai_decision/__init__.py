@@ -58,12 +58,12 @@ def get_decision_engine():
 
 # Direct imports for convenience (will work after all modules are loaded)
 try:
-    from .zero_day_detector import ZeroDayDetector, HybridIDSPipeline
+    from .decision_engine import AIDecisionEngine
     from .explainer import AttackExplainer
+    from .llm_reporter import LLMReporter
     from .meta_classifier import MetaModelSelector
     from .rl_threshold import RLThresholdAgent
-    from .llm_reporter import LLMReporter
-    from .decision_engine import AIDecisionEngine
+    from .zero_day_detector import HybridIDSPipeline, ZeroDayDetector
 except ImportError as e:
     import logging
 

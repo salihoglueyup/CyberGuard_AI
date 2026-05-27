@@ -11,14 +11,13 @@ SHAP ve LIME ile model açıklanabilirliği.
     - Per-prediction açıklamalar
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import numpy as np
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime
-import logging
+
+import numpy as np
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -33,7 +32,7 @@ class ExplainabilityEngine:
     Explainable AI Engine - SHAP ve LIME entegrasyonu
     """
 
-    def __init__(self, model=None, feature_names: List[str] = None):
+    def __init__(self, model=None, feature_names: list[str] = None):
         self.model = model
         self.feature_names = feature_names or []
         self.shap_values = None
@@ -43,7 +42,7 @@ class ExplainabilityEngine:
         """Model set et"""
         self.model = model
 
-    def set_feature_names(self, names: List[str]):
+    def set_feature_names(self, names: list[str]):
         """Feature isimlerini set et"""
         self.feature_names = names
 
@@ -54,7 +53,7 @@ class ExplainabilityEngine:
         X: np.ndarray,
         background_samples: int = 100,
         method: str = "deep",  # deep, kernel, tree
-    ) -> Dict:
+    ) -> dict:
         """
         SHAP değerlerini hesapla
 
@@ -146,7 +145,7 @@ class ExplainabilityEngine:
 
     def compute_lime_explanation(
         self, instance: np.ndarray, num_features: int = 10, num_samples: int = 1000
-    ) -> Dict:
+    ) -> dict:
         """
         Tek bir instance için LIME açıklaması
 
@@ -228,7 +227,7 @@ class ExplainabilityEngine:
 
     def compute_permutation_importance(
         self, X: np.ndarray, y: np.ndarray, n_repeats: int = 5
-    ) -> Dict:
+    ) -> dict:
         """
         Permutation feature importance hesapla
         """
@@ -282,7 +281,7 @@ class ExplainabilityEngine:
                 )
             )
 
-            print(f"✅ Permutation importance tamamlandı")
+            print("✅ Permutation importance tamamlandı")
 
             return {
                 "method": "permutation",
@@ -297,7 +296,7 @@ class ExplainabilityEngine:
 
     # ============= Visualization Data =============
 
-    def get_visualization_data(self, top_n: int = 15) -> Dict:
+    def get_visualization_data(self, top_n: int = 15) -> dict:
         """
         Görselleştirme için veri hazırla
         """
@@ -343,8 +342,8 @@ class ExplainabilityEngine:
 
 
 def explain_prediction(
-    model, instance: np.ndarray, feature_names: List[str] = None, method: str = "shap"
-) -> Dict:
+    model, instance: np.ndarray, feature_names: list[str] = None, method: str = "shap"
+) -> dict:
     """
     Tek bir prediction için açıklama
     """
@@ -363,9 +362,9 @@ def get_feature_importance(
     model,
     X: np.ndarray,
     y: np.ndarray,
-    feature_names: List[str] = None,
+    feature_names: list[str] = None,
     method: str = "permutation",
-) -> Dict:
+) -> dict:
     """
     Feature importance hesapla
     """
@@ -380,7 +379,7 @@ def get_feature_importance(
 
 
 # Singleton
-_xai_instance: Optional[ExplainabilityEngine] = None
+_xai_instance: ExplainabilityEngine | None = None
 
 
 def get_xai_engine() -> ExplainabilityEngine:
@@ -396,7 +395,6 @@ if __name__ == "__main__":
     print("🧪 XAI Module Test\n")
 
     # Dummy model and data
-    import tensorflow as tf
     from tensorflow import keras
     from tensorflow.keras import layers
 

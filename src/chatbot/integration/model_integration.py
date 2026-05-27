@@ -9,13 +9,14 @@ Tüm IDS modellerini AI Assistant'a entegre eder
     - Model karşılaştırma
 """
 
+import json
 import os
 import sys
-import json
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+import numpy as np
 
 # src/chatbot/model_integration.py -> parent.parent = src -> parent = project_root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -24,7 +25,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 # Model cache
-_model_cache: Dict[str, Any] = {}
+_model_cache: dict[str, Any] = {}
 
 
 class AIModelIntegration:
@@ -67,7 +68,7 @@ class AIModelIntegration:
                 try:
                     with open(params_file) as f:
                         params = json.load(f)
-                except:
+                except (json.JSONDecodeError, OSError):
                     pass
 
             self.available_models[model_name] = {
@@ -92,7 +93,7 @@ class AIModelIntegration:
                     data = json.load(f)
                     for k, v in data.items():
                         self.training_results[f"paper_{k}"] = v
-            except:
+            except (json.JSONDecodeError, OSError):
                 pass
 
         # Saldırı bazlı sonuçlar
@@ -103,7 +104,7 @@ class AIModelIntegration:
                     data = json.load(f)
                     for k, v in data.items():
                         self.training_results[f"attack_{k}"] = v
-            except:
+            except (json.JSONDecodeError, OSError):
                 pass
 
         # Eski SSA sonuçları
@@ -112,10 +113,10 @@ class AIModelIntegration:
             try:
                 with open(ssa_results) as f:
                     self.training_results.update(json.load(f))
-            except:
+            except (json.JSONDecodeError, OSError):
                 pass
 
-    def get_available_models(self) -> List[Dict]:
+    def get_available_models(self) -> list[dict]:
         """Mevcut modelleri listele"""
         return list(self.available_models.values())
 
@@ -166,7 +167,6 @@ class AIModelIntegration:
             return None
 
         try:
-            import tensorflow as tf
             from tensorflow import keras
 
             model_path = self.available_models[model_name]["path"]
@@ -181,7 +181,7 @@ class AIModelIntegration:
 
     def predict_with_model(
         self, model_name: str, features: np.ndarray
-    ) -> Optional[Dict]:
+    ) -> dict | None:
         """Belirli bir model ile prediction yap"""
         model = self.load_model(model_name)
         if model is None:
@@ -231,8 +231,8 @@ class AIModelIntegration:
             return None
 
     def ensemble_predict(
-        self, features: np.ndarray, model_names: List[str] = None
-    ) -> Optional[Dict]:
+        self, features: np.ndarray, model_names: list[str] = None
+    ) -> dict | None:
         """Tüm modeller veya belirli modeller ile ensemble prediction"""
         if model_names is None:
             model_names = list(self.available_models.keys())
@@ -283,13 +283,13 @@ class AIModelIntegration:
 
         return "\n".join(comparison)
 
-    def analyze_attack_with_models(self, attack_data: Dict) -> str:
+    def analyze_attack_with_models(self, attack_data: dict) -> str:
         """Bir saldırıyı tüm modellerle analiz et"""
         # Feature extraction (basitleştirilmiş)
         features = np.random.randn(10, 41).astype(np.float32)  # Placeholder
 
         results = []
-        results.append(f"🔍 **SALDIRI ANALİZİ:**\n")
+        results.append("🔍 **SALDIRI ANALİZİ:**\n")
         results.append(f"Kaynak IP: {attack_data.get('source_ip', 'N/A')}")
         results.append(f"Saldırı Tipi: {attack_data.get('attack_type', 'N/A')}")
         results.append(f"Şiddet: {attack_data.get('severity', 'N/A')}\n")

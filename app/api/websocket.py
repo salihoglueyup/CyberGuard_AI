@@ -3,18 +3,19 @@ WebSocket Server for Real-time Attack Broadcasting
 Connects Globe3D, Attack Map and ML Predictions
 """
 
-from fastapi import WebSocket, WebSocketDisconnect
-from typing import List, Dict, Any
 import asyncio
 import json
 from datetime import datetime
+from typing import Any
+
+from fastapi import WebSocket, WebSocketDisconnect
 
 
 class ConnectionManager:
     """Manages WebSocket connections for real-time updates"""
 
     def __init__(self):
-        self.active_connections: List[WebSocket] = []
+        self.active_connections: list[WebSocket] = []
         self.connection_count = 0
         self.max_connections = 100
 
@@ -36,7 +37,7 @@ class ConnectionManager:
             self.active_connections.remove(websocket)
             print(f"[WS] Disconnected. Total: {len(self.active_connections)}")
 
-    async def broadcast(self, message: Dict[str, Any]):
+    async def broadcast(self, message: dict[str, Any]):
         """Broadcast message to all connected clients"""
         if not self.active_connections:
             return
@@ -55,7 +56,7 @@ class ConnectionManager:
             self.disconnect(conn)
 
     async def broadcast_attack(
-        self, attack: Dict[str, Any], ml_prediction: Dict[str, Any] = None
+        self, attack: dict[str, Any], ml_prediction: dict[str, Any] = None
     ):
         """Broadcast an attack event with ML prediction"""
         message = {
@@ -73,7 +74,7 @@ class ConnectionManager:
         }
         await self.broadcast(message)
 
-    async def broadcast_stats(self, stats: Dict[str, Any]):
+    async def broadcast_stats(self, stats: dict[str, Any]):
         """Broadcast attack statistics"""
         message = {
             "type": "stats",
@@ -82,7 +83,7 @@ class ConnectionManager:
         }
         await self.broadcast(message)
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get WebSocket server status"""
         return {
             "active_connections": len(self.active_connections),

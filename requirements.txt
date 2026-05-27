@@ -59,8 +59,14 @@ pyyaml
 requests
 httpx
 psutil
+slowapi
+prometheus-fastapi-instrumentator>=7.0.0
 
 # ============================================
+# Testing
+# ============================================
+pytest
+
 # Database
 # ============================================
 # SQLite (built-in with Python)

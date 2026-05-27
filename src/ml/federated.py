@@ -10,17 +10,16 @@ Privacy-preserving dağıtık öğrenme.
     - Secure aggregation
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
-import logging
-import copy
+from pathlib import Path
+
+import numpy as np
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -48,8 +47,8 @@ class FLClient:
     local_epochs: int = 1
     batch_size: int = 32
     current_round: int = 0
-    metrics: Dict = field(default_factory=dict)
-    weights: Optional[List[np.ndarray]] = None
+    metrics: dict = field(default_factory=dict)
+    weights: list[np.ndarray] | None = None
 
 
 @dataclass
@@ -58,9 +57,9 @@ class FLRound:
 
     round_id: int
     started_at: str
-    completed_at: Optional[str] = None
-    participating_clients: List[str] = field(default_factory=list)
-    aggregated_metrics: Dict = field(default_factory=dict)
+    completed_at: str | None = None
+    participating_clients: list[str] = field(default_factory=list)
+    aggregated_metrics: dict = field(default_factory=dict)
 
 
 class FederatedServer:
@@ -85,25 +84,25 @@ class FederatedServer:
         self.learning_rate = learning_rate
 
         self.global_model = None
-        self.clients: Dict[str, FLClient] = {}
-        self.rounds: List[FLRound] = []
+        self.clients: dict[str, FLClient] = {}
+        self.rounds: list[FLRound] = []
         self.current_round = 0
         self.is_training = False
 
         # Results
-        self.global_metrics_history: List[Dict] = []
+        self.global_metrics_history: list[dict] = []
 
-    def initialize_global_model(self, input_shape: Tuple, num_classes: int):
+    def initialize_global_model(self, input_shape: tuple, num_classes: int):
         """Global modeli başlat"""
         if self.model_fn:
             self.global_model = self.model_fn(input_shape, num_classes)
         else:
             self.global_model = self._default_model(input_shape, num_classes)
 
-        print(f"✅ Global model initialized")
+        print("✅ Global model initialized")
         self.global_model.summary()
 
-    def _default_model(self, input_shape: Tuple, num_classes: int):
+    def _default_model(self, input_shape: tuple, num_classes: int):
         """Varsayılan model"""
         from tensorflow import keras
         from tensorflow.keras import layers
@@ -144,13 +143,13 @@ class FederatedServer:
 
         return client
 
-    def get_global_weights(self) -> List[np.ndarray]:
+    def get_global_weights(self) -> list[np.ndarray]:
         """Global model ağırlıklarını al"""
         if self.global_model is None:
             return []
         return self.global_model.get_weights()
 
-    def set_global_weights(self, weights: List[np.ndarray]):
+    def set_global_weights(self, weights: list[np.ndarray]):
         """Global model ağırlıklarını set et"""
         if self.global_model:
             self.global_model.set_weights(weights)
@@ -161,7 +160,7 @@ class FederatedServer:
         X: np.ndarray,
         y: np.ndarray,
         validation_split: float = 0.1,
-    ) -> Dict:
+    ) -> dict:
         """
         Bir client'ı eğit (simulated)
         """
@@ -214,7 +213,7 @@ class FederatedServer:
             client.status = ClientStatus.FAILED
             return {"error": str(e)}
 
-    def aggregate_weights(self, client_ids: List[str]) -> List[np.ndarray]:
+    def aggregate_weights(self, client_ids: list[str]) -> list[np.ndarray]:
         """
         FedAvg: Weighted averaging of client weights
         """
@@ -255,7 +254,7 @@ class FederatedServer:
         return aggregated
 
     def run_round(
-        self, client_data: Dict[str, Tuple[np.ndarray, np.ndarray]]
+        self, client_data: dict[str, tuple[np.ndarray, np.ndarray]]
     ) -> FLRound:
         """
         Bir FL round çalıştır
@@ -318,6 +317,8 @@ class FederatedServer:
                 **fl_round.aggregated_metrics,
             }
         )
+        if len(self.global_metrics_history) > 1000:
+            self.global_metrics_history = self.global_metrics_history[-500:]
 
         print(f"\n   📊 Round {self.current_round} completed")
         print(
@@ -330,7 +331,7 @@ class FederatedServer:
         self,
         client_data_generator,  # Callable that returns client data
         num_rounds: int = None,
-    ) -> Dict:
+    ) -> dict:
         """
         Tam FL eğitimi
         """
@@ -340,7 +341,7 @@ class FederatedServer:
         self.is_training = True
 
         print(f"\n{'='*60}")
-        print(f"🚀 Federated Learning Training")
+        print("🚀 Federated Learning Training")
         print(f"{'='*60}")
         print(f"   Rounds: {num_rounds}")
         print(f"   Clients per round: {self.clients_per_round}")
@@ -360,7 +361,7 @@ class FederatedServer:
 
         return self.get_training_summary()
 
-    def get_training_summary(self) -> Dict:
+    def get_training_summary(self) -> dict:
         """Eğitim özeti"""
         return {
             "total_rounds": len(self.rounds),
@@ -393,7 +394,7 @@ class FederatedServer:
             self.global_model.save(path)
             print(f"💾 Global model saved: {path}")
 
-    def evaluate_global_model(self, X: np.ndarray, y: np.ndarray) -> Dict:
+    def evaluate_global_model(self, X: np.ndarray, y: np.ndarray) -> dict:
         """Global modeli değerlendir"""
         if self.global_model is None:
             return {"error": "Model initialized değil"}
@@ -404,7 +405,7 @@ class FederatedServer:
 
 
 # Singleton
-_fl_server: Optional[FederatedServer] = None
+_fl_server: FederatedServer | None = None
 
 
 def get_fl_server() -> FederatedServer:

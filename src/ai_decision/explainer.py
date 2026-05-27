@@ -12,12 +12,12 @@ SHAP ve Attention-based açıklamalar.
     - Human-readable explanations
 """
 
+import logging
 import os
 import sys
-import numpy as np
-from typing import Dict, List, Optional, Tuple, Union
 from datetime import datetime
-import logging
+
+import numpy as np
 
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -177,7 +177,7 @@ class AttackExplainer:
     def __init__(
         self,
         model=None,
-        feature_names: List[str] = None,
+        feature_names: list[str] = None,
         use_shap: bool = True,
     ):
         """
@@ -204,7 +204,7 @@ class AttackExplainer:
         self,
         X: np.ndarray,
         method: str = "gradient",  # gradient, permutation, shap
-    ) -> Dict:
+    ) -> dict:
         """
         Feature importance hesapla
 
@@ -232,7 +232,7 @@ class AttackExplainer:
         else:
             return self._shap_importance(X)
 
-    def _gradient_importance(self, X: np.ndarray) -> Dict:
+    def _gradient_importance(self, X: np.ndarray) -> dict:
         """Gradient-based importance (fast)"""
         try:
             import tensorflow as tf
@@ -259,7 +259,7 @@ class AttackExplainer:
             logger.warning(f"Gradient importance failed: {e}")
             return {}
 
-    def _permutation_importance(self, X: np.ndarray) -> Dict:
+    def _permutation_importance(self, X: np.ndarray) -> dict:
         """Permutation importance (slow but accurate)"""
         try:
             baseline_pred = self.model.predict(X, verbose=0)
@@ -286,7 +286,7 @@ class AttackExplainer:
             logger.warning(f"Permutation importance failed: {e}")
             return {}
 
-    def _shap_importance(self, X: np.ndarray) -> Dict:
+    def _shap_importance(self, X: np.ndarray) -> dict:
         """SHAP values (most accurate)"""
         try:
             import shap
@@ -321,7 +321,7 @@ class AttackExplainer:
         X: np.ndarray,
         attack_type: str,
         top_n: int = 5,
-    ) -> Dict:
+    ) -> dict:
         """
         Saldırı için human-readable açıklama
 
@@ -347,11 +347,15 @@ class AttackExplainer:
         evidence = []
         for feat_name, imp in top_features:
             if imp > 0.05:  # En az %5 önemli
-                direction = (
-                    "↑"
-                    if np.mean(X[:, self.feature_names.index(feat_name)]) > 0
-                    else "↓"
-                )
+                try:
+                    feat_idx = self.feature_names.index(feat_name)
+                    direction = (
+                        "↑"
+                        if np.mean(X[:, feat_idx]) > 0
+                        else "↓"
+                    )
+                except (ValueError, IndexError):
+                    direction = "?"
                 evidence.append(f"{feat_name} {direction} ({imp*100:.1f}%)")
 
         # Natural language explanation
@@ -373,7 +377,7 @@ class AttackExplainer:
             "timestamp": datetime.now().isoformat(),
         }
 
-    def _check_pattern_match(self, importance: Dict, pattern: Dict) -> float:
+    def _check_pattern_match(self, importance: dict, pattern: dict) -> float:
         """Pattern match skoru hesapla"""
         if not pattern.get("key_features"):
             return 0.5
@@ -386,8 +390,8 @@ class AttackExplainer:
     def _generate_explanation(
         self,
         attack_type: str,
-        evidence: List[str],
-        pattern: Dict,
+        evidence: list[str],
+        pattern: dict,
     ) -> str:
         """Natural language explanation oluştur"""
 
@@ -416,7 +420,7 @@ class AttackExplainer:
 
         return f"{explanation} {rec}"
 
-    def get_attention_weights(self, model, X: np.ndarray) -> Optional[np.ndarray]:
+    def get_attention_weights(self, model, X: np.ndarray) -> np.ndarray | None:
         """
         Attention-based modelden weight'leri çıkar
 
@@ -452,7 +456,7 @@ class AttackExplainer:
             logger.warning(f"Could not extract attention weights: {e}")
             return None
 
-    def visualize_explanation(self, explanation: Dict) -> Dict:
+    def visualize_explanation(self, explanation: dict) -> dict:
         """Görselleştirme için veri hazırla"""
         return {
             "chart_data": {
@@ -479,8 +483,8 @@ def explain_attack(
     X: np.ndarray,
     attack_type: str,
     model=None,
-    feature_names: List[str] = None,
-) -> Dict:
+    feature_names: list[str] = None,
+) -> dict:
     """
     Quick attack explanation
 
@@ -511,7 +515,7 @@ if __name__ == "__main__":
 
     print(f"Attack Type: {explanation['attack_type']}")
     print(f"Description: {explanation['description']}")
-    print(f"Top Features:")
+    print("Top Features:")
     for f in explanation["top_features"]:
         print(f"  - {f['name']}: {f['importance']*100:.1f}%")
     print(f"\nExplanation: {explanation['explanation']}")

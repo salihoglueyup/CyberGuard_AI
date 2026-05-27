@@ -5,13 +5,11 @@ Database'deki saldırıları vektörleştir ve benzer saldırı analizi
 
 import os
 import sqlite3
+
 import pandas as pd
-from typing import List, Dict
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-
-
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 class AttackVectorManager:
@@ -42,7 +40,7 @@ class AttackVectorManager:
                 collection_name="attack_vectors"
             )
             print(f"✅ Attack VectorStore yüklendi: {self._get_vector_count()} saldırı")
-        except:
+        except Exception:
             self.vectorstore = None
             print("⚠️ Attack VectorStore oluşturuluyor...")
 
@@ -50,7 +48,7 @@ class AttackVectorManager:
         """Vektör sayısı"""
         try:
             return len(self.vectorstore.get()['ids'])
-        except:
+        except (AttributeError, KeyError, TypeError):
             return 0
 
     def vectorize_attacks(self, limit: int = 1000) -> bool:
@@ -67,16 +65,16 @@ class AttackVectorManager:
             # Database'den saldırıları çek
             conn = sqlite3.connect(self.db_path)
 
-            query = f"""
+            query = """
             SELECT 
                 id, timestamp, attack_type, source_ip, destination_ip, 
                 port, severity, status, description, blocked
             FROM attacks 
             ORDER BY timestamp DESC 
-            LIMIT {limit}
+            LIMIT ?
             """
 
-            df = pd.read_sql_query(query, conn)
+            df = pd.read_sql_query(query, conn, params=(int(limit),))
             conn.close()
 
             if len(df) == 0:
@@ -138,7 +136,12 @@ Zaman: {row['timestamp']}
                     collection_name="attack_vectors"
                 )
 
-            self.vectorstore.persist()
+            # Modern ChromaDB auto-persists; only call persist() if available (legacy versions)
+            if hasattr(self.vectorstore, 'persist'):
+                try:
+                    self.vectorstore.persist()
+                except (TypeError, AttributeError):
+                    pass  # Auto-persisting ChromaDB version
 
             print(f"✅ {len(documents)} saldırı vektörleştirildi!")
             return True
@@ -149,7 +152,7 @@ Zaman: {row['timestamp']}
             traceback.print_exc()
             return False
 
-    def find_similar_attacks(self, query: str, k: int = 5) -> List[Dict]:
+    def find_similar_attacks(self, query: str, k: int = 5) -> list[dict]:
         """
         Benzer saldırıları bul
 
@@ -184,7 +187,7 @@ Zaman: {row['timestamp']}
             print(f"❌ Arama hatası: {e}")
             return []
 
-    def analyze_attack_pattern(self, attack_type: str) -> Dict:
+    def analyze_attack_pattern(self, attack_type: str) -> dict:
         """
         Belirli bir saldırı türü için pattern analizi
 
@@ -262,7 +265,7 @@ Zaman: {row['timestamp']}
         except Exception as e:
             print(f"❌ Silme hatası: {e}")
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """İstatistikler"""
         try:
             return {
@@ -270,7 +273,7 @@ Zaman: {row['timestamp']}
                 'vectorstore_active': self.vectorstore is not None,
                 'db_path': self.db_path
             }
-        except:
+        except Exception:
             return {
                 'total_vectors': 0,
                 'vectorstore_active': False,

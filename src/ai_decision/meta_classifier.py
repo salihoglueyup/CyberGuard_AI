@@ -14,13 +14,13 @@ Flow:
     Traffic → Context Features → Meta-Classifier → Best Model Selection
 """
 
+import json
+import logging
 import os
 import sys
-import numpy as np
-from typing import Dict, List, Optional, Tuple, Callable, Union
 from datetime import datetime
-import logging
-import json
+
+import numpy as np
 
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +30,7 @@ sys.path.insert(0, PROJECT_ROOT)
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
 
     TF_AVAILABLE = True
 except ImportError:
@@ -175,7 +175,7 @@ class MetaModelSelector:
 
     def __init__(
         self,
-        models: Dict[str, keras.Model] = None,
+        models: dict[str, keras.Model] = None,
         use_learned_selector: bool = True,
     ):
         """
@@ -187,12 +187,12 @@ class MetaModelSelector:
         self.use_learned = use_learned_selector
 
         self.context_extractor = TrafficContextExtractor()
-        self.selector_model: Optional[keras.Model] = None
+        self.selector_model: keras.Model | None = None
 
         # Performance tracking
         self.performance_history = {name: [] for name in self.MODEL_TYPES}
 
-        logger.info(f"🎯 MetaModelSelector initialized")
+        logger.info("🎯 MetaModelSelector initialized")
         logger.info(f"   Models: {list(self.models.keys())}")
         logger.info(f"   Learned selector: {use_learned_selector}")
 
@@ -238,7 +238,7 @@ class MetaModelSelector:
         y_train: np.ndarray,
         epochs: int = 50,
         batch_size: int = 32,
-    ) -> Dict:
+    ) -> dict:
         """
         Meta-classifier'ı eğit
 
@@ -276,7 +276,7 @@ class MetaModelSelector:
         self,
         X: np.ndarray,
         return_all: bool = False,
-    ) -> Union[str, Dict]:
+    ) -> str | dict:
         """
         Traffic için en uygun modeli seç
 
@@ -292,7 +292,7 @@ class MetaModelSelector:
         else:
             return self._heuristic_selection(X, return_all)
 
-    def _learned_selection(self, X: np.ndarray, return_all: bool) -> Union[str, Dict]:
+    def _learned_selection(self, X: np.ndarray, return_all: bool) -> str | dict:
         """Öğrenilmiş selector ile seçim"""
         context = self.context_extractor.extract(X)
         probs = self.selector_model.predict(context, verbose=0)
@@ -308,7 +308,7 @@ class MetaModelSelector:
         best_idx = np.argmax(avg_probs)
         return self.MODEL_TYPES[best_idx]
 
-    def _heuristic_selection(self, X: np.ndarray, return_all: bool) -> Union[str, Dict]:
+    def _heuristic_selection(self, X: np.ndarray, return_all: bool) -> str | dict:
         """Heuristic-based model selection"""
         context = self.context_extractor.extract(X)
         avg_context = np.mean(context, axis=0)
@@ -344,7 +344,7 @@ class MetaModelSelector:
 
         return max(scores, key=scores.get)
 
-    def predict_with_selection(self, X: np.ndarray) -> Dict:
+    def predict_with_selection(self, X: np.ndarray) -> dict:
         """
         Model seç ve tahmin yap
 
@@ -412,7 +412,7 @@ class MetaModelSelector:
                 -1000:
             ]
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Selector istatistikleri"""
         stats = {
             "registered_models": list(self.models.keys()),
@@ -456,7 +456,7 @@ class MetaModelSelector:
     @classmethod
     def load(cls, path: str) -> "MetaModelSelector":
         """Selector'ı yükle"""
-        with open(os.path.join(path, "metadata.json"), "r") as f:
+        with open(os.path.join(path, "metadata.json")) as f:
             metadata = json.load(f)
 
         selector = cls(use_learned_selector=metadata["use_learned"])
@@ -473,7 +473,7 @@ class MetaModelSelector:
 
 
 def create_meta_selector(
-    models: Dict[str, keras.Model] = None,
+    models: dict[str, keras.Model] = None,
     use_learned: bool = False,
 ) -> MetaModelSelector:
     """Create meta selector with optional models"""
@@ -507,7 +507,7 @@ if __name__ == "__main__":
 
     # Test all scores
     all_scores = selector.select_model(X_simple, return_all=True)
-    print(f"\nAll model scores for simple traffic:")
+    print("\nAll model scores for simple traffic:")
     for name, score in sorted(all_scores.items(), key=lambda x: x[1], reverse=True):
         print(f"  {name}: {score*100:.1f}%")
 

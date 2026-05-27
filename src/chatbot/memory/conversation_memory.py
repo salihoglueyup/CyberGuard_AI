@@ -11,14 +11,13 @@ SQLite tabanlı kalıcı konuşma hafızası.
     - Context caching
 """
 
-import os
 import json
-import sqlite3
-from pathlib import Path
-from typing import Optional, Dict, List, Any
-from datetime import datetime, timedelta
-from dataclasses import dataclass, asdict
 import logging
+import sqlite3
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 DB_PATH = PROJECT_ROOT / "data" / "conversation_memory.db"
@@ -30,13 +29,13 @@ logger = logging.getLogger("ConversationMemory")
 class Message:
     """Chat mesajı"""
 
-    id: Optional[int]
+    id: int | None
     session_id: str
     role: str  # user, assistant, system
     content: str
-    provider: Optional[str]
-    model: Optional[str]
-    tokens: Optional[int]
+    provider: str | None
+    model: str | None
+    tokens: int | None
     created_at: str
 
 
@@ -45,12 +44,12 @@ class Session:
     """Konuşma oturumu"""
 
     id: str
-    user_id: Optional[str]
-    title: Optional[str]
+    user_id: str | None
+    title: str | None
     created_at: str
     updated_at: str
     message_count: int
-    provider: Optional[str]
+    provider: str | None
 
 
 class ConversationMemory:
@@ -58,7 +57,7 @@ class ConversationMemory:
     Kalıcı Konuşma Hafızası
     """
 
-    def __init__(self, db_path: Optional[str] = None):
+    def __init__(self, db_path: str | None = None):
         self.db_path = db_path or str(DB_PATH)
 
         # Ensure directory exists
@@ -144,10 +143,10 @@ class ConversationMemory:
 
     def create_session(
         self,
-        session_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        title: Optional[str] = None,
-        provider: Optional[str] = None,
+        session_id: str | None = None,
+        user_id: str | None = None,
+        title: str | None = None,
+        provider: str | None = None,
     ) -> Session:
         """Yeni oturum oluştur"""
         import uuid
@@ -176,7 +175,7 @@ class ConversationMemory:
             provider=provider,
         )
 
-    def get_session(self, session_id: str) -> Optional[Session]:
+    def get_session(self, session_id: str) -> Session | None:
         """Oturum getir"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -207,9 +206,9 @@ class ConversationMemory:
 
     def list_sessions(
         self,
-        user_id: Optional[str] = None,
+        user_id: str | None = None,
         limit: int = 20,
-    ) -> List[Session]:
+    ) -> list[Session]:
         """Oturumları listele"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -273,9 +272,9 @@ class ConversationMemory:
         session_id: str,
         role: str,
         content: str,
-        provider: Optional[str] = None,
-        model: Optional[str] = None,
-        tokens: Optional[int] = None,
+        provider: str | None = None,
+        model: str | None = None,
+        tokens: int | None = None,
     ) -> Message:
         """Mesaj ekle"""
         now = datetime.now().isoformat()
@@ -319,7 +318,7 @@ class ConversationMemory:
         self,
         session_id: str,
         limit: int = 50,
-    ) -> List[Message]:
+    ) -> list[Message]:
         """Oturum mesajlarını getir"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -356,7 +355,7 @@ class ConversationMemory:
         self,
         session_id: str,
         limit: int = 10,
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """LLM için mesaj geçmişi"""
         messages = self.get_messages(session_id, limit)
 
@@ -368,7 +367,7 @@ class ConversationMemory:
 
     # ============= Preferences =============
 
-    def get_preferences(self, user_id: str) -> Dict:
+    def get_preferences(self, user_id: str) -> dict:
         """Kullanıcı tercihlerini getir"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -396,7 +395,7 @@ class ConversationMemory:
             "response_style": "technical",
         }
 
-    def save_preferences(self, user_id: str, preferences: Dict):
+    def save_preferences(self, user_id: str, preferences: dict):
         """Kullanıcı tercihlerini kaydet"""
         now = datetime.now().isoformat()
 
@@ -438,7 +437,7 @@ class ConversationMemory:
             )
             conn.commit()
 
-    def get_cached_context(self, key: str) -> Optional[Any]:
+    def get_cached_context(self, key: str) -> Any | None:
         """Cache'den context al"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -470,7 +469,7 @@ class ConversationMemory:
 
 
 # Singleton
-_memory_instance: Optional[ConversationMemory] = None
+_memory_instance: ConversationMemory | None = None
 
 
 def get_memory() -> ConversationMemory:

@@ -5,12 +5,12 @@ LSTM + Dense Network tabanlı ağ anomali tespiti
 Dosya Yolu: src/network_detection/model.py
 """
 
-import os
 import json
-import pickle
-import numpy as np
-from typing import Dict, List, Optional
+import os
 from datetime import datetime
+
+import joblib
+import numpy as np
 
 try:
     from sklearn.ensemble import IsolationForest, RandomForestClassifier
@@ -76,7 +76,7 @@ class NetworkAnomalyModel:
                     n_estimators=100, contamination=0.1, random_state=42
                 )
 
-        print(f"🌐 Network Anomaly Model başlatıldı")
+        print("🌐 Network Anomaly Model başlatıldı")
         print(f"   Model tipi: {model_type}")
         print(f"   LSTM: {'Evet' if self.use_lstm else 'Hayır'}")
 
@@ -132,9 +132,9 @@ class NetworkAnomalyModel:
 
         # Model summary
         print("✅ Optimized LSTM-IDS modeli oluşturuldu!")
-        print(f"   📊 Conv1D: 30 filters, kernel=5")
-        print(f"   📊 LSTM: 120 units, dropout=0.2")
-        print(f"   📊 Dense: 512 units, sigmoid")
+        print("   📊 Conv1D: 30 filters, kernel=5")
+        print("   📊 LSTM: 120 units, dropout=0.2")
+        print("   📊 Dense: 512 units, sigmoid")
         print(f"   📊 Output: {len(self.ATTACK_TYPES)} classes")
 
     def train(
@@ -144,7 +144,7 @@ class NetworkAnomalyModel:
         epochs: int = 50,
         batch_size: int = 32,
         validation_split: float = 0.2,
-    ) -> Dict:
+    ) -> dict:
         """
         Modeli eğit
 
@@ -161,7 +161,7 @@ class NetworkAnomalyModel:
         if not SKLEARN_AVAILABLE:
             raise RuntimeError("scikit-learn yüklü değil!")
 
-        print(f"\n🎯 Eğitim başlıyor...")
+        print("\n🎯 Eğitim başlıyor...")
         print(f"   Samples: {len(X)}")
         print(f"   Features: {X.shape[1]}")
         print(f"   Classes: {len(np.unique(y))}")
@@ -186,7 +186,7 @@ class NetworkAnomalyModel:
 
         # LSTM eğit
         if self.use_lstm:
-            print(f"\n🧠 Optimized LSTM-IDS eğitiliyor...")
+            print("\n🧠 Optimized LSTM-IDS eğitiliyor...")
             print(f"   Epochs: {epochs}, Batch: {batch_size}")
 
             # LSTM için 3D shape gerekli (samples, timesteps, features)
@@ -216,7 +216,7 @@ class NetworkAnomalyModel:
         self.is_trained = True
         results["trained_at"] = datetime.now().isoformat()
 
-        print(f"\n✅ Eğitim tamamlandı!")
+        print("\n✅ Eğitim tamamlandı!")
 
         return results
 
@@ -236,7 +236,7 @@ class NetworkAnomalyModel:
                 return self.classifier.predict_proba(X_scaled)
             return self.classifier.predict(X_scaled)
 
-    def predict_single(self, features: List[float]) -> Dict:
+    def predict_single(self, features: list[float]) -> dict:
         """Tek örnek için tahmin"""
         X = np.array([features])
 
@@ -267,11 +267,11 @@ class NetworkAnomalyModel:
 
         # Classifier
         with open(os.path.join(model_dir, "classifier.pkl"), "wb") as f:
-            pickle.dump(self.classifier, f)
+            joblib.dump(self.classifier, f)
 
         # Scaler
         with open(os.path.join(model_dir, "scaler.pkl"), "wb") as f:
-            pickle.dump(self.scaler, f)
+            joblib.dump(self.scaler, f)
 
         # LSTM
         if self.use_lstm and self.lstm_model:
@@ -294,16 +294,16 @@ class NetworkAnomalyModel:
     @classmethod
     def load(cls, model_dir: str) -> "NetworkAnomalyModel":
         """Modeli yükle"""
-        with open(os.path.join(model_dir, "metadata.json"), "r") as f:
+        with open(os.path.join(model_dir, "metadata.json")) as f:
             metadata = json.load(f)
 
         instance = cls(model_type=metadata["model_type"], use_lstm=metadata["use_lstm"])
 
         with open(os.path.join(model_dir, "classifier.pkl"), "rb") as f:
-            instance.classifier = pickle.load(f)
+            instance.classifier = joblib.load(f)
 
         with open(os.path.join(model_dir, "scaler.pkl"), "rb") as f:
-            instance.scaler = pickle.load(f)
+            instance.scaler = joblib.load(f)
 
         lstm_path = os.path.join(model_dir, "lstm_model.h5")
         if os.path.exists(lstm_path) and TF_AVAILABLE:

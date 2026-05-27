@@ -12,10 +12,11 @@ Meta-heuristic ve klasik feature selection teknikleri.
     - Hybrid Selection
 """
 
-import numpy as np
-from typing import Tuple, Optional, List, Dict, Callable
-from dataclasses import dataclass
 import logging
+from collections.abc import Callable
+from dataclasses import dataclass
+
+import numpy as np
 
 logger = logging.getLogger("FeatureSelection")
 
@@ -24,9 +25,9 @@ logger = logging.getLogger("FeatureSelection")
 class FeatureSelectionResult:
     """Feature selection sonucu"""
 
-    selected_indices: List[int]
-    selected_names: List[str]
-    scores: Dict[str, float]
+    selected_indices: list[int]
+    selected_names: list[str]
+    scores: dict[str, float]
     n_original: int
     n_selected: int
     reduction_ratio: float
@@ -55,7 +56,7 @@ class MutualInformationSelector:
         self.scores_ = mutual_info_classif(X, y, random_state=self.random_state)
         return self
 
-    def get_selected_indices(self) -> List[int]:
+    def get_selected_indices(self) -> list[int]:
         """En iyi feature indekslerini döndür"""
         if self.scores_ is None:
             raise ValueError("fit() önce çağrılmalı")
@@ -122,7 +123,7 @@ class RFESelector:
 
         return self
 
-    def get_selected_indices(self) -> List[int]:
+    def get_selected_indices(self) -> list[int]:
         """Seçilen indeksler"""
         if self.selected_indices_ is None:
             raise ValueError("fit() önce çağrılmalı")
@@ -204,7 +205,7 @@ class PSOFeatureSelector:
         if fitness_func is None:
             fitness_func = self._default_fitness
 
-        print(f"🔄 PSO Feature Selection başlıyor...")
+        print("🔄 PSO Feature Selection başlıyor...")
         print(f"   Particles: {self.n_particles}, Iterations: {self.n_iterations}")
 
         for iteration in range(self.n_iterations):
@@ -271,8 +272,8 @@ class PSOFeatureSelector:
         mask: np.ndarray,
     ) -> float:
         """Default fitness: accuracy with penalty for many features"""
-        from sklearn.model_selection import cross_val_score
         from sklearn.ensemble import RandomForestClassifier
+        from sklearn.model_selection import cross_val_score
 
         if mask.sum() == 0:
             return 0
@@ -294,7 +295,7 @@ class PSOFeatureSelector:
 
         return accuracy - penalty
 
-    def get_selected_indices(self) -> List[int]:
+    def get_selected_indices(self) -> list[int]:
         """Seçilen feature indeksleri"""
         if self.best_position_ is None:
             raise ValueError("fit() önce çağrılmalı")
@@ -358,7 +359,7 @@ class SSAFeatureSelector:
         if fitness_func is None:
             fitness_func = self._default_fitness
 
-        print(f"🔄 SSA Feature Selection başlıyor...")
+        print("🔄 SSA Feature Selection başlıyor...")
 
         lb, ub = 0, 1  # Lower and upper bounds
 
@@ -418,8 +419,8 @@ class SSAFeatureSelector:
 
     def _default_fitness(self, X, y, mask):
         """Default fitness function"""
-        from sklearn.model_selection import cross_val_score
         from sklearn.ensemble import RandomForestClassifier
+        from sklearn.model_selection import cross_val_score
 
         if mask.sum() == 0:
             return 0
@@ -434,7 +435,7 @@ class SSAFeatureSelector:
 
         return scores.mean() - 0.001 * mask.sum()
 
-    def get_selected_indices(self) -> List[int]:
+    def get_selected_indices(self) -> list[int]:
         if self.best_position_ is None:
             raise ValueError("fit() önce çağrılmalı")
         return np.where(self.best_position_ > 0.5)[0].tolist()
@@ -454,7 +455,7 @@ def select_features(
     y: np.ndarray,
     method: str = "mutual_info",
     n_features: int = 20,
-    feature_names: List[str] = None,
+    feature_names: list[str] = None,
     **kwargs,
 ) -> FeatureSelectionResult:
     """

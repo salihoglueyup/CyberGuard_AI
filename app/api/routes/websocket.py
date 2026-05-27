@@ -3,11 +3,11 @@ WebSocket API - REAL DATA VERSION
 Real-time data streaming with psutil
 """
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from typing import List, Dict
-from datetime import datetime
 import asyncio
 import json
+from datetime import datetime
+
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 try:
     import psutil
@@ -18,11 +18,11 @@ except ImportError:
 
 router = APIRouter()
 
-connected_clients: List[WebSocket] = []
-event_subscribers: Dict[str, List[WebSocket]] = {}
+connected_clients: list[WebSocket] = []
+event_subscribers: dict[str, list[WebSocket]] = {}
 
 
-def get_system_metrics() -> Dict:
+def get_system_metrics() -> dict:
     if not PSUTIL_AVAILABLE:
         return {"error": "psutil not available"}
 
@@ -38,7 +38,7 @@ def get_system_metrics() -> Dict:
     }
 
 
-def get_security_metrics() -> Dict:
+def get_security_metrics() -> dict:
     # Collect from other modules
     return {
         "active_connections": len(connected_clients),
@@ -88,6 +88,10 @@ async def events_websocket(websocket: WebSocket):
         for subscribers in event_subscribers.values():
             if websocket in subscribers:
                 subscribers.remove(websocket)
+        # Prune empty subscriber lists to prevent memory leak
+        empty_keys = [k for k, v in event_subscribers.items() if not v]
+        for k in empty_keys:
+            del event_subscribers[k]
 
 
 @router.websocket("/ws/security")
@@ -117,7 +121,7 @@ async def get_status():
     }
 
 
-async def broadcast_event(event_type: str, data: Dict):
+async def broadcast_event(event_type: str, data: dict):
     """Broadcast event to all subscribers"""
     subscribers = event_subscribers.get(event_type, []) + event_subscribers.get(
         "all", []
@@ -131,12 +135,12 @@ async def broadcast_event(event_type: str, data: Dict):
     for ws in subscribers:
         try:
             await ws.send_json(message)
-        except:
+        except Exception:
             pass
 
 
 # Attack stream for Globe3D
-attack_stream_clients: List[WebSocket] = []
+attack_stream_clients: list[WebSocket] = []
 
 
 @router.websocket("/ws/attacks")
@@ -147,7 +151,7 @@ async def attacks_websocket(websocket: WebSocket):
 
     # Import ML predictor
     try:
-        from app.services.ml_predictor import predict_threat
+        from src.services.ml_predictor import predict_threat
 
         HAS_ML = True
     except ImportError:
@@ -155,7 +159,7 @@ async def attacks_websocket(websocket: WebSocket):
 
     # Import GeoIP
     try:
-        from app.services.geoip import lookup_ip, get_random_coords_in_country
+        from src.services.geoip import get_random_coords_in_country, lookup_ip
 
         HAS_GEOIP = True
     except ImportError:
@@ -195,14 +199,14 @@ async def attacks_websocket(websocket: WebSocket):
             attack_stream_clients.remove(websocket)
 
 
-async def broadcast_attack(attack: Dict):
+async def broadcast_attack(attack: dict):
     """Broadcast attack to all connected Globe3D clients"""
     if not attack_stream_clients:
         return
 
     # Add ML prediction
     try:
-        from app.services.ml_predictor import predict_threat
+        from src.services.ml_predictor import predict_threat
 
         ml_prediction = predict_threat(attack)
     except Exception:
@@ -214,7 +218,7 @@ async def broadcast_attack(attack: Dict):
 
     # Add GeoIP coordinates
     try:
-        from app.services.geoip import lookup_ip
+        from src.services.geoip import lookup_ip
 
         source_ip = attack.get("source", {}).get("ip", "")
         target_ip = attack.get("target", {}).get("ip", "")
@@ -248,7 +252,7 @@ async def broadcast_attack(attack: Dict):
         attack_stream_clients.remove(ws)
 
 
-def get_attack_stream_status() -> Dict:
+def get_attack_stream_status() -> dict:
     """Get attack stream status"""
     return {
         "connected_clients": len(attack_stream_clients),

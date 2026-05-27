@@ -12,20 +12,19 @@ Yöntemler:
 Ref: Makaledeki "Feature Selection" önerisi
 """
 
+
 import numpy as np
-from typing import Dict, List, Optional, Tuple
-from pathlib import Path
 
 try:
-    from sklearn.feature_selection import (
-        VarianceThreshold,
-        SelectKBest,
-        RFE,
-        chi2,
-        mutual_info_classif,
-        f_classif,
-    )
     from sklearn.ensemble import RandomForestClassifier
+    from sklearn.feature_selection import (
+        RFE,
+        SelectKBest,
+        VarianceThreshold,
+        chi2,
+        f_classif,
+        mutual_info_classif,
+    )
 
     SKLEARN_AVAILABLE = True
 except ImportError:
@@ -58,16 +57,16 @@ class FeatureSelector:
         self.verbose = verbose
 
         self.selector = None
-        self.selected_indices: Optional[np.ndarray] = None
-        self.feature_scores: Optional[np.ndarray] = None
-        self.feature_names: Optional[List[str]] = None
+        self.selected_indices: np.ndarray | None = None
+        self.feature_scores: np.ndarray | None = None
+        self.feature_names: list[str] | None = None
 
         if verbose:
-            print(f"🔍 Feature Selector başlatıldı")
+            print("🔍 Feature Selector başlatıldı")
             print(f"   Method: {method}, N features: {n_features}")
 
     def fit(
-        self, X: np.ndarray, y: np.ndarray, feature_names: List[str] = None
+        self, X: np.ndarray, y: np.ndarray, feature_names: list[str] = None
     ) -> "FeatureSelector":
         """Feature selection uygula"""
 
@@ -157,19 +156,19 @@ class FeatureSelector:
         return X[:, self.selected_indices]
 
     def fit_transform(
-        self, X: np.ndarray, y: np.ndarray, feature_names: List[str] = None
+        self, X: np.ndarray, y: np.ndarray, feature_names: list[str] = None
     ) -> np.ndarray:
         """Fit ve transform birlikte"""
         self.fit(X, y, feature_names)
         return self.transform(X)
 
-    def get_selected_features(self) -> List[str]:
+    def get_selected_features(self) -> list[str]:
         """Seçili feature isimlerini döndür"""
         if self.selected_indices is None or self.feature_names is None:
             return []
         return [self.feature_names[i] for i in self.selected_indices]
 
-    def get_feature_ranking(self) -> List[Tuple[str, float]]:
+    def get_feature_ranking(self) -> list[tuple[str, float]]:
         """Feature ranking döndür"""
         if self.feature_scores is None or self.feature_names is None:
             return []
@@ -206,7 +205,7 @@ def select_features(
     X_test: np.ndarray = None,
     method: str = "kbest",
     n_features: int = 50,
-) -> Tuple[np.ndarray, np.ndarray, FeatureSelector]:
+) -> tuple[np.ndarray, np.ndarray, FeatureSelector]:
     """
     Feature selection wrapper
 

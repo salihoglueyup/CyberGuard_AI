@@ -5,18 +5,18 @@ Visualization utilities
 Grafik ve görselleştirme fonksiyonları
 """
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-from typing import List, Dict, Tuple, Optional
 import warnings
+from datetime import datetime, timedelta
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
 # Plotly'yi opsiyonel yap
 try:
-    import plotly.graph_objects as go
     import plotly.express as px
+    import plotly.graph_objects as go
     from plotly.subplots import make_subplots
 
     PLOTLY_AVAILABLE = True
@@ -90,9 +90,9 @@ class Visualizer:
     # MATPLOTLIB VERSIONS
     # ========================================
 
-    def plot_attack_timeline_mpl(self, attacks: List[Dict],
+    def plot_attack_timeline_mpl(self, attacks: list[dict],
                                  title: str = "Attack Timeline",
-                                 figsize: Tuple = (12, 6)) -> plt.figure:
+                                 figsize: tuple = (12, 6)) -> plt.figure:
         """
         Saldırı zaman çizelgesi (Matplotlib)
 
@@ -135,10 +135,10 @@ class Visualizer:
 
         return fig
 
-    def plot_attack_distribution_mpl(self, attacks: List[Dict],
+    def plot_attack_distribution_mpl(self, attacks: list[dict],
                                      by: str = 'attack_type',
                                      title: str = "Attack Distribution",
-                                     figsize: Tuple = (10, 8)) -> plt.figure:
+                                     figsize: tuple = (10, 8)) -> plt.figure:
         """
         Saldırı dağılımı (Matplotlib pie chart)
 
@@ -194,10 +194,10 @@ class Visualizer:
 
         return fig
 
-    def plot_top_attackers_mpl(self, attacks: List[Dict],
+    def plot_top_attackers_mpl(self, attacks: list[dict],
                                top_n: int = 10,
                                title: str = "Top Attacker IPs",
-                               figsize: Tuple = (10, 6)) -> plt.figure:
+                               figsize: tuple = (10, 6)) -> plt.figure:
         """
         En çok saldıran IP'ler (Matplotlib bar chart)
 
@@ -244,9 +244,9 @@ class Visualizer:
         return fig
 
     def plot_confusion_matrix_mpl(self, cm: np.ndarray,
-                                  labels: List[str],
+                                  labels: list[str],
                                   title: str = "Confusion Matrix",
-                                  figsize: Tuple = (10, 8)) -> plt.figure:
+                                  figsize: tuple = (10, 8)) -> plt.figure:
         """
         Confusion matrix (Matplotlib)
 
@@ -296,10 +296,12 @@ class Visualizer:
 
         return fig
 
-    def plot_training_history_mpl(self, history: Dict,
-                                  metrics: List[str] = ['loss', 'accuracy'],
+    def plot_training_history_mpl(self, history: dict,
+                                  metrics: list[str] | None = None,
                                   title: str = "Training History",
-                                  figsize: Tuple = (14, 5)) -> plt.figure:
+                                  figsize: tuple = (14, 5)) -> plt.figure:
+        if metrics is None:
+            metrics = ['loss', 'accuracy']
         """
         Model eğitim geçmişi (Matplotlib)
 
@@ -342,7 +344,7 @@ class Visualizer:
         return fig
 
     def _create_empty_figure_mpl(self, message: str = "No data",
-                                 figsize: Tuple = (10, 6)) -> plt.figure:
+                                 figsize: tuple = (10, 6)) -> plt.figure:
         """Boş grafik oluştur (Matplotlib)"""
 
         fig, ax = plt.subplots(figsize=figsize)
@@ -365,23 +367,23 @@ class Visualizer:
     # UNIFIED API (Matplotlib veya Plotly)
     # ========================================
 
-    def plot_attack_timeline(self, attacks: List[Dict], **kwargs):
+    def plot_attack_timeline(self, attacks: list[dict], **kwargs):
         """Attack timeline (otomatik backend seçer)"""
         return self.plot_attack_timeline_mpl(attacks, **kwargs)
 
-    def plot_attack_distribution(self, attacks: List[Dict], **kwargs):
+    def plot_attack_distribution(self, attacks: list[dict], **kwargs):
         """Attack distribution (otomatik backend seçer)"""
         return self.plot_attack_distribution_mpl(attacks, **kwargs)
 
-    def plot_top_attackers(self, attacks: List[Dict], **kwargs):
+    def plot_top_attackers(self, attacks: list[dict], **kwargs):
         """Top attackers (otomatik backend seçer)"""
         return self.plot_top_attackers_mpl(attacks, **kwargs)
 
-    def plot_confusion_matrix(self, cm: np.ndarray, labels: List[str], **kwargs):
+    def plot_confusion_matrix(self, cm: np.ndarray, labels: list[str], **kwargs):
         """Confusion matrix (otomatik backend seçer)"""
         return self.plot_confusion_matrix_mpl(cm, labels, **kwargs)
 
-    def plot_training_history(self, history: Dict, **kwargs):
+    def plot_training_history(self, history: dict, **kwargs):
         """Training history (otomatik backend seçer)"""
         return self.plot_training_history_mpl(history, **kwargs)
 

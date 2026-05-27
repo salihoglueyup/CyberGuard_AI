@@ -11,16 +11,17 @@ Otomatik model seçimi ve hyperparameter tuning.
     - Best model seçimi
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Any, Callable
-from datetime import datetime
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
-import logging
+from pathlib import Path
+
+import numpy as np
 
 # Suppress TensorFlow warnings
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -50,13 +51,13 @@ class ModelType(Enum):
 class HyperparameterSpace:
     """Hyperparameter arama uzayı"""
 
-    lstm_units: List[int] = field(default_factory=lambda: [64, 128, 256])
-    dense_units: List[int] = field(default_factory=lambda: [256, 512])
-    dropout_rate: List[float] = field(default_factory=lambda: [0.2, 0.3, 0.5])
-    learning_rate: List[float] = field(default_factory=lambda: [0.001, 0.0001])
-    batch_size: List[int] = field(default_factory=lambda: [32, 64, 128])
-    conv_filters: List[int] = field(default_factory=lambda: [16, 32, 64])
-    kernel_size: List[int] = field(default_factory=lambda: [3, 5, 7])
+    lstm_units: list[int] = field(default_factory=lambda: [64, 128, 256])
+    dense_units: list[int] = field(default_factory=lambda: [256, 512])
+    dropout_rate: list[float] = field(default_factory=lambda: [0.2, 0.3, 0.5])
+    learning_rate: list[float] = field(default_factory=lambda: [0.001, 0.0001])
+    batch_size: list[int] = field(default_factory=lambda: [32, 64, 128])
+    conv_filters: list[int] = field(default_factory=lambda: [16, 32, 64])
+    kernel_size: list[int] = field(default_factory=lambda: [3, 5, 7])
 
 
 @dataclass
@@ -65,8 +66,8 @@ class TrialResult:
 
     trial_id: str
     model_type: str
-    hyperparameters: Dict
-    metrics: Dict
+    hyperparameters: dict
+    metrics: dict
     training_time: float
     timestamp: str
 
@@ -88,8 +89,8 @@ class AutoMLEngine:
         self.cv_folds = cv_folds
         self.metric = metric
 
-        self.trials: List[TrialResult] = []
-        self.best_trial: Optional[TrialResult] = None
+        self.trials: list[TrialResult] = []
+        self.best_trial: TrialResult | None = None
         self.is_running = False
 
         # Sonuçlar dizini
@@ -97,10 +98,9 @@ class AutoMLEngine:
         self.results_dir.mkdir(parents=True, exist_ok=True)
 
     def _build_model(
-        self, model_type: ModelType, input_shape: Tuple, num_classes: int, params: Dict
+        self, model_type: ModelType, input_shape: tuple, num_classes: int, params: dict
     ):
         """Model oluştur"""
-        import tensorflow as tf
         from tensorflow import keras
         from tensorflow.keras import layers
 
@@ -203,7 +203,7 @@ class AutoMLEngine:
 
         return model
 
-    def _sample_hyperparameters(self, space: HyperparameterSpace) -> Dict:
+    def _sample_hyperparameters(self, space: HyperparameterSpace) -> dict:
         """Hyperparameter sample et"""
         if self.search_strategy == SearchStrategy.RANDOM:
             return {
@@ -216,22 +216,32 @@ class AutoMLEngine:
                 "kernel_size": np.random.choice(space.kernel_size),
             }
         elif self.search_strategy == SearchStrategy.GRID:
-            # Grid için sıralı seçim (simplified)
-            idx = len(self.trials) % len(space.lstm_units)
+            # Grid: use itertools-style index decomposition for full Cartesian product
+            trial_idx = len(self.trials)
+            sizes = [
+                len(space.lstm_units), len(space.dense_units), len(space.dropout_rate),
+                len(space.learning_rate), len(space.batch_size), len(space.conv_filters),
+                len(space.kernel_size),
+            ]
+            indices = []
+            for s in reversed(sizes):
+                indices.append(trial_idx % s)
+                trial_idx //= s
+            indices.reverse()
             return {
-                "lstm_units": space.lstm_units[idx % len(space.lstm_units)],
-                "dense_units": space.dense_units[idx % len(space.dense_units)],
-                "dropout_rate": space.dropout_rate[idx % len(space.dropout_rate)],
-                "learning_rate": space.learning_rate[idx % len(space.learning_rate)],
-                "batch_size": space.batch_size[idx % len(space.batch_size)],
-                "conv_filters": space.conv_filters[idx % len(space.conv_filters)],
-                "kernel_size": space.kernel_size[idx % len(space.kernel_size)],
+                "lstm_units": space.lstm_units[indices[0]],
+                "dense_units": space.dense_units[indices[1]],
+                "dropout_rate": space.dropout_rate[indices[2]],
+                "learning_rate": space.learning_rate[indices[3]],
+                "batch_size": space.batch_size[indices[4]],
+                "conv_filters": space.conv_filters[indices[5]],
+                "kernel_size": space.kernel_size[indices[6]],
             }
         else:  # Bayesian - simplified
             # Gerçek Bayesian için gaussian process kullanılır
             return self._sample_hyperparameters_bayesian(space)
 
-    def _sample_hyperparameters_bayesian(self, space: HyperparameterSpace) -> Dict:
+    def _sample_hyperparameters_bayesian(self, space: HyperparameterSpace) -> dict:
         """Bayesian hyperparameter sampling (simplified)"""
         # Önceki sonuçlara göre ağırlıklı sampling
         if len(self.trials) < 3:
@@ -291,11 +301,12 @@ class AutoMLEngine:
         X_val: np.ndarray,
         y_val: np.ndarray,
         model_type: ModelType,
-        params: Dict,
+        params: dict,
         epochs: int = 20,
     ) -> TrialResult:
         """Tek bir trial çalıştır"""
         import time
+
         from tensorflow import keras
 
         trial_id = f"trial_{len(self.trials)+1:03d}"
@@ -328,9 +339,9 @@ class AutoMLEngine:
 
             from sklearn.metrics import (
                 accuracy_score,
+                f1_score,
                 precision_score,
                 recall_score,
-                f1_score,
             )
 
             metrics = {
@@ -381,11 +392,11 @@ class AutoMLEngine:
         self,
         X: np.ndarray,
         y: np.ndarray,
-        model_types: List[ModelType] = None,
+        model_types: list[ModelType] = None,
         space: HyperparameterSpace = None,
         epochs_per_trial: int = 20,
         callback: Callable[[TrialResult], None] = None,
-    ) -> Dict:
+    ) -> dict:
         """
         AutoML arama çalıştır
 
@@ -420,7 +431,7 @@ class AutoMLEngine:
         )
 
         print(f"\n{'='*60}")
-        print(f"🤖 AutoML Search Başlıyor")
+        print("🤖 AutoML Search Başlıyor")
         print(f"{'='*60}")
         print(f"   Strategy: {self.search_strategy.value}")
         print(f"   Max Trials: {self.max_trials}")
@@ -456,7 +467,7 @@ class AutoMLEngine:
 
         return self.get_summary()
 
-    def get_summary(self) -> Dict:
+    def get_summary(self) -> dict:
         """Arama özeti"""
         if not self.trials:
             return {"status": "no_trials"}
@@ -520,7 +531,7 @@ class AutoMLEngine:
 
 
 # Singleton instance
-_automl_instance: Optional[AutoMLEngine] = None
+_automl_instance: AutoMLEngine | None = None
 
 
 def get_automl_engine() -> AutoMLEngine:

@@ -23,7 +23,7 @@ from pathlib import Path
 from datetime import datetime
 import json
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -339,7 +339,7 @@ def main():
         "created_at": datetime.now().isoformat(),
     }
 
-    results_path = PROJECT_ROOT / "models" / "ssa_optimization_results.json"
+    results_path = PROJECT_ROOT / "model_artifacts" / "ssa_optimization_results.json"
     with open(results_path, "w") as f:
         json.dump(results, f, indent=2)
 

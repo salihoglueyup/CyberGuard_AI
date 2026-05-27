@@ -84,7 +84,7 @@ export function ProgressCircle({
                 />
             </svg>
             {showLabel && (
-                <span className="absolute text-sm font-semibold text-white">
+                <span className="absolute text-sm font-semibold text-[var(--hud-text)]">
                     {Math.round(percentage)}%
                 </span>
             )}

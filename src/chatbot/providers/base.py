@@ -4,7 +4,6 @@ Tüm AI sağlayıcıları bu interface'i implement eder
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, Dict, List
 
 
 class BaseProvider(ABC):
@@ -18,8 +17,8 @@ class BaseProvider(ABC):
     def chat(
         self,
         message: str,
-        context: Optional[str] = None,
-        system_prompt: Optional[str] = None,
+        context: str | None = None,
+        system_prompt: str | None = None,
         **kwargs
     ) -> str:
         """
@@ -37,13 +36,13 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    def get_model_info(self) -> Dict:
+    def get_model_info(self) -> dict:
         """Model bilgilerini döndür"""
         pass
 
     @classmethod
     @abstractmethod
-    def list_models(cls) -> List[Dict]:
+    def list_models(cls) -> list[dict]:
         """Mevcut modelleri listele"""
         pass
 

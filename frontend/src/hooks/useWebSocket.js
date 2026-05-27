@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { create } from 'zustand';
 
-const WS_URL = 'ws://localhost:8000/ws';
+const WS_URL = import.meta.env.VITE_WS_URL || `ws://${window.location.hostname}:8000/ws`;
 const RECONNECT_INTERVAL = 5000;
 const HEARTBEAT_INTERVAL = 30000;
 const MAX_RECONNECT_ATTEMPTS = 5;
@@ -221,6 +221,13 @@ export function useWebSocket() {
         clearThreats,
         resetConnection,
     };
+}
+
+// HMR cleanup: Vite HMR'da eski ba\u011flant\u0131y\u0131 temizle
+if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+        disconnectWebSocket();
+    });
 }
 
 export default useWebSocket;

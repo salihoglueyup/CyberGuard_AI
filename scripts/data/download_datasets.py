@@ -136,7 +136,7 @@ def check_kaggle_credentials():
         # Sadece sahibin okuyabilmesi için izinleri ayarla (Windows'ta opsiyonel)
         try:
             os.chmod(kaggle_json, 0o600)
-        except:
+        except Exception:
             pass
 
         return True

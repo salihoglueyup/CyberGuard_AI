@@ -11,9 +11,8 @@ Enhanced Features:
 Ref: https://console.groq.com/docs/quickstart
 """
 
-import os
 import logging
-from typing import Optional, Dict, List
+import os
 from datetime import datetime
 
 try:
@@ -122,7 +121,7 @@ class GroqHandler:
         model: str = "llama-3.3-70b-versatile",
         temperature: float = 0.3,
         max_tokens: int = 4096,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
     ):
         """
         Groq Handler başlat
@@ -147,7 +146,7 @@ class GroqHandler:
         self.max_tokens = max_tokens
 
         # Conversation history (son 10 mesaj)
-        self.conversation_history: List[Dict] = []
+        self.conversation_history: list[dict] = []
         self.max_history = 10
 
         # Groq client oluştur
@@ -159,9 +158,9 @@ class GroqHandler:
     def chat(
         self,
         user_message: str,
-        system_prompt: Optional[str] = None,
-        context: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
+        system_prompt: str | None = None,
+        context: str | None = None,
+        history: list[dict] | None = None,
     ) -> str:
         """
         Kullanıcı mesajına yanıt ver
@@ -301,7 +300,7 @@ Her yanıtta şu bilgileri BİRLİKTE sun:
             "%Y-%m-%d %H:%M"
         )
 
-    def get_model_info(self) -> Dict:
+    def get_model_info(self) -> dict:
         """Model bilgilerini döndür"""
         model_info = self.AVAILABLE_MODELS.get(self.model, {})
         return {
@@ -315,7 +314,7 @@ Her yanıtta şu bilgileri BİRLİKTE sun:
         }
 
     @classmethod
-    def list_models(cls) -> List[Dict]:
+    def list_models(cls) -> list[dict]:
         """Mevcut modelleri listele"""
         return [
             {"id": model_id, **info} for model_id, info in cls.AVAILABLE_MODELS.items()

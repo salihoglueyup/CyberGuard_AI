@@ -27,7 +27,7 @@ from tensorflow import keras
 
 print(f"✅ TensorFlow {tf.__version__}")
 
-MODELS_DIR = PROJECT_ROOT / "models"
+MODELS_DIR = PROJECT_ROOT / "model_artifacts"
 
 
 def find_keras_models():

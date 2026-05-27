@@ -12,13 +12,13 @@ Mimari:
     Input → Encoder → Latent Space → Decoder → Reconstruction
 """
 
+
 import numpy as np
-from typing import Dict, Optional, Tuple
 
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
 
     TF_AVAILABLE = True
 except ImportError:
@@ -37,10 +37,12 @@ class FeatureAutoencoder:
         self,
         input_dim: int,
         latent_dim: int = 32,
-        hidden_layers: list = [128, 64],
+        hidden_layers: list | None = None,
         dropout_rate: float = 0.2,
         activation: str = "relu",
     ):
+        if hidden_layers is None:
+            hidden_layers = [128, 64]
         if not TF_AVAILABLE:
             raise ImportError("TensorFlow gerekli!")
 
@@ -50,14 +52,14 @@ class FeatureAutoencoder:
         self.dropout_rate = dropout_rate
         self.activation = activation
 
-        self.autoencoder: Optional[Model] = None
-        self.encoder: Optional[Model] = None
-        self.decoder: Optional[Model] = None
+        self.autoencoder: Model | None = None
+        self.encoder: Model | None = None
+        self.decoder: Model | None = None
 
-        print(f"🔮 Autoencoder başlatılıyor...")
+        print("🔮 Autoencoder başlatılıyor...")
         print(f"   Input: {input_dim} → Latent: {latent_dim}")
 
-    def build(self) -> Tuple[Model, Model, Model]:
+    def build(self) -> tuple[Model, Model, Model]:
         """Autoencoder mimarisini oluştur"""
 
         # Encoder
@@ -102,7 +104,7 @@ class FeatureAutoencoder:
             optimizer=keras.optimizers.Adam(learning_rate=0.001), loss="mse"
         )
 
-        print(f"✅ Autoencoder oluşturuldu!")
+        print("✅ Autoencoder oluşturuldu!")
         print(f"   Encoder params: {self.encoder.count_params():,}")
 
         return self.autoencoder, self.encoder, self.decoder
@@ -112,7 +114,7 @@ class FeatureAutoencoder:
         if self.autoencoder is None:
             self.build()
 
-        print(f"\n🏋️ Autoencoder eğitiliyor...")
+        print("\n🏋️ Autoencoder eğitiliyor...")
 
         history = self.autoencoder.fit(
             X,
@@ -218,7 +220,7 @@ class VariationalAutoencoder(FeatureAutoencoder):
         self.autoencoder.add_loss(vae_loss)
         self.autoencoder.compile(optimizer="adam")
 
-        print(f"✅ VAE oluşturuldu!")
+        print("✅ VAE oluşturuldu!")
         return self.autoencoder, self.encoder, self.decoder
 
 

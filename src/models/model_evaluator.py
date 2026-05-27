@@ -3,24 +3,30 @@ Model Evaluator - CyberGuard AI
 Detaylı model değerlendirme ve metrik hesaplama
 """
 
-import numpy as np
-import pandas as pd
+import json
+import warnings
+from datetime import datetime
+
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score,
-    confusion_matrix, classification_report,
-    roc_curve, auc, roc_auc_score,
-    precision_recall_curve, average_precision_score,
-    matthews_corrcoef, cohen_kappa_score
+    accuracy_score,
+    auc,
+    average_precision_score,
+    classification_report,
+    cohen_kappa_score,
+    confusion_matrix,
+    f1_score,
+    matthews_corrcoef,
+    precision_recall_curve,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
 )
 from sklearn.preprocessing import label_binarize
-import plotly.graph_objects as go
-import plotly.express as px
-from typing import Dict, List, Tuple, Optional
-import json
-from datetime import datetime
-import warnings
+
 warnings.filterwarnings('ignore')
 
 
@@ -37,7 +43,7 @@ class ModelEvaluator:
     - Detaylı raporlama
     """
 
-    def __init__(self, class_names: List[str] = None):
+    def __init__(self, class_names: list[str] = None):
         """
         Args:
             class_names: Sınıf isimleri
@@ -52,7 +58,7 @@ class ModelEvaluator:
         y_true: np.ndarray,
         y_pred: np.ndarray,
         y_pred_proba: np.ndarray = None
-    ) -> Dict:
+    ) -> dict:
         """
         Tüm metrikleri hesapla
 
@@ -100,13 +106,13 @@ class ModelEvaluator:
         # Matthews Correlation Coefficient
         try:
             metrics['mcc'] = matthews_corrcoef(y_true, y_pred)
-        except:
+        except Exception:
             metrics['mcc'] = None
 
         # Cohen's Kappa
         try:
             metrics['cohen_kappa'] = cohen_kappa_score(y_true, y_pred)
-        except:
+        except Exception:
             metrics['cohen_kappa'] = None
 
         # ROC-AUC (multi-class)
@@ -135,7 +141,7 @@ class ModelEvaluator:
                     try:
                         auc_score = roc_auc_score(y_true_bin[:, i], y_pred_proba[:, i])
                         roc_auc_per_class.append(auc_score)
-                    except:
+                    except Exception:
                         roc_auc_per_class.append(0.0)
 
                 metrics['roc_auc_per_class'] = roc_auc_per_class
@@ -164,7 +170,7 @@ class ModelEvaluator:
         self,
         y_true: np.ndarray,
         y_pred: np.ndarray
-    ) -> Dict:
+    ) -> dict:
         """
         Confusion matrix'ten detaylı metrikler
 
@@ -215,7 +221,7 @@ class ModelEvaluator:
         y_true: np.ndarray,
         y_pred: np.ndarray,
         save_path: str = 'confusion_matrix.png',
-        figsize: Tuple[int, int] = (12, 10),
+        figsize: tuple[int, int] = (12, 10),
         normalize: bool = False
     ):
         """
@@ -262,7 +268,7 @@ class ModelEvaluator:
         y_true: np.ndarray,
         y_pred_proba: np.ndarray,
         save_path: str = 'roc_curves.png',
-        figsize: Tuple[int, int] = (12, 10)
+        figsize: tuple[int, int] = (12, 10)
     ):
         """
         ROC curves görselleştir (multi-class)
@@ -311,7 +317,7 @@ class ModelEvaluator:
         y_true: np.ndarray,
         y_pred_proba: np.ndarray,
         save_path: str = 'precision_recall_curves.png',
-        figsize: Tuple[int, int] = (12, 10)
+        figsize: tuple[int, int] = (12, 10)
     ):
         """
         Precision-Recall curves
@@ -351,9 +357,9 @@ class ModelEvaluator:
 
     def plot_metric_comparison(
         self,
-        metrics: Dict,
+        metrics: dict,
         save_path: str = 'metric_comparison.png',
-        figsize: Tuple[int, int] = (14, 8)
+        figsize: tuple[int, int] = (14, 8)
     ):
         """
         Per-class metrik karşılaştırması
@@ -416,7 +422,7 @@ class ModelEvaluator:
         y_pred_proba: np.ndarray = None,
         model_name: str = "Model",
         output_dir: str = "models/evaluation"
-    ) -> Dict:
+    ) -> dict:
         """
         Kapsamlı değerlendirme raporu oluştur
 

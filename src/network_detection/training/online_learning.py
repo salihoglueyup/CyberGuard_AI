@@ -11,10 +11,10 @@ CyberGuard AI için streaming ve real-time öğrenme
 Ref: Makaledeki "Online IDS" önerisi
 """
 
-import numpy as np
-from typing import Dict, Optional, Tuple, List, Deque
-from collections import deque
 import time
+from collections import deque
+
+import numpy as np
 
 try:
     import tensorflow as tf
@@ -56,13 +56,13 @@ class OnlineLearningIDS:
         self.drift_threshold = drift_threshold
 
         # Replay buffer
-        self.X_buffer: Deque = deque(maxlen=buffer_size)
-        self.y_buffer: Deque = deque(maxlen=buffer_size)
+        self.X_buffer: deque = deque(maxlen=buffer_size)
+        self.y_buffer: deque = deque(maxlen=buffer_size)
 
         # Stats
         self.samples_seen = 0
         self.updates_done = 0
-        self.recent_accuracy: Deque = deque(maxlen=100)
+        self.recent_accuracy: deque = deque(maxlen=100)
         self.drift_detected = False
 
         # Original optimizer learning rate'i düşür
@@ -143,7 +143,7 @@ class OnlineLearningIDS:
         else:
             self.drift_detected = False
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """İstatistikleri döndür"""
         return {
             "samples_seen": self.samples_seen,
@@ -168,11 +168,11 @@ class StreamingPredictor:
         self.batch_size = batch_size
         self.threshold = threshold
 
-        self.pending_batch: List = []
-        self.predictions: List = []
-        self.latencies: List = []
+        self.pending_batch: list = []
+        self.predictions: list = []
+        self.latencies: list = []
 
-    def add_sample(self, sample: np.ndarray) -> Optional[int]:
+    def add_sample(self, sample: np.ndarray) -> int | None:
         """
         Tek örnek ekle, batch dolunca predict et
 
@@ -202,7 +202,7 @@ class StreamingPredictor:
 
         return preds[-1]  # Son prediction
 
-    def flush(self) -> List[int]:
+    def flush(self) -> list[int]:
         """Pending örnekleri işle"""
         if len(self.pending_batch) > 0:
             X = np.array(self.pending_batch)
@@ -213,7 +213,7 @@ class StreamingPredictor:
 
         return self.predictions
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         return {
             "total_predictions": len(self.predictions),
             "avg_latency_ms": np.mean(self.latencies) if self.latencies else 0,

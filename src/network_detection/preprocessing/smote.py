@@ -13,13 +13,13 @@ Yöntemler:
     - Class Weights: Ağırlıklı loss function
 """
 
-import numpy as np
-from typing import Tuple, Dict, Optional, Union
 from collections import Counter
 
+import numpy as np
+
 try:
-    from imblearn.over_sampling import SMOTE, ADASYN, BorderlineSMOTE
     from imblearn.combine import SMOTEENN, SMOTETomek
+    from imblearn.over_sampling import ADASYN, SMOTE, BorderlineSMOTE
 
     IMBLEARN_AVAILABLE = True
 except ImportError:
@@ -40,7 +40,7 @@ class DataBalancer:
     def __init__(
         self,
         method: str = "smote",
-        sampling_strategy: Union[str, Dict, float] = "auto",
+        sampling_strategy: str | dict | float = "auto",
         random_state: int = 42,
         k_neighbors: int = 5,
         verbose: bool = True,
@@ -72,7 +72,7 @@ class DataBalancer:
         self._create_sampler()
 
         if verbose:
-            print(f"⚖️ DataBalancer başlatıldı")
+            print("⚖️ DataBalancer başlatıldı")
             print(f"   Yöntem: {self.method.upper()}")
             print(f"   Strateji: {sampling_strategy}")
 
@@ -112,7 +112,7 @@ class DataBalancer:
 
     def fit_resample(
         self, X: np.ndarray, y: np.ndarray
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Veriyi dengele
 
@@ -165,7 +165,7 @@ class DataBalancer:
             print(f"      Sınıf {cls}: {count:,} ({pct:.1f}%) {bar}")
 
 
-def compute_class_weights(y: np.ndarray) -> Dict[int, float]:
+def compute_class_weights(y: np.ndarray) -> dict[int, float]:
     """
     Class weights hesapla
 
@@ -192,7 +192,7 @@ def compute_class_weights(y: np.ndarray) -> Dict[int, float]:
     return class_weights
 
 
-def analyze_imbalance(y: np.ndarray) -> Dict:
+def analyze_imbalance(y: np.ndarray) -> dict:
     """
     Veri dengesizliğini analiz et
 

@@ -10,9 +10,9 @@ GPT-4, GPT-4o, GPT-4-turbo desteği.
     - Vision (görsel analiz)
 """
 
-import os
 import logging
-from typing import Optional, Dict, List, Any, Generator
+import os
+from collections.abc import Generator
 from datetime import datetime
 
 try:
@@ -69,7 +69,7 @@ class OpenAIHandler:
         model: str = "gpt-4o",
         temperature: float = 0.3,
         max_tokens: int = 4096,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
     ):
         """
         OpenAI Handler başlat
@@ -102,9 +102,9 @@ class OpenAIHandler:
     def chat(
         self,
         user_message: str,
-        system_prompt: Optional[str] = None,
-        context: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
+        system_prompt: str | None = None,
+        context: str | None = None,
+        history: list[dict] | None = None,
         stream: bool = False,
     ) -> str:
         """
@@ -170,7 +170,7 @@ class OpenAIHandler:
             self.logger.error(f"❌ OpenAI API Error: {e}")
             return f"Üzgünüm, bir hata oluştu: {str(e)}"
 
-    def _stream_response(self, messages: List[Dict]) -> Generator[str, None, None]:
+    def _stream_response(self, messages: list[dict]) -> Generator[str, None, None]:
         """Streaming response"""
         try:
             stream = self.client.chat.completions.create(
@@ -192,7 +192,7 @@ class OpenAIHandler:
         self,
         user_message: str,
         image_url: str,
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
     ) -> str:
         """
         Görsel ile chat (GPT-4o, GPT-4-turbo)
@@ -252,7 +252,7 @@ class OpenAIHandler:
 
 Şu anki tarih: {datetime.now().strftime('%Y-%m-%d %H:%M')}"""
 
-    def get_model_info(self) -> Dict:
+    def get_model_info(self) -> dict:
         """Model bilgilerini döndür"""
         model_info = self.AVAILABLE_MODELS.get(self.model, {})
         return {
@@ -267,7 +267,7 @@ class OpenAIHandler:
         }
 
     @classmethod
-    def list_models(cls) -> List[Dict]:
+    def list_models(cls) -> list[dict]:
         """Mevcut modelleri listele"""
         return [
             {"id": model_id, **info} for model_id, info in cls.AVAILABLE_MODELS.items()

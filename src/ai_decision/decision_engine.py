@@ -16,13 +16,13 @@ Flow:
     RL Decision → Explain → Report
 """
 
+import json
+import logging
 import os
 import sys
-import numpy as np
-from typing import Dict, List, Optional, Union, Tuple
 from datetime import datetime
-import logging
-import json
+
+import numpy as np
 
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,11 +38,11 @@ except ImportError:
     TF_AVAILABLE = False
 
 # Local imports
-from .zero_day_detector import ZeroDayDetector, HybridIDSPipeline
 from .explainer import AttackExplainer
+from .llm_reporter import LLMReporter
 from .meta_classifier import MetaModelSelector
 from .rl_threshold import RLThresholdAgent
-from .llm_reporter import LLMReporter
+from .zero_day_detector import ZeroDayDetector
 
 logger = logging.getLogger("AIDecisionEngine")
 
@@ -70,7 +70,7 @@ class AIDecisionEngine:
     def __init__(
         self,
         input_dim: int = 78,
-        models: Dict[str, keras.Model] = None,
+        models: dict[str, keras.Model] = None,
         use_rl: bool = True,
         use_meta_selector: bool = True,
         sensitivity: int = 3,
@@ -121,18 +121,18 @@ class AIDecisionEngine:
             "ignored": 0,
         }
 
-        logger.info(f"✅ Components initialized:")
+        logger.info("✅ Components initialized:")
         logger.info(f"   └─ ZeroDayDetector: sensitivity={sensitivity}")
-        logger.info(f"   └─ AttackExplainer: SHAP/Attention")
+        logger.info("   └─ AttackExplainer: SHAP/Attention")
         logger.info(f"   └─ MetaSelector: {use_meta_selector}")
         logger.info(f"   └─ RLThreshold: {use_rl}")
-        logger.info(f"   └─ LLMReporter: enabled")
+        logger.info("   └─ LLMReporter: enabled")
 
     def initialize(
         self,
         X_normal: np.ndarray = None,
         epochs: int = 30,
-    ) -> Dict:
+    ) -> dict:
         """
         Engine'i initialize et (VAE train, RL pretrain)
 
@@ -171,7 +171,7 @@ class AIDecisionEngine:
         generate_report: bool = True,
         source_info: str = "Unknown",
         target_info: str = "Unknown",
-    ) -> Dict:
+    ) -> dict:
         """
         Ana karar fonksiyonu - Full AI pipeline
 
@@ -228,7 +228,7 @@ class AIDecisionEngine:
             attack_type = "ZERO_DAY"
             confidence = anomaly_score
         else:
-            attack_type = attack_labels[min(predicted_class, len(attack_labels) - 1)]
+            attack_type = attack_labels[max(0, min(predicted_class, len(attack_labels) - 1))]
             confidence = model_confidence
 
         # === STEP 4: RL Threshold Decision ===
@@ -308,7 +308,7 @@ class AIDecisionEngine:
         self,
         X: np.ndarray,
         generate_reports: bool = False,
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """Batch decision"""
         results = []
         for i in range(len(X)):
@@ -319,7 +319,7 @@ class AIDecisionEngine:
             results.append(result)
         return results
 
-    def _update_stats(self, result: Dict):
+    def _update_stats(self, result: dict):
         """Update internal stats"""
         self.stats["total_decisions"] += 1
 
@@ -351,7 +351,7 @@ class AIDecisionEngine:
             self.meta_selector.register_model(name, model)
         logger.info(f"✅ Model registered: {name}")
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Engine istatistikleri"""
         return {
             "version": self.VERSION,
@@ -411,7 +411,7 @@ class AIDecisionEngine:
     @classmethod
     def load(cls, path: str) -> "AIDecisionEngine":
         """Engine'i yükle"""
-        with open(os.path.join(path, "engine_metadata.json"), "r") as f:
+        with open(os.path.join(path, "engine_metadata.json")) as f:
             metadata = json.load(f)
 
         engine = cls(

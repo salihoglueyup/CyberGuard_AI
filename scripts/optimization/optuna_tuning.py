@@ -21,7 +21,7 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -39,7 +39,7 @@ except ImportError:
     sys.exit(1)
 
 DATA_DIR = PROJECT_ROOT / "data" / "raw" / "cicids2017_full"
-MODELS_DIR = PROJECT_ROOT / "models"
+MODELS_DIR = PROJECT_ROOT / "model_artifacts"
 
 
 def load_data():

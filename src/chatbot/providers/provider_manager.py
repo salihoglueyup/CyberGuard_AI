@@ -11,11 +11,10 @@ Tüm LLM provider'larını yöneten unified interface.
     - Streaming
 """
 
-import os
 import logging
-from typing import Optional, Dict, List, Any, Generator
+import os
 from enum import Enum
-from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger("ProviderManager")
 
@@ -43,7 +42,7 @@ class ProviderManager:
         LLMProvider.OLLAMA,  # Local
     ]
 
-    def __init__(self, preferred_provider: Optional[LLMProvider] = None):
+    def __init__(self, preferred_provider: LLMProvider | None = None):
         """
         Provider Manager başlat
 
@@ -51,8 +50,8 @@ class ProviderManager:
             preferred_provider: Tercih edilen provider
         """
         self.preferred_provider = preferred_provider
-        self.handlers: Dict[LLMProvider, Any] = {}
-        self.active_provider: Optional[LLMProvider] = None
+        self.handlers: dict[LLMProvider, Any] = {}
+        self.active_provider: LLMProvider | None = None
 
         self._initialize_handlers()
 
@@ -61,7 +60,7 @@ class ProviderManager:
 
         # Groq
         try:
-            from src.chatbot.groq_handler import GroqHandler
+            from src.chatbot.providers.groq_handler import GroqHandler
 
             if os.getenv("GROQ_API_KEY"):
                 self.handlers[LLMProvider.GROQ] = GroqHandler
@@ -71,7 +70,7 @@ class ProviderManager:
 
         # OpenAI
         try:
-            from src.chatbot.openai_handler import OpenAIHandler
+            from src.chatbot.providers.openai_handler import OpenAIHandler
 
             if os.getenv("OPENAI_API_KEY"):
                 self.handlers[LLMProvider.OPENAI] = OpenAIHandler
@@ -81,7 +80,7 @@ class ProviderManager:
 
         # Claude
         try:
-            from src.chatbot.claude_handler import ClaudeHandler
+            from src.chatbot.providers.claude_handler import ClaudeHandler
 
             if os.getenv("ANTHROPIC_API_KEY") or os.getenv("CLAUDE_API_KEY"):
                 self.handlers[LLMProvider.CLAUDE] = ClaudeHandler
@@ -91,7 +90,7 @@ class ProviderManager:
 
         # Gemini
         try:
-            from src.chatbot.gemini_handler import GeminiHandler
+            from src.chatbot.providers.gemini_handler import GeminiHandler
 
             if os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"):
                 self.handlers[LLMProvider.GEMINI] = GeminiHandler
@@ -101,7 +100,7 @@ class ProviderManager:
 
         # Ollama
         try:
-            from src.chatbot.ollama_handler import OllamaHandler
+            from src.chatbot.providers.ollama_handler import OllamaHandler
 
             if OllamaHandler.is_available():
                 self.handlers[LLMProvider.OLLAMA] = OllamaHandler
@@ -126,7 +125,7 @@ class ProviderManager:
         if self.active_provider:
             logger.info(f"🎯 Active provider: {self.active_provider.value}")
 
-    def get_handler(self, provider: Optional[LLMProvider] = None):
+    def get_handler(self, provider: LLMProvider | None = None):
         """
         Handler instance al
 
@@ -144,10 +143,10 @@ class ProviderManager:
     def chat(
         self,
         user_message: str,
-        system_prompt: Optional[str] = None,
-        context: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
-        provider: Optional[LLMProvider] = None,
+        system_prompt: str | None = None,
+        context: str | None = None,
+        history: list[dict] | None = None,
+        provider: LLMProvider | None = None,
         stream: bool = False,
         fallback: bool = True,
     ) -> str:
@@ -202,7 +201,7 @@ class ProviderManager:
 
         return f"❌ Tüm provider'lar başarısız oldu. Son hata: {last_error}"
 
-    def get_available_providers(self) -> List[Dict]:
+    def get_available_providers(self) -> list[dict]:
         """Mevcut provider'ları listele"""
         providers = []
 
@@ -245,7 +244,7 @@ class ProviderManager:
             return True
         return False
 
-    def get_active_provider_info(self) -> Dict:
+    def get_active_provider_info(self) -> dict:
         """Aktif provider bilgisi"""
         if not self.active_provider:
             return {"error": "No active provider"}
@@ -258,7 +257,7 @@ class ProviderManager:
 
 
 # Singleton
-_provider_manager: Optional[ProviderManager] = None
+_provider_manager: ProviderManager | None = None
 
 
 def get_provider_manager() -> ProviderManager:

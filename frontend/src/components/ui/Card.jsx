@@ -1,9 +1,9 @@
 const variants = {
     default: 'card',
     glass: 'card card-glass',
-    gradient: 'card card-gradient text-white',
+    gradient: 'card card-gradient text-[var(--hud-text)]',
     glow: 'card card-glow',
-    flat: 'bg-slate-800/50 rounded-xl p-6 border border-slate-700/50',
+    flat: 'bg-[var(--hud-surface)] rounded-xl p-6 border border-[var(--hud-border)]',
 };
 
 export default function Card({
@@ -27,7 +27,7 @@ export default function Card({
 
 Card.Header = function CardHeader({ children, className = '' }) {
     return (
-        <div className={`pb-4 mb-4 border-b border-slate-700/50 ${className}`}>
+        <div className={`pb-4 mb-4 border-b border-[var(--hud-border)] ${className}`}>
             {children}
         </div>
     );
@@ -35,8 +35,8 @@ Card.Header = function CardHeader({ children, className = '' }) {
 
 Card.Title = function CardTitle({ children, icon: Icon, className = '' }) {
     return (
-        <h3 className={`text-lg font-semibold text-white flex items-center gap-2 ${className}`}>
-            {Icon && <Icon className="w-5 h-5 text-blue-400" />}
+        <h3 className={`text-lg font-semibold text-[var(--hud-text-bright)] flex items-center gap-2 ${className}`}>
+            {Icon && <Icon className="w-5 h-5 text-[var(--hud-cyan)]" />}
             {children}
         </h3>
     );
@@ -48,7 +48,7 @@ Card.Body = function CardBody({ children, className = '' }) {
 
 Card.Footer = function CardFooter({ children, className = '' }) {
     return (
-        <div className={`pt-4 mt-4 border-t border-slate-700/50 ${className}`}>
+        <div className={`pt-4 mt-4 border-t border-[var(--hud-border)] ${className}`}>
             {children}
         </div>
     );

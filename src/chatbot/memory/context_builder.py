@@ -11,12 +11,9 @@ AI Chatbot için zengin context oluşturur.
     - Smart action detection
 """
 
-import os
 import json
-from pathlib import Path
-from typing import Optional, Dict, List, Any
-from datetime import datetime, timedelta
 import logging
+from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 logger = logging.getLogger("ContextBuilder")
@@ -201,7 +198,7 @@ class ContextBuilder:
             logger.debug(f"IDS context error: {e}")
             return ""
 
-    def detect_smart_action(self, message: str) -> Optional[Dict]:
+    def detect_smart_action(self, message: str) -> dict | None:
         """
         Mesajdan smart action tespit et
 
@@ -220,7 +217,7 @@ class ContextBuilder:
 
         return None
 
-    def execute_smart_action(self, action: str, params: Dict = None) -> Optional[str]:
+    def execute_smart_action(self, action: str, params: dict = None) -> str | None:
         """
         Smart action çalıştır ve sonuç döndür
         """
@@ -303,7 +300,7 @@ class ContextBuilder:
 | Accuracy | %{ps.get('accuracy', 0)*100:.2f} |
 | F1-Score | %{ps.get('f1_score', 0)*100:.2f} |"""
 
-        except Exception as e:
+        except Exception:
             pass
 
         return ""
@@ -314,7 +311,7 @@ class ContextBuilder:
             from src.chatbot.model_integration import get_integration
 
             return get_integration().get_model_comparison()
-        except:
+        except Exception:
             return ""
 
     def _action_recommend_model(self) -> str:
@@ -346,7 +343,7 @@ class ContextBuilder:
 - Makale mimarisi ile eğitildi (SSA-LSTMIDS)
 - CICIDS2017 dataset ile validate edildi"""
 
-        except Exception as e:
+        except Exception:
             pass
 
         return ""
@@ -384,7 +381,7 @@ Mevcut bilgiler veritabanından kontrol edilebilir."""
 
 
 # Singleton
-_context_builder: Optional[ContextBuilder] = None
+_context_builder: ContextBuilder | None = None
 
 
 def get_context_builder() -> ContextBuilder:

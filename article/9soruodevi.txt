@@ -1,0 +1,179 @@
+YAPAY ZEKA CASE STUDY RAPORU
+==============================
+
+1. MAKALE BİLGİLERİ
+-------------------
+Makale Başlığı: An optimized LSTM-based deep learning model for anomaly network intrusion detection
+Yazar(lar): Scientific Reports (2025) 15:1554
+Yayın Yılı: 2025
+Kaynak: Scientific Reports, Nature Portfolio
+Alan/Konu: Siber Güvenlik, Derin Öğrenme, Saldırı Tespit Sistemleri
+
+ÖZET: Bu makale, kendinizin neden bu makaleyi seçtiğinizi açıklayan bir bölüm içermelidir. Makale, ağ trafiğinde anormal aktiviteleri (siber saldırıları) tespit etmek için SSA (Sparrow Search Algorithm) ile optimize edilmiş bir LSTM tabanlı derin öğrenme modeli sunmaktadır.
+
+
+2. PROBLEM TANIMI
+-----------------
+Makale hangi iş veya toplumsal problemi çözmeye odaklanıyor?
+
+SİBER SALDIRI TESPİT PROBLEMİ:
+- Siber saldırılar yılda milyarlarca dolar zarara neden olmaktadır
+- Geleneksel IDS (Intrusion Detection System) sistemleri yeni saldırı türlerini tespit etmekte yetersiz kalmaktadır
+- Gerçek zamanlı tespit ve düşük false-positive oranı kritik öneme sahiptir
+- Ağ trafiği karmaşık ve yüksek hacimlidir, manuel analiz imkansızdır
+
+Bu problem neden önemli?
+- Finansal kayıplar (ransomware, veri ihlalleri)
+- İtibar kaybı (müşteri güveni)
+- Yasal yaptırımlar (KVKK, GDPR ihlalleri)
+- Kritik altyapı güvenliği (enerji, sağlık, finans)
+
+
+3. KULLANILAN VERİ SETİ
+-----------------------
+Makale hangi veri setini kullanmış? Veri türü, boyutu, kamuya açık mı, anonim mi?
+
++-------------+------------------+-------------+--------------+
+| Dataset     | Tür              | Boyut       | Kamuya Açık  |
++-------------+------------------+-------------+--------------+
+| NSL-KDD     | Network Traffic  | ~148K kayıt | Evet         |
+| CICIDS2017  | Network Traffic  | 2.83M kayıt | Evet         |
+| BoT-IoT     | IoT Traffic      | 73M kayıt   | Evet         |
++-------------+------------------+-------------+--------------+
+
+Detaylı Açıklama:
+- NSL-KDD: KDD'99 dataseti'nin iyileştirilmiş versiyonu, 41 özellik, DoS/Probe/R2L/U2R saldırı türleri
+- CICIDS2017: Kanada Siber Güvenlik Enstitüsü tarafından oluşturulan gerçekçi dataset, 84 özellik
+- BoT-IoT: IoT cihazlarına yönelik saldırıları içeren modern dataset, 43 özellik
+
+
+4. KULLANILAN YÖNTEM/MODEL
+--------------------------
+Hangi yapay zeka veya makine öğrenmesi yöntemi kullanılmış?
+
+MODEL ADI: SSA-LSTMIDS (Sparrow Search Algorithm - LSTM Intrusion Detection System)
+
+MİMARİ:
+Input → Conv1D(30) → MaxPooling → LSTM(120) → Dense(512) → Dropout(0.2) → Softmax
+
+OPTİMİZASYON YÖNTEMİ: SSA (Sparrow Search Algorithm)
+- Metaheuristik optimizasyon algoritması
+- LSTM units, Conv filters, epochs, batch size otomatik olarak ayarlanır
+- Klasik grid search'e göre daha hızlı ve etkili
+
+Model nasıl eğitilmiş?
+- Epoch sayısı: 300
+- Batch size: 120
+- Early stopping patience: 6
+- Learning rate: Adam optimizer varsayılan
+
+DEĞERLENDİRME METRİKLERİ:
+- Accuracy, Precision, Recall, F1-Score, ROC AUC
+
+
+5. SONUÇLAR VE BULGULAR
+-----------------------
+Modelin performansı nedir?
+
++-------------+----------+-----------+--------+----------+
+| Dataset     | Accuracy | Precision | Recall | F1-Score |
++-------------+----------+-----------+--------+----------+
+| NSL-KDD     | 99.36%   | 99.37%    | 99.36% | 99.36%   |
+| CICIDS2017  | 99.88%   | 99.89%    | 99.88% | 99.88%   |
+| BoT-IoT     | 99.99%   | 99.99%    | 99.99% | 99.99%   |
++-------------+----------+-----------+--------+----------+
+
+Bu sonuçlar problemi çözmeye nasıl katkı sağladı?
+- Geleneksel ML yöntemlerinden (SVM, RF, DT) %5-10 daha yüksek accuracy
+- SSA optimizasyonu ile manuel hiperparametre ayarlaması gereksiz
+- Gerçek zamanlı IDS uygulamalarına uygun performans
+- Düşük false positive oranı ile operasyonel verimlilik
+
+
+6. YBS (YÖNETİM BİLİŞİM SİSTEMLERİ) UYARLAMASI
+----------------------------------------------
+Bu çözümü hangi YBS süreçlerinde kullanabilirsiniz?
+
++----------------------+-----------------------------------------------+
+| Alan                 | Uygulama                                      |
++----------------------+-----------------------------------------------+
+| CRM                  | Müşteri verilerinin güvenliği, sahte hesap   |
+|                      | tespiti, fraud detection                      |
++----------------------+-----------------------------------------------+
+| ERP                  | Kurumsal ağ trafiği izleme, veri sızıntısı   |
+|                      | önleme, supply chain güvenliği                |
++----------------------+-----------------------------------------------+
+| İnsan Kaynakları     | Çalışan erişim anomalileri tespiti, insider  |
+|                      | threat detection                              |
++----------------------+-----------------------------------------------+
+| Pazarlama Analitiği  | Bot trafik tespiti, reklam dolandırıcılığı   |
+|                      | önleme, click fraud detection                 |
++----------------------+-----------------------------------------------+
+| E-ticaret            | DDoS saldırı koruma, ödeme güvenliği,        |
+|                      | card-not-present fraud                        |
++----------------------+-----------------------------------------------+
+
+Olası KPI'lar: Müşteri memnuniyeti, verimlilik, ROI vb.
+- Saldırı tespit oranı (Detection Rate)
+- Yanlış alarm oranı (False Positive Rate)
+- Ortalama tespit süresi (Mean Time to Detect - MTTD)
+- Ortalama müdahale süresi (Mean Time to Respond - MTTR)
+- Engellenen saldırı sayısı
+- Sistem uptime oranı
+
+
+7. ETİK VE VERİ GÜVENLİĞİ DEĞERLENDİRMESİ
+-----------------------------------------
+Makale veri gizliliği, şeffaflık, önyargı veya etik konularını ele alıyor mu?
+
++-------------------+-------+-----------------------------------------------+
+| Konu              | Durum | Açıklama                                      |
++-------------------+-------+-----------------------------------------------+
+| Veri Gizliliği    | ✓     | Eğitim verileri anonimleştirilmiş            |
+| Şeffaflık         | ✓     | Açık kaynak metodoloji, tekrarlanabilir      |
+| Önyargı           | ~     | Dataset'ler belirli saldırı türlerine odaklı |
+| Açıklanabilirlik  | ~     | Deep learning black-box problemi mevcut      |
+| KVKK/GDPR Uyumu   | ✓     | Kişisel veri işlemez, sadece ağ trafiği      |
++-------------------+-------+-----------------------------------------------+
+
+Yapay zeka modelinin açıklanabilirliği hangi düzeyde?
+- Deep learning modelleri genellikle "black-box" olarak kabul edilir
+- SHAP ve LIME gibi XAI (Explainable AI) teknikleri ile açıklanabilirlik artırılabilir
+- Feature importance analizi ile hangi özelliklerin önemli olduğu belirlenebilir
+
+
+8. SONUÇ VE ÖNERİLER
+--------------------
+Bu çözümün iş dünyası açısından güçlü ve zayıf yönlerini değerlendirin.
+
+GÜÇLÜ YÖNLER:
+- Çok yüksek accuracy oranları (%99+)
+- SSA ile otomatik hiperparametre optimizasyonu
+- 3 farklı dataset üzerinde test edilmiş ve doğrulanmış
+- Gerçek zamanlı tespit kapasitesi
+- Düşük false positive oranı
+
+ZAYIF YÖNLER:
+- Gerçek dünya deployment detayları yetersiz
+- Adversarial attack dayanıklılığı test edilmemiş
+- Model güncelleme stratejisi belirtilmemiş
+- Hesaplama maliyeti (GPU gereksinimi) detaylandırılmamış
+
+GENEL DEĞERLENDİRME:
+- Uygulanabilirlik: ★★★★★ (5/5) - Çok Yüksek
+- Maliyet: ★★★★☆ (4/5) - GPU gereksinimi var
+- Etik Risk: ★★★★☆ (4/5) - Düşük risk
+- Yönetilebilirlik: ★★★☆☆ (3/5) - ML Ops gerekli
+
+
+9. KAYNAKÇA
+-----------
+Scientific Reports. (2025). An optimized LSTM-based deep learning model for 
+anomaly network intrusion detection. Scientific Reports, 15, 1554. 
+https://doi.org/10.1038/s41598-025-85248-z
+
+
+==============================
+HAZIRLAYAN: Eyüp Zeki Salihoğlu
+TARİH: 10 Ocak 2026
+==============================

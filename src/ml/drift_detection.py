@@ -11,17 +11,16 @@ Concept ve Data drift tespiti ve görselleştirme.
     - Timeline görselleştirme
 """
 
-import os
-import sys
 import json
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
-from datetime import datetime, timedelta
-from dataclasses import dataclass, field
-from enum import Enum
 import logging
+import sys
 from collections import deque
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from pathlib import Path
+
+import numpy as np
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -64,11 +63,11 @@ class DriftSnapshot:
 
     snapshot_id: str
     timestamp: str
-    psi_scores: Dict[str, float]
-    ks_scores: Dict[str, float]
+    psi_scores: dict[str, float]
+    ks_scores: dict[str, float]
     overall_drift_score: float
     severity: DriftSeverity
-    alerts: List[DriftAlert]
+    alerts: list[DriftAlert]
 
 
 class DriftDetector:
@@ -96,7 +95,7 @@ class DriftDetector:
     def __init__(
         self,
         reference_data: np.ndarray = None,
-        feature_names: List[str] = None,
+        feature_names: list[str] = None,
         window_size: int = 1000,
         check_interval: int = 100,
     ):
@@ -106,14 +105,14 @@ class DriftDetector:
         self.check_interval = check_interval
 
         self.current_window = deque(maxlen=window_size)
-        self.snapshots: List[DriftSnapshot] = []
-        self.alerts: List[DriftAlert] = []
+        self.snapshots: list[DriftSnapshot] = []
+        self.alerts: list[DriftAlert] = []
         self.samples_since_check = 0
 
         # Metrics history
-        self.psi_history: List[Dict] = []
-        self.ks_history: List[Dict] = []
-        self.accuracy_history: List[Dict] = []
+        self.psi_history: list[dict] = []
+        self.ks_history: list[dict] = []
+        self.accuracy_history: list[dict] = []
 
     def set_reference_data(self, data: np.ndarray):
         """Reference (baseline) verisini set et"""
@@ -188,7 +187,7 @@ class DriftDetector:
 
     def calculate_ks_statistic(
         self, reference: np.ndarray, current: np.ndarray
-    ) -> Tuple[float, float]:
+    ) -> tuple[float, float]:
         """
         Kolmogorov-Smirnov test istatistiği
 
@@ -288,6 +287,10 @@ class DriftDetector:
         )
 
         self.snapshots.append(snapshot)
+        if len(self.snapshots) > 1000:
+            self.snapshots = self.snapshots[-500:]
+        if len(self.alerts) > 5000:
+            self.alerts = self.alerts[-2500:]
 
         # Update history
         self.psi_history.append(
@@ -306,7 +309,7 @@ class DriftDetector:
         return snapshot
 
     def _get_severity(
-        self, value: float, thresholds: Dict[DriftSeverity, float]
+        self, value: float, thresholds: dict[DriftSeverity, float]
     ) -> DriftSeverity:
         """Severity belirle"""
         for severity in [
@@ -319,7 +322,7 @@ class DriftDetector:
                 return severity
         return DriftSeverity.CRITICAL
 
-    def get_drift_status(self) -> Dict:
+    def get_drift_status(self) -> dict:
         """Güncel drift durumu"""
         if not self.snapshots:
             return {"status": "no_data", "message": "Henüz drift kontrolü yapılmadı"}
@@ -347,7 +350,7 @@ class DriftDetector:
             )[:5],
         }
 
-    def get_visualization_data(self) -> Dict:
+    def get_visualization_data(self) -> dict:
         """Görselleştirme için veri"""
         if not self.snapshots:
             return {"error": "Veri yok"}
@@ -394,7 +397,7 @@ class DriftDetector:
 
 
 # Singleton
-_drift_detector: Optional[DriftDetector] = None
+_drift_detector: DriftDetector | None = None
 
 
 def get_drift_detector() -> DriftDetector:

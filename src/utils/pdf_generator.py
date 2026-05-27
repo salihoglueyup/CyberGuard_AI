@@ -3,20 +3,25 @@ PDF Report Generator - CyberGuard AI
 Güvenlik raporları oluşturur
 """
 
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4, letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
-from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
-from reportlab.pdfgen import canvas
-from datetime import datetime
-import sqlite3
-import pandas as pd
-import matplotlib.pyplot as plt
 import io
-from typing import Dict, List
-import os
+import sqlite3
+from datetime import datetime
+
+import matplotlib.pyplot as plt
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import (
+    Image,
+    PageBreak,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
 
 class PDFReportGenerator:
@@ -47,50 +52,41 @@ class PDFReportGenerator:
 
         self.normal_style = self.styles['Normal']
 
-    def get_attack_stats(self, days: int = 7) -> Dict:
+    def get_attack_stats(self, days: int = 7) -> dict:
         """Saldırı istatistikleri"""
         conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        try:
+            cursor = conn.cursor()
 
-        # Toplam saldırı
-        cursor.execute(f"""
-            SELECT COUNT(*) FROM attacks 
-            WHERE timestamp >= datetime('now', '-{days} days')
-        """)
-        total = cursor.fetchone()[0]
+            # Toplam saldırı
+            cursor.execute(
+                "SELECT COUNT(*) FROM attacks WHERE timestamp >= datetime('now', '-' || ? || ' days')",
+                (days,)
+            )
+            total = cursor.fetchone()[0]
 
-        # Türe göre
-        cursor.execute(f"""
-            SELECT attack_type, COUNT(*) as count 
-            FROM attacks 
-            WHERE timestamp >= datetime('now', '-{days} days')
-            GROUP BY attack_type 
-            ORDER BY count DESC 
-            LIMIT 5
-        """)
-        by_type = cursor.fetchall()
+            # Türe göre
+            cursor.execute(
+                "SELECT attack_type, COUNT(*) as count FROM attacks WHERE timestamp >= datetime('now', '-' || ? || ' days') GROUP BY attack_type ORDER BY count DESC LIMIT 5",
+                (days,)
+            )
+            by_type = cursor.fetchall()
 
-        # Severity'e göre
-        cursor.execute(f"""
-            SELECT severity, COUNT(*) as count 
-            FROM attacks 
-            WHERE timestamp >= datetime('now', '-{days} days')
-            GROUP BY severity
-        """)
-        by_severity = cursor.fetchall()
+            # Severity'e göre
+            cursor.execute(
+                "SELECT severity, COUNT(*) as count FROM attacks WHERE timestamp >= datetime('now', '-' || ? || ' days') GROUP BY severity",
+                (days,)
+            )
+            by_severity = cursor.fetchall()
 
-        # En tehlikeli IP'ler
-        cursor.execute(f"""
-            SELECT source_ip, COUNT(*) as count 
-            FROM attacks 
-            WHERE timestamp >= datetime('now', '-{days} days')
-            GROUP BY source_ip 
-            ORDER BY count DESC 
-            LIMIT 10
-        """)
-        top_ips = cursor.fetchall()
-
-        conn.close()
+            # En tehlikeli IP'ler
+            cursor.execute(
+                "SELECT source_ip, COUNT(*) as count FROM attacks WHERE timestamp >= datetime('now', '-' || ? || ' days') GROUP BY source_ip ORDER BY count DESC LIMIT 10",
+                (days,)
+            )
+            top_ips = cursor.fetchall()
+        finally:
+            conn.close()
 
         return {
             'total': total,
@@ -99,7 +95,7 @@ class PDFReportGenerator:
             'top_ips': top_ips
         }
 
-    def create_pie_chart(self, data: List[tuple], title: str):
+    def create_pie_chart(self, data: list[tuple], title: str):
         """Pie chart oluştur ve Image objesi döndür"""
         if not data:
             return None
@@ -121,7 +117,7 @@ class PDFReportGenerator:
         # Image objesi döndür
         return Image(img_buffer, width=4*inch, height=2.5*inch)
 
-    def create_bar_chart(self, data: List[tuple], title: str, xlabel: str, ylabel: str):
+    def create_bar_chart(self, data: list[tuple], title: str, xlabel: str, ylabel: str):
         """Bar chart oluştur ve Image objesi döndür"""
         if not data:
             return None
@@ -295,7 +291,7 @@ class PDFReportGenerator:
 
         # Footer
         story.append(Spacer(1, 0.5*inch))
-        footer_text = f"""
+        footer_text = """
         <i>Bu rapor CyberGuard AI tarafından otomatik oluşturulmuştur.<br/>
         © 2025 CyberGuard AI | Yapay Zeka Destekli Siber Güvenlik Platformu</i>
         """

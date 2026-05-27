@@ -42,7 +42,7 @@ export default function Dropdown({
             >
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                     {Icon && <Icon className="w-4 h-4 text-slate-400 flex-shrink-0" />}
-                    <span className={selectedOption ? 'text-white' : 'text-slate-400'}>
+                    <span className={selectedOption ? 'text-[var(--hud-text)]' : 'text-slate-400'}>
                         {selectedOption?.label || placeholder}
                     </span>
                 </div>

@@ -6,9 +6,10 @@ config.yaml dosyasını okur ve ayarları yönetir
 """
 
 import os
+import threading
+from typing import Any
+
 import yaml
-from typing import Any, Dict, Optional
-from pathlib import Path
 
 
 class Config:
@@ -28,12 +29,14 @@ class Config:
     _config_data = None
     _env_vars = {}
     _env_loaded = False
+    _lock = threading.Lock()
 
     def __new__(cls, config_file: str = "config.yaml"):
         """Singleton pattern - tek bir config instance"""
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super().__new__(cls)
+            return cls._instance
 
     def __init__(self, config_file: str = "config.yaml"):
         """
@@ -70,7 +73,7 @@ class Config:
             return
 
         try:
-            with open(env_file, 'r', encoding='utf-8') as f:
+            with open(env_file, encoding='utf-8') as f:
                 for line in f:
                     # Boş satırları ve yorumları atla
                     line = line.strip()
@@ -92,8 +95,9 @@ class Config:
                         # Environment variable'a ekle
                         self._env_vars[key] = value
 
-                        # Sistem environment'a da ekle (opsiyonel)
-                        os.environ[key] = value
+                        # Only set app-specific env vars, don't overwrite system vars
+                        if key.startswith(('CYBERGUARD_', 'GROQ_', 'OPENAI_', 'DB_', 'SECRET_', 'API_')):
+                            os.environ.setdefault(key, value)
 
             print(f"✅ Environment variables loaded from {env_file}")
 
@@ -107,7 +111,7 @@ class Config:
             raise FileNotFoundError(f"Config file not found: {self.config_file}")
 
         try:
-            with open(self.config_file, 'r', encoding='utf-8') as f:
+            with open(self.config_file, encoding='utf-8') as f:
                 self._config_data = yaml.safe_load(f)
 
             print(f"✅ Config loaded: {self.config_file}")
@@ -171,23 +175,24 @@ class Config:
 
         Not: Bu değişiklik sadece runtime'da geçerli, dosyaya yazılmaz
         """
+        with self._lock:
+            keys = key.split('.')
+            config = self._config_data
 
-        keys = key.split('.')
-        config = self._config_data
+            # Son key'e kadar git
+            for k in keys[:-1]:
+                if k not in config:
+                    config[k] = {}
+                config = config[k]
 
-        # Son key'e kadar git
-        for k in keys[:-1]:
-            if k not in config:
-                config[k] = {}
-            config = config[k]
-
-        # Değeri set et
-        config[keys[-1]] = value
+            # Değeri set et
+            config[keys[-1]] = value
 
     def reload(self):
         """Config dosyasını yeniden yükle"""
-        self._config_data = None
-        self._load_config()
+        with self._lock:
+            self._config_data = None
+            self._load_config()
 
     # ========================================
     # CONVENIENCE PROPERTIES
@@ -228,7 +233,7 @@ class Config:
         return self.get('database.path', 'src/database/cyberguard.db')
 
     @property
-    def gemini_api_key(self) -> Optional[str]:
+    def gemini_api_key(self) -> str | None:
         """Google Gemini API Key"""
         return self.get_env('GOOGLE_API_KEY')
 
@@ -236,12 +241,12 @@ class Config:
     # MODEL CONFIGS
     # ========================================
 
-    def get_network_model_config(self) -> Dict:
+    def get_network_model_config(self) -> dict:
         """Network detection model config"""
         return {
             'model_path': self.get_env('NETWORK_MODEL_PATH',
                                        self.get('network_detection.model_path',
-                                                'models/network_detector/lstm_model.h5')),
+                                                'model_artifacts/network_detector/lstm_model.h5')),
             'sequence_length': self.get('network_detection.model.sequence_length', 10),
             'features': self.get('network_detection.model.features', 78),
             'num_classes': self.get('network_detection.model.num_classes', 15),
@@ -253,12 +258,12 @@ class Config:
             'threshold_malicious': self.get('network_detection.thresholds.malicious', 0.50),
         }
 
-    def get_malware_model_config(self) -> Dict:
+    def get_malware_model_config(self) -> dict:
         """Malware detection model config"""
         return {
             'model_path': self.get_env('MALWARE_MODEL_PATH',
                                        self.get('malware_detection.model_path',
-                                                'models/malware_classifier/cnn_model.h5')),
+                                                'model_artifacts/malware_classifier/cnn_model.h5')),
             'input_shape': self.get('malware_detection.model.input_shape', [224, 224, 3]),
             'num_classes': self.get('malware_detection.model.num_classes', 9),
             'batch_size': self.get('malware_detection.training.batch_size', 32),
@@ -269,7 +274,7 @@ class Config:
             'timeout_seconds': self.get('malware_detection.scan_settings.timeout_seconds', 30),
         }
 
-    def get_chatbot_config(self) -> Dict:
+    def get_chatbot_config(self) -> dict:
         """Chatbot config"""
         return {
             'model_name': self.get('chatbot.model.name', 'gemini-pro'),
@@ -290,7 +295,7 @@ class Config:
     # DATABASE CONFIGS
     # ========================================
 
-    def get_database_config(self) -> Dict:
+    def get_database_config(self) -> dict:
         """Database config"""
         return {
             'type': self.get('database.type', 'sqlite'),
@@ -306,7 +311,7 @@ class Config:
     # SECURITY CONFIGS
     # ========================================
 
-    def get_security_config(self) -> Dict:
+    def get_security_config(self) -> dict:
         """Security config"""
         return {
             'rate_limiting_enabled': self.get('security.rate_limiting.enabled', True),
@@ -321,7 +326,7 @@ class Config:
     # MONITORING CONFIGS
     # ========================================
 
-    def get_monitoring_config(self) -> Dict:
+    def get_monitoring_config(self) -> dict:
         """Monitoring config"""
         return {
             'real_time_analysis': self.get('monitoring.real_time_analysis', True),
@@ -335,7 +340,7 @@ class Config:
     # VISUALIZATION CONFIGS
     # ========================================
 
-    def get_visualization_config(self) -> Dict:
+    def get_visualization_config(self) -> dict:
         """Visualization config"""
         return {
             'refresh_rate_seconds': self.get('visualization.dashboard.refresh_rate_seconds', 10),
@@ -350,7 +355,7 @@ class Config:
     # DATA SOURCE CONFIGS
     # ========================================
 
-    def get_data_sources(self) -> Dict:
+    def get_data_sources(self) -> dict:
         """Data sources config"""
         return {
             'network_dataset': {
@@ -402,10 +407,10 @@ class Config:
 
         # Klasörlerin varlığını kontrol et
         required_dirs = [
-            'data/logs',
-            'models/network_detector',
-            'models/malware_classifier',
-            'models/chatbot',
+            'logs/app',
+            'model_artifacts/network_detector',
+            'model_artifacts/malware_classifier',
+            'model_artifacts/chatbot',
         ]
 
         for dir_path in required_dirs:
@@ -414,7 +419,7 @@ class Config:
 
         return (len(errors) == 0, errors)
 
-    def print_config(self, section: Optional[str] = None):
+    def print_config(self, section: str | None = None):
         """
         Config'i pretty print et
 
@@ -437,20 +442,20 @@ class Config:
         print(json.dumps(data, indent=2, ensure_ascii=False))
         print("=" * 60)
 
-    def export_to_dict(self) -> Dict:
+    def export_to_dict(self) -> dict:
         """Tüm config'i dict olarak export et"""
         return self._config_data.copy()
 
     def create_directories(self):
         """Config'de belirtilen tüm klasörleri oluştur"""
         directories = [
-            'data/logs',
+            'logs/app',
             'data/raw',
             'data/processed',
             'data/quarantine',
-            'models/network_detector',
-            'models/malware_classifier',
-            'models/chatbot/vectorstore',
+            'model_artifacts/network_detector',
+            'model_artifacts/malware_classifier',
+            'model_artifacts/chatbot/vectorstore',
         ]
 
         for directory in directories:
@@ -510,14 +515,14 @@ if __name__ == "__main__":
         # Models
         print("\n🤖 Models:")
         network_config = config.get_network_model_config()
-        print(f"  Network Detection:")
+        print("  Network Detection:")
         print(f"    - Type: {config.get('network_detection.model.type')}")
         print(f"    - Sequence Length: {network_config['sequence_length']}")
         print(f"    - Features: {network_config['features']}")
         print(f"    - Classes: {network_config['num_classes']}")
 
         malware_config = config.get_malware_model_config()
-        print(f"  Malware Classification:")
+        print("  Malware Classification:")
         print(f"    - Type: {config.get('malware_detection.model.base_model')}")
         print(f"    - Input Shape: {malware_config['input_shape']}")
         print(f"    - Classes: {malware_config['num_classes']}")

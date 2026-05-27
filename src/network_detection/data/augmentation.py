@@ -11,9 +11,9 @@ Dengesiz veri setleri için augmentation teknikleri.
     - Class balancing
 """
 
-import numpy as np
-from typing import Tuple, Optional, Dict, List
 import logging
+
+import numpy as np
 
 logger = logging.getLogger("DataAugmentation")
 
@@ -34,13 +34,13 @@ class SMOTEAugmenter:
         self.k_neighbors = k_neighbors
         self.sampling_strategy = sampling_strategy
         self.random_state = random_state
-        np.random.seed(random_state)
+        self._rng = np.random.default_rng(random_state)
 
     def fit_resample(
         self,
         X: np.ndarray,
         y: np.ndarray,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         SMOTE uygula
 
@@ -86,7 +86,7 @@ class SMOTEAugmenter:
         self,
         X: np.ndarray,
         y: np.ndarray,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Manual SMOTE implementation"""
         classes, counts = np.unique(y, return_counts=True)
         max_count = counts.max()
@@ -106,11 +106,11 @@ class SMOTEAugmenter:
                 # Generate synthetic samples
                 for _ in range(n_synthetic):
                     # Random sample from class
-                    idx = np.random.randint(0, len(X_cls))
+                    idx = self._rng.integers(0, len(X_cls))
                     sample = X_cls[idx]
 
                     # Add small noise
-                    noise = np.random.randn(*sample.shape) * 0.01
+                    noise = self._rng.standard_normal(sample.shape) * 0.01
                     synthetic = sample + noise
 
                     X_new.append(synthetic[np.newaxis])
@@ -143,7 +143,7 @@ class ADASYNAugmenter:
         self,
         X: np.ndarray,
         y: np.ndarray,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """ADASYN uygula"""
         try:
             from imblearn.over_sampling import ADASYN
@@ -195,7 +195,7 @@ class RandomOversamplerWrapper:
         self,
         X: np.ndarray,
         y: np.ndarray,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Random oversampling"""
         try:
             from imblearn.over_sampling import RandomOverSampler
@@ -223,6 +223,7 @@ class RandomOversamplerWrapper:
 
         except ImportError:
             # Manual implementation
+            rng = np.random.default_rng(self.random_state)
             classes, counts = np.unique(y, return_counts=True)
             max_count = counts.max()
 
@@ -235,7 +236,7 @@ class RandomOversamplerWrapper:
                     X_cls = X[cls_mask]
 
                     n_oversample = max_count - count
-                    indices = np.random.choice(len(X_cls), n_oversample, replace=True)
+                    indices = rng.choice(len(X_cls), n_oversample, replace=True)
 
                     X_new.append(X_cls[indices])
                     y_new.append(np.full(n_oversample, cls))
@@ -252,7 +253,7 @@ def balance_dataset(
     method: str = "smote",  # "smote", "adasyn", "random", "undersample"
     target_ratio: float = 1.0,
     random_state: int = 42,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Dataset dengeleme
 
@@ -284,11 +285,11 @@ def undersample_majority(
     X: np.ndarray,
     y: np.ndarray,
     random_state: int = 42,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Majority class'ı undersample et
     """
-    np.random.seed(random_state)
+    rng = np.random.default_rng(random_state)
 
     classes, counts = np.unique(y, return_counts=True)
     min_count = counts.min()
@@ -301,7 +302,7 @@ def undersample_majority(
         X_cls = X[cls_mask]
 
         if len(X_cls) > min_count:
-            indices = np.random.choice(len(X_cls), min_count, replace=False)
+            indices = rng.choice(len(X_cls), min_count, replace=False)
             X_new.append(X_cls[indices])
         else:
             X_new.append(X_cls)
@@ -311,13 +312,13 @@ def undersample_majority(
     return np.concatenate(X_new), np.concatenate(y_new)
 
 
-def get_class_distribution(y: np.ndarray) -> Dict[int, int]:
+def get_class_distribution(y: np.ndarray) -> dict[int, int]:
     """Sınıf dağılımını döndür"""
     classes, counts = np.unique(y, return_counts=True)
     return dict(zip(classes.tolist(), counts.tolist()))
 
 
-def calculate_class_weights(y: np.ndarray) -> Dict[int, float]:
+def calculate_class_weights(y: np.ndarray) -> dict[int, float]:
     """
     Dengesiz sınıflar için ağırlık hesapla
 
@@ -337,7 +338,7 @@ def create_balanced_batches(
     X: np.ndarray,
     y: np.ndarray,
     batch_size: int = 32,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Her batch'te dengeli sınıf dağılımı
     """

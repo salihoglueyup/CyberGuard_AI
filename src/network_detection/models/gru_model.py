@@ -12,13 +12,13 @@ Mimari:
     Conv1D → GRU → Dense → Output
 """
 
+
 import numpy as np
-from typing import Dict, Optional, Tuple
 
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
     from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
     TF_AVAILABLE = True
@@ -36,7 +36,7 @@ class GRUIDSModel:
 
     def __init__(
         self,
-        input_shape: Tuple[int, int] = (10, 78),
+        input_shape: tuple[int, int] = (10, 78),
         num_classes: int = 15,
         gru_units: int = 100,
         conv_filters: int = 32,
@@ -55,7 +55,7 @@ class GRUIDSModel:
         self.bidirectional = bidirectional
         self.model_name = model_name
 
-        self.model: Optional[Model] = None
+        self.model: Model | None = None
 
         print(f"⚡ {model_name} başlatılıyor...")
         print(f"   📊 GRU units: {gru_units}")
@@ -119,7 +119,7 @@ class GRUIDSModel:
         epochs=50,
         batch_size=64,
         patience=5,
-    ) -> Dict:
+    ) -> dict:
         if self.model is None:
             self.build()
 

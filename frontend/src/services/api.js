@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Full URL kullan - proxy bypass
-const API_BASE = 'http://localhost:8000/api';
+// Full URL kullan - env variable ile konfigüre edilebilir
+export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 const api = axios.create({
     baseURL: API_BASE,
@@ -9,6 +9,30 @@ const api = axios.create({
         'Content-Type': 'application/json'
     }
 });
+
+// Auth token interceptor
+api.interceptors.request.use((config) => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+// 401 response interceptor — redirect to login
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
+            if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 // Dashboard API
 export const dashboardApi = {
@@ -96,7 +120,7 @@ export const chatApi = {
                             } else if (data.text) {
                                 onChunk?.(data.text);
                             }
-                        } catch { /* JSON parse error, skip */ }
+                        } catch (e) { /* JSON parse error, skip */ }
                     }
                 }
             }
@@ -110,8 +134,8 @@ export const chatApi = {
                 } else {
                     onError?.(res.data.error);
                 }
-            } catch {
-                onError?.(error.message);
+            } catch (fallbackErr) {
+                onError?.(fallbackErr.message || error.message);
             }
         }
     }

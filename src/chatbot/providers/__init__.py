@@ -13,7 +13,7 @@ Providers:
 """
 
 from .groq_handler import GroqHandler
-from .provider_manager import ProviderManager, LLMProvider, get_provider_manager
+from .provider_manager import LLMProvider, ProviderManager, get_provider_manager
 
 # Optional imports
 try:
@@ -32,7 +32,7 @@ except ImportError:
     OllamaHandler = None
 
 try:
-    from .gemini_handler import GeminiHandler, EnhancedGeminiHandler
+    from .gemini_handler import EnhancedGeminiHandler, GeminiHandler
 except ImportError:
     GeminiHandler = None
     EnhancedGeminiHandler = None

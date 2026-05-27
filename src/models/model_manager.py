@@ -5,10 +5,9 @@ ML modellerini yönetir (load, save, list, deploy)
 Dosya Yolu: src/models/model_manager.py
 """
 
-import os
 import json
+import os
 import shutil
-from typing import Dict, List, Optional
 from datetime import datetime
 from pathlib import Path
 
@@ -25,7 +24,7 @@ class ModelManager:
     - Metadata yönetimi
     """
 
-    def __init__(self, base_dir: str = "models"):
+    def __init__(self, base_dir: str = "model_artifacts"):
         """
         Args:
             base_dir: Model klasörü
@@ -48,7 +47,7 @@ class ModelManager:
         # Registry yükle veya oluştur
         self.registry = self._load_registry()
 
-        print(f"📦 Model Manager başlatıldı")
+        print("📦 Model Manager başlatıldı")
         print(f"📁 Base directory: {self.base_dir}")
         print(f"📄 Registry file: {self.registry_file}")
 
@@ -56,12 +55,12 @@ class ModelManager:
     # REGISTRY OPERATIONS
     # ========================================
 
-    def _load_registry(self) -> Dict:
+    def _load_registry(self) -> dict:
         """Registry dosyasını yükle"""
 
         if os.path.exists(self.registry_file):
             try:
-                with open(self.registry_file, 'r', encoding='utf-8') as f:
+                with open(self.registry_file, encoding='utf-8') as f:
                     registry = json.load(f)
 
                 # Format kontrolü - models dict ise list'e çevir
@@ -103,8 +102,11 @@ class ModelManager:
         try:
             self.registry['last_updated'] = datetime.now().isoformat()
 
-            with open(self.registry_file, 'w', encoding='utf-8') as f:
+            # Atomic write: write to temp file first, then replace
+            tmp_file = self.registry_file + '.tmp'
+            with open(tmp_file, 'w', encoding='utf-8') as f:
                 json.dump(self.registry, f, indent=2, ensure_ascii=False)
+            os.replace(tmp_file, self.registry_file)
 
             return True
 
@@ -134,7 +136,7 @@ class ModelManager:
 
         return f"{model_type}_{model_name}_{timestamp}_{hash_part}"
 
-    def create_model_directory(self, model_id: str, model_info: Dict) -> Path:
+    def create_model_directory(self, model_id: str, model_info: dict) -> Path:
         """
         Model klasörü oluştur
 
@@ -181,9 +183,9 @@ class ModelManager:
         model_name: str,
         model_type: str,
         framework: str,
-        hyperparameters: Dict,
-        training_config: Dict,
-        tags: List[str] = None,
+        hyperparameters: dict,
+        training_config: dict,
+        tags: list[str] = None,
         description: str = None
     ) -> bool:
         """
@@ -240,7 +242,7 @@ class ModelManager:
 
         return True
 
-    def update_model_metrics(self, model_id: str, metrics: Dict) -> bool:
+    def update_model_metrics(self, model_id: str, metrics: dict) -> bool:
         """
         Model metriklerini güncelle
 
@@ -275,7 +277,7 @@ class ModelManager:
     # MODEL OPERATIONS
     # ========================================
 
-    def get_model_info(self, model_id: str) -> Optional[Dict]:
+    def get_model_info(self, model_id: str) -> dict | None:
         """
         Model bilgilerini getir
 
@@ -292,7 +294,7 @@ class ModelManager:
 
         return None
 
-    def load_model(self, model_id: str) -> Dict:
+    def load_model(self, model_id: str) -> dict:
         """
         Model yükle (dosya yolunu döndür)
 
@@ -387,7 +389,7 @@ class ModelManager:
         # Hiçbir dosya bulunamadı
         raise FileNotFoundError(f"Model dosyası bulunamadı: {model_id}")
 
-    def list_models(self, status: Optional[str] = None) -> List[Dict]:
+    def list_models(self, status: str | None = None) -> list[dict]:
         """
         Modelleri listele
 
@@ -522,7 +524,7 @@ class ModelManager:
     # SEARCH & FILTER
     # ========================================
 
-    def search_models(self, query: str) -> List[Dict]:
+    def search_models(self, query: str) -> list[dict]:
         """Model ara (isim, açıklama, tip)"""
 
         query_lower = query.lower()
@@ -536,7 +538,7 @@ class ModelManager:
 
         return results
 
-    def get_best_model(self, metric: str = 'accuracy') -> Optional[Dict]:
+    def get_best_model(self, metric: str = 'accuracy') -> dict | None:
         """En iyi modeli bul"""
 
         models = self.list_models()
@@ -562,7 +564,7 @@ class ModelManager:
     # STATISTICS
     # ========================================
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Model istatistikleri"""
 
         models = self.registry['models']
@@ -631,7 +633,7 @@ class ModelManager:
 
                 if os.path.exists(metadata_path):
                     try:
-                        with open(metadata_path, 'r', encoding='utf-8') as f:
+                        with open(metadata_path, encoding='utf-8') as f:
                             metadata = json.load(f)
 
                         # Eksik bilgileri tamamla

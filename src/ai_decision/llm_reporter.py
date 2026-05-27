@@ -12,12 +12,10 @@ Large Language Model tabanlı IDS raporlama modülü.
     - Offline/local LLM support
 """
 
+import logging
 import os
 import sys
-from typing import Dict, List, Optional, Union
 from datetime import datetime
-import logging
-import json
 
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -184,15 +182,16 @@ class LLMReporter:
 
         # Report history
         self.report_history = []
+        self._max_history = 1000
 
-        logger.info(f"📝 LLMReporter initialized")
+        logger.info("📝 LLMReporter initialized")
         logger.info(f"   Provider: {llm_provider}")
 
     def generate_attack_report(
         self,
         attack_type: str,
         confidence: float,
-        explanation: Dict = None,
+        explanation: dict = None,
         source_info: str = "Unknown",
         target_info: str = "Unknown",
         template: str = "attack_summary",
@@ -250,6 +249,8 @@ class LLMReporter:
                 "report": report[:500],  # Store first 500 chars
             }
         )
+        if len(self.report_history) > self._max_history:
+            self.report_history = self.report_history[-500:]
 
         return report
 
@@ -258,7 +259,7 @@ class LLMReporter:
         anomaly_score: float,
         raw_error: float,
         threshold: float,
-        anomalous_features: List[str] = None,
+        anomalous_features: list[str] = None,
         explanation: str = None,
     ) -> str:
         """Generate zero-day attack report"""
@@ -277,7 +278,7 @@ class LLMReporter:
         self,
         attack_type: str,
         confidence: float,
-        explanation: Dict = None,
+        explanation: dict = None,
         traffic_analysis: str = None,
         model_name: str = "Unknown",
         latency_ms: float = 0,
@@ -329,7 +330,7 @@ class LLMReporter:
 
         return self._template_report("quick_alert", data)
 
-    def _template_report(self, template_name: str, data: Dict) -> str:
+    def _template_report(self, template_name: str, data: dict) -> str:
         """Template-based report generation"""
         template = self.templates.get(template_name, self.templates["attack_summary"])
 
@@ -343,26 +344,26 @@ class LLMReporter:
                     data[key] = f"[{key}]"
             return template.format(**data)
 
-    def _extract_template_keys(self, template: str) -> List[str]:
+    def _extract_template_keys(self, template: str) -> list[str]:
         """Extract keys from template string"""
         import re
 
         return re.findall(r"\{(\w+)[:\.\}]", template)
 
-    def _llm_report(self, data: Dict) -> str:
+    def _llm_report(self, data: dict) -> str:
         """LLM-enhanced report generation"""
         # This would call an external LLM API
         # For now, fallback to template
         logger.info("LLM report generation - falling back to template")
         return self._template_report("attack_summary", data)
 
-    def _format_indicators(self, evidence: List[str]) -> str:
+    def _format_indicators(self, evidence: list[str]) -> str:
         """Format evidence list"""
         if not evidence:
             return "- No specific indicators identified"
         return "\n".join(f"- {e}" for e in evidence[:5])
 
-    def _format_features(self, features: List[Dict]) -> str:
+    def _format_features(self, features: list[dict]) -> str:
         """Format feature attribution"""
         if not features:
             return "Feature attribution not available."
@@ -380,7 +381,7 @@ class LLMReporter:
         severity = self.severity_map.get(attack_type, "MEDIUM")
 
         if attack_type == "ZERO_DAY":
-            return f"A novel attack pattern was detected with high anomaly score. Immediate investigation recommended."
+            return "A novel attack pattern was detected with high anomaly score. Immediate investigation recommended."
 
         return f"A {attack_type} attack was detected with {confidence:.0%} confidence. Severity level: {severity}."
 
@@ -401,7 +402,7 @@ class LLMReporter:
             "ZERO_DAY": "Unknown impact - immediate investigation required.",
             "PortScan": f"Reconnaissance activity detected. Impact level: {level}",
             "Bot": f"Possible botnet infection. Impact level: {level}",
-            "Infiltration": f"Internal network compromise. Impact level: CRITICAL",
+            "Infiltration": "Internal network compromise. Impact level: CRITICAL",
         }
 
         return impacts.get(
@@ -467,11 +468,11 @@ class LLMReporter:
         }
         return actions.get(attack_type, "Investigate immediately")
 
-    def get_report_history(self, limit: int = 10) -> List[Dict]:
+    def get_report_history(self, limit: int = 10) -> list[dict]:
         """Get recent reports"""
         return self.report_history[-limit:]
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Reporter statistics"""
         attack_counts = {}
         for report in self.report_history:
@@ -500,7 +501,7 @@ def create_reporter(
 def quick_report(
     attack_type: str,
     confidence: float,
-    explanation: Dict = None,
+    explanation: dict = None,
 ) -> str:
     """Generate quick attack report"""
     reporter = LLMReporter()

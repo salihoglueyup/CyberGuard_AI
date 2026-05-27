@@ -10,9 +10,8 @@ Local LLM desteği - İnternet gerektirmez.
     - Streaming responses
 """
 
-import os
 import logging
-from typing import Optional, Dict, List, Any, Generator
+from collections.abc import Generator
 from datetime import datetime
 
 try:
@@ -91,9 +90,9 @@ class OllamaHandler:
     def chat(
         self,
         user_message: str,
-        system_prompt: Optional[str] = None,
-        context: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
+        system_prompt: str | None = None,
+        context: str | None = None,
+        history: list[dict] | None = None,
         stream: bool = False,
     ) -> str:
         """
@@ -156,7 +155,7 @@ class OllamaHandler:
             self.logger.error(f"❌ Ollama Error: {e}")
             return f"Üzgünüm, bir hata oluştu: {str(e)}"
 
-    def _stream_response(self, url: str, payload: Dict) -> Generator[str, None, None]:
+    def _stream_response(self, url: str, payload: dict) -> Generator[str, None, None]:
         """Streaming response"""
         try:
             response = requests.post(url, json=payload, stream=True)
@@ -190,14 +189,14 @@ Local olarak çalışıyorsun, tamamen offline.
 
 Tarih: {datetime.now().strftime('%Y-%m-%d %H:%M')}"""
 
-    def list_local_models(self) -> List[str]:
+    def list_local_models(self) -> list[str]:
         """Ollama'da yüklü modelleri listele"""
         try:
             response = requests.get(f"{self.host}/api/tags")
             if response.status_code == 200:
                 models = response.json().get("models", [])
                 return [m["name"] for m in models]
-        except:
+        except Exception:
             pass
         return []
 
@@ -206,10 +205,10 @@ Tarih: {datetime.now().strftime('%Y-%m-%d %H:%M')}"""
         try:
             response = requests.post(f"{self.host}/api/pull", json={"name": model_name})
             return response.status_code == 200
-        except:
+        except Exception:
             return False
 
-    def get_model_info(self) -> Dict:
+    def get_model_info(self) -> dict:
         """Model bilgilerini döndür"""
         model_info = self.AVAILABLE_MODELS.get(self.model, {})
         return {
@@ -224,7 +223,7 @@ Tarih: {datetime.now().strftime('%Y-%m-%d %H:%M')}"""
         }
 
     @classmethod
-    def list_models(cls) -> List[Dict]:
+    def list_models(cls) -> list[dict]:
         """Mevcut modelleri listele"""
         return [
             {"id": model_id, **info} for model_id, info in cls.AVAILABLE_MODELS.items()
@@ -236,7 +235,7 @@ Tarih: {datetime.now().strftime('%Y-%m-%d %H:%M')}"""
         try:
             response = requests.get("http://localhost:11434/api/tags", timeout=2)
             return response.status_code == 200
-        except:
+        except Exception:
             return False
 
 

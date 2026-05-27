@@ -3,13 +3,14 @@ Memory Manager - CyberGuard AI
 Konuşma hafızası ve uzun dönem bellek sistemi
 """
 
-import os
 import json
-from typing import List, Dict, Optional
+import os
+from collections import deque
 from datetime import datetime
-from langchain_huggingface import HuggingFaceEmbeddings
+
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 class MemoryManager:
@@ -40,23 +41,23 @@ class MemoryManager:
                 collection_name=f"memory_{user_id}"
             )
             print(f"✅ Memory yüklendi: {self._get_memory_count()} kayıt")
-        except:
+        except Exception:
             self.vectorstore = None
             print("⚠️ Memory oluşturuluyor...")
 
         # Kısa dönem hafıza (son N mesaj)
-        self.short_term_memory = []
+        self.short_term_memory = deque(maxlen=10)
         self.max_short_term = 10
 
     def _get_memory_count(self) -> int:
         """Hafıza kayıt sayısı"""
         try:
             return len(self.vectorstore.get()['ids'])
-        except:
+        except (AttributeError, KeyError, TypeError):
             return 0
 
     def add_conversation(self, user_message: str, bot_response: str,
-                        context: Optional[Dict] = None) -> bool:
+                        context: dict | None = None) -> bool:
         """
         Konuşmayı hafızaya ekle
 
@@ -114,17 +115,13 @@ Zaman: {timestamp}
                 'timestamp': timestamp
             })
 
-            # Kısa dönem hafızayı sınırla
-            if len(self.short_term_memory) > self.max_short_term:
-                self.short_term_memory.pop(0)
-
             return True
 
         except Exception as e:
             print(f"❌ Hafızaya eklenemedi: {e}")
             return False
 
-    def search_memory(self, query: str, k: int = 3) -> List[Dict]:
+    def search_memory(self, query: str, k: int = 3) -> list[dict]:
         """
         Hafızada ara
 
@@ -224,7 +221,7 @@ Zaman: {timestamp}
         except Exception as e:
             print(f"❌ Silme hatası: {e}")
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Hafıza istatistikleri"""
         try:
             return {
@@ -233,7 +230,7 @@ Zaman: {timestamp}
                 'short_term_count': len(self.short_term_memory),
                 'vectorstore_active': self.vectorstore is not None
             }
-        except:
+        except Exception:
             return {
                 'user_id': self.user_id,
                 'total_conversations': 0,
@@ -241,7 +238,7 @@ Zaman: {timestamp}
                 'vectorstore_active': False
             }
 
-    def export_memory(self) -> List[Dict]:
+    def export_memory(self) -> list[dict]:
         """Tüm hafızayı dışa aktar"""
         try:
             if not self.vectorstore:

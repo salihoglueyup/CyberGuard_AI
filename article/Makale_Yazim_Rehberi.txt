@@ -1,0 +1,183 @@
+================================================================================
+                    CYBERGUARD AI - ÖDEV RAPORU REHBERİ
+================================================================================
+
+Hedef: 8-12 sayfa arası, öz ve net bir rapor
+
+================================================================================
+                         RAPOR YAPISI (5 BÖLÜM)
+================================================================================
+
+1. GİRİŞ (1-1.5 sayfa)
+2. YÖNTEM (2-3 sayfa)  
+3. SİSTEM TASARIMI (2-3 sayfa)
+4. SONUÇLAR (1.5-2 sayfa)
+5. SONUÇ VE DEĞERLENDİRME (1 sayfa)
+
+TOPLAM: 8-12 sayfa
+
+================================================================================
+                         BÖLÜM BÖLÜM YAZILACAKLAR
+================================================================================
+
+------------------------------------------------------------------------------
+BÖLÜM 1: GİRİŞ (1-1.5 sayfa)
+------------------------------------------------------------------------------
+
+Ne yazmalısın:
+- Siber güvenlik neden önemli? (2-3 cümle)
+- Geleneksel sistemlerin sorunu nedir? (2-3 cümle)
+- Bu projede ne yaptın? (3-4 cümle)
+- Hangi teknolojiyi kullandın? (SSA-LSTM, kısaca açıkla)
+
+Örnek açılış:
+"Siber saldırılar her geçen yıl artmakta ve geleneksel imza tabanlı güvenlik 
+sistemleri bu tehditlere karşı yetersiz kalmaktadır. Bu çalışmada, derin 
+öğrenme tabanlı bir saldırı tespit platformu olan CyberGuard AI geliştirilmiştir."
+
+------------------------------------------------------------------------------
+BÖLÜM 2: YÖNTEM (2-3 sayfa)
+------------------------------------------------------------------------------
+
+2.1 Veri Kümeleri (yarım sayfa)
+- NSL-KDD: 148K kayıt, 41 özellik
+- CICIDS2017: 2.8M kayıt, 84 özellik  
+- BoT-IoT: 73M kayıt, IoT odaklı
+
+2.2 Veri Ön İşleme (yarım sayfa)
+- Normalizasyon (Min-Max)
+- SMOTE (sınıf dengeleme)
+- 80/20 veri bölümü
+
+2.3 Model Mimarisi (1 sayfa)
+- Conv1D → MaxPooling → LSTM → Dense → Dropout → Output
+- Şema çiz veya ASCII diyagram ekle
+- Neden LSTM? (zamansal bağımlılıklar)
+
+2.4 SSA Optimizasyonu (yarım sayfa)
+- SSA nedir? (serçe davranışından esinlenen algoritma)
+- Ne optimize edildi? (LSTM units: 120, filters: 30, batch: 120)
+
+------------------------------------------------------------------------------
+BÖLÜM 3: SİSTEM TASARIMI (2-3 sayfa)
+------------------------------------------------------------------------------
+
+3.1 Genel Mimari (1 sayfa)
+- Frontend: React (34 sayfa)
+- Backend: FastAPI (150+ API)
+- ML Engine: TensorFlow
+
+Basit bir şema çiz:
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│   Frontend   │◄───►│   Backend    │◄───►│   ML Model   │
+│   (React)    │    │  (FastAPI)   │    │ (TensorFlow) │
+└──────────────┘    └──────────────┘    └──────────────┘
+
+3.2 Önemli Özellikler (1-2 sayfa)
+Her birini 2-3 cümleyle açıkla:
+
+- Dashboard: Anlık istatistikler ve grafikler
+- 3D Threat Map: Dünya haritasında canlı saldırı görselleştirme
+- AI Asistan: 5 LLM entegrasyonu (GPT, Gemini, Claude vb.)
+- WebSocket: Gerçek zamanlı veri akışı
+- API'ler: 150+ endpoint, dış sistemlerle entegrasyon
+
+------------------------------------------------------------------------------
+BÖLÜM 4: SONUÇLAR (1.5-2 sayfa)
+------------------------------------------------------------------------------
+
+4.1 Ana Sonuç Tablosu
+
+| Veri Kümesi | Doğruluk | F1-Score |
+|-------------|----------|----------|
+| NSL-KDD     | %99.36   | %99.36   |
+| CICIDS2017  | %99.88   | %99.88   |
+| BoT-IoT     | %99.99   | %99.99   |
+
+4.2 Karşılaştırma (yarım sayfa)
+
+| Yöntem      | NSL-KDD  |
+|-------------|----------|
+| SVM         | %94.5    |
+| Random Forest| %96.8   |
+| LSTM (temel)| %98.5    |
+| SSA-LSTM    | %99.36   |
+
+4.3 Kısa Yorum (3-4 cümle)
+- Model tüm veri kümelerinde %99+ başarı gösterdi
+- SSA optimizasyonu performansı artırdı
+- Platform gerçek zamanlı tespit yapabiliyor
+
+------------------------------------------------------------------------------
+BÖLÜM 5: SONUÇ VE DEĞERLENDİRME (1 sayfa)
+------------------------------------------------------------------------------
+
+5.1 Ne Yaptık? (3-4 cümle)
+- SSA-LSTM modeli geliştirildi
+- Web platformu oluşturuldu
+- Yüksek doğruluk oranları elde edildi
+
+5.2 Kısıtlamalar (2-3 madde)
+- Sadece public veri setleri kullanıldı
+- Adversarial saldırılara karşı test edilmedi
+- GPU gereksinimi var
+
+5.3 Gelecek Çalışmalar (2-3 madde)
+- Canlı ağ ortamında test
+- Federe öğrenme entegrasyonu
+- Edge deployment
+
+================================================================================
+                         KAYNAKÇA (5-10 kaynak yeterli)
+================================================================================
+
+En önemli kaynaklar:
+
+[1] Xue, J., & Shen, B. (2020). SSA algoritması. Systems Science & CE, 8(1).
+[2] Hochreiter, S., & Schmidhuber, J. (1997). LSTM. Neural Computation, 9(8).
+[3] Scientific Reports. (2025). SSA-LSTM IDS. Scientific Reports, 15, 1554.
+[4] Tavallaee, M., et al. (2009). NSL-KDD analizi. IEEE CISDA.
+[5] Sharafaldin, I., et al. (2018). CICIDS2017. ICISSp.
+
+================================================================================
+                         PRATİK İPUÇLARI
+================================================================================
+
+1. Ekran görüntüsü ekle:
+   - Dashboard'dan bir görsel
+   - 3D haritadan bir görsel
+   - AI asistan sohbetinden bir görsel
+
+2. Kod örneği ekle (kısa):
+   ```python
+   model = Sequential([
+       Conv1D(30, 3, activation='relu'),
+       MaxPooling1D(2),
+       LSTM(120),
+       Dense(512, activation='relu'),
+       Dropout(0.2),
+       Dense(n_classes, activation='softmax')
+   ])
+   ```
+
+3. Tablolara dikkat et - numaralandır (Tablo 1, Tablo 2...)
+
+4. Her bölümün başında kısa bir giriş cümlesi yaz
+
+5. Teknik terimleri ilk geçtiği yerde açıkla:
+   "LSTM (Long Short-Term Memory - Uzun-Kısa Süreli Bellek)"
+
+================================================================================
+                              ÖZET
+================================================================================
+
+5 Bölüm:
+1. GİRİŞ - Neden bu proje?
+2. YÖNTEM - Nasıl yaptık?
+3. SİSTEM - Ne ürettik?
+4. SONUÇLAR - Ne bulduk?
+5. SONUÇ - Ne kazandık?
+
+Hedef: 8-12 sayfa, 3-5 tablo, 2-3 şekil, 5-10 kaynak
+
+================================================================================

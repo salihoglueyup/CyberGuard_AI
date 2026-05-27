@@ -10,17 +10,17 @@ Modelleri gerçek trafikte karşılaştırma.
     - Performans karşılaştırma
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
-import logging
-from collections import defaultdict
+from pathlib import Path
+from typing import Any
+
+import numpy as np
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -43,8 +43,8 @@ class ModelVariant:
     model_name: str
     model_path: str
     traffic_weight: float = 0.5
-    predictions: List[Dict] = field(default_factory=list)
-    metrics: Dict = field(default_factory=dict)
+    predictions: list[dict] = field(default_factory=list)
+    metrics: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -58,9 +58,9 @@ class ABTest:
     variant_b: ModelVariant
     status: TestStatus = TestStatus.DRAFT
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
-    started_at: Optional[str] = None
-    completed_at: Optional[str] = None
-    winner: Optional[str] = None
+    started_at: str | None = None
+    completed_at: str | None = None
+    winner: str | None = None
 
 
 class ABTestingEngine:
@@ -69,9 +69,9 @@ class ABTestingEngine:
     """
 
     def __init__(self):
-        self.tests: Dict[str, ABTest] = {}
-        self.active_test_id: Optional[str] = None
-        self.loaded_models: Dict[str, Any] = {}
+        self.tests: dict[str, ABTest] = {}
+        self.active_test_id: str | None = None
+        self.loaded_models: dict[str, Any] = {}
 
         # Results directory
         self.results_dir = PROJECT_ROOT / "models" / "ab_test_results"
@@ -85,7 +85,7 @@ class ABTestingEngine:
         model_a_path: str,
         model_b_name: str,
         model_b_path: str,
-        traffic_split: Tuple[float, float] = (0.5, 0.5),
+        traffic_split: tuple[float, float] = (0.5, 0.5),
     ) -> ABTest:
         """
         Yeni A/B test oluştur
@@ -182,8 +182,8 @@ class ABTestingEngine:
                     logger.error(f"Model yükleme hatası: {e}")
 
     def predict(
-        self, test_id: str, features: np.ndarray, ground_truth: Optional[int] = None
-    ) -> Dict:
+        self, test_id: str, features: np.ndarray, ground_truth: int | None = None
+    ) -> dict:
         """
         A/B test ile prediction yap
 
@@ -233,6 +233,8 @@ class ABTestingEngine:
             }
 
             variant.predictions.append(record)
+            if len(variant.predictions) > 10000:
+                variant.predictions = variant.predictions[-5000:]
 
             return {
                 "variant": variant.variant_id,
@@ -244,7 +246,7 @@ class ABTestingEngine:
         except Exception as e:
             return {"error": str(e)}
 
-    def analyze_test(self, test_id: str) -> Dict:
+    def analyze_test(self, test_id: str) -> dict:
         """
         A/B test sonuçlarını analiz et
         """
@@ -253,7 +255,7 @@ class ABTestingEngine:
 
         test = self.tests[test_id]
 
-        def calculate_metrics(predictions: List[Dict]) -> Dict:
+        def calculate_metrics(predictions: list[dict]) -> dict:
             if not predictions:
                 return {"count": 0}
 
@@ -307,8 +309,8 @@ class ABTestingEngine:
         }
 
     def _calculate_significance(
-        self, predictions_a: List[Dict], predictions_b: List[Dict]
-    ) -> Dict:
+        self, predictions_a: list[dict], predictions_b: list[dict]
+    ) -> dict:
         """Statistical significance hesapla"""
 
         # Minimum sample
@@ -365,7 +367,7 @@ class ABTestingEngine:
             return {"significant": False, "reason": "scipy gerekli"}
 
     def _get_recommendation(
-        self, metrics_a: Dict, metrics_b: Dict, significance: Dict
+        self, metrics_a: dict, metrics_b: dict, significance: dict
     ) -> str:
         """Öneri oluştur"""
         if not significance.get("significant"):
@@ -381,7 +383,7 @@ class ABTestingEngine:
         else:
             return f"Variant B (accuracy: {acc_b*100:.1f}%) öneriliyor. +{diff:.1f}% daha iyi."
 
-    def get_test_status(self, test_id: str) -> Dict:
+    def get_test_status(self, test_id: str) -> dict:
         """Test durumunu getir"""
         if test_id not in self.tests:
             return {"error": "Test bulunamadı"}
@@ -398,7 +400,7 @@ class ABTestingEngine:
             "winner": test.winner,
         }
 
-    def list_tests(self) -> List[Dict]:
+    def list_tests(self) -> list[dict]:
         """Tüm testleri listele"""
         return [
             {
@@ -428,7 +430,7 @@ class ABTestingEngine:
 
 
 # Singleton
-_ab_engine: Optional[ABTestingEngine] = None
+_ab_engine: ABTestingEngine | None = None
 
 
 def get_ab_engine() -> ABTestingEngine:
@@ -456,5 +458,5 @@ if __name__ == "__main__":
         traffic_split=(0.5, 0.5),
     )
 
-    print(f"\n📋 Test listesi:")
+    print("\n📋 Test listesi:")
     print(json.dumps(engine.list_tests(), indent=2))

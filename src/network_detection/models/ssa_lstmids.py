@@ -15,28 +15,23 @@ SSA ile optimize edilen parametreler:
     - Early stopping patience: 6
 """
 
-import os
-import sys
 import json
+import os
+
 import numpy as np
-from pathlib import Path
-from typing import Dict, Optional, Tuple
-from datetime import datetime
 
 # Proje yolu
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 try:
     import tensorflow as tf
     from tensorflow import keras
-    from tensorflow.keras import layers, Model
+    from tensorflow.keras import Model, layers
     from tensorflow.keras.callbacks import (
         EarlyStopping,
-        ReduceLROnPlateau,
         ModelCheckpoint,
+        ReduceLROnPlateau,
     )
 
     TF_AVAILABLE = True
@@ -73,7 +68,7 @@ class SSA_LSTMIDS:
 
     def __init__(
         self,
-        input_shape: Tuple[int, int],
+        input_shape: tuple[int, int],
         num_classes: int,
         use_paper_params: bool = True,
         **kwargs,
@@ -106,7 +101,7 @@ class SSA_LSTMIDS:
             if key in self.params:
                 self.params[key] = kwargs[key]
 
-        self.model: Optional[Model] = None
+        self.model: Model | None = None
         self.history = None
 
         print("\n" + "=" * 60)
@@ -181,13 +176,13 @@ class SSA_LSTMIDS:
         self,
         X_train: np.ndarray,
         y_train: np.ndarray,
-        X_val: Optional[np.ndarray] = None,
-        y_val: Optional[np.ndarray] = None,
-        epochs: Optional[int] = None,
-        batch_size: Optional[int] = None,
-        save_path: Optional[str] = None,
+        X_val: np.ndarray | None = None,
+        y_val: np.ndarray | None = None,
+        epochs: int | None = None,
+        batch_size: int | None = None,
+        save_path: str | None = None,
         verbose: int = 1,
-    ) -> Dict:
+    ) -> dict:
         """
         Modeli eğit
 
@@ -209,7 +204,7 @@ class SSA_LSTMIDS:
         epochs = epochs or self.params["epochs"]
         batch_size = batch_size or self.params["batch_size"]
 
-        print(f"\n🏋️ Eğitim başlıyor...")
+        print("\n🏋️ Eğitim başlıyor...")
         print(f"   Epochs: {epochs}")
         print(f"   Batch Size: {batch_size}")
         print(f"   Train samples: {len(X_train):,}")
@@ -269,7 +264,7 @@ class SSA_LSTMIDS:
                 self.history.history["val_accuracy"][-1]
             )
 
-        print(f"\n✅ Eğitim tamamlandı!")
+        print("\n✅ Eğitim tamamlandı!")
         print(f"   Epoch: {results['epochs_trained']}")
         print(f"   Accuracy: {results['final_accuracy']*100:.2f}%")
         if "final_val_accuracy" in results:
@@ -277,13 +272,13 @@ class SSA_LSTMIDS:
 
         return results
 
-    def evaluate(self, X_test: np.ndarray, y_test: np.ndarray) -> Dict:
+    def evaluate(self, X_test: np.ndarray, y_test: np.ndarray) -> dict:
         """Model değerlendirmesi"""
         from sklearn.metrics import (
             accuracy_score,
+            f1_score,
             precision_score,
             recall_score,
-            f1_score,
         )
 
         y_pred_proba = self.model.predict(X_test, verbose=0)
@@ -329,7 +324,7 @@ class SSA_LSTMIDS:
             ".keras", "_params.json"
         )
         if os.path.exists(params_path):
-            with open(params_path, "r") as f:
+            with open(params_path) as f:
                 params = json.load(f)
         else:
             params = cls.PAPER_PARAMS
@@ -358,7 +353,7 @@ def optimize_with_ssa(
     num_classes: int,
     max_iterations: int = 20,
     population_size: int = 10,
-) -> Tuple[Dict, float]:
+) -> tuple[dict, float]:
     """
     SSA ile hiperparametre optimizasyonu
 
@@ -370,7 +365,7 @@ def optimize_with_ssa(
     print("\n🦠 SSA Hiperparametre Optimizasyonu")
     print("=" * 50)
 
-    def objective(params: Dict) -> float:
+    def objective(params: dict) -> float:
         model = SSA_LSTMIDS(
             input_shape=X_train.shape[1:],
             num_classes=num_classes,
@@ -432,7 +427,7 @@ if __name__ == "__main__":
 
     # Evaluate
     eval_results = model.evaluate(X_val, y_val)
-    print(f"\n📊 Test Sonuçları:")
+    print("\n📊 Test Sonuçları:")
     for key, value in eval_results.items():
         print(f"   {key}: {value*100:.2f}%")
 

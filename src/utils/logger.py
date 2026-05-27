@@ -7,9 +7,9 @@ Tüm uygulama loglarını yönetir
 
 import logging
 import os
+import sys
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
-import sys
 
 
 class Logger:
@@ -51,7 +51,7 @@ class Logger:
             cls._instances[name] = super().__new__(cls)
         return cls._instances[name]
 
-    def __init__(self, name: str = "CyberGuard", log_dir: str = "data/logs"):
+    def __init__(self, name: str = "CyberGuard", log_dir: str = "logs/app"):
         """
         Logger'ı başlat
 
@@ -410,7 +410,7 @@ if __name__ == "__main__":
     if os.path.exists(log_file):
         print("\n📋 Son 10 log satırı:")
         print("-" * 60)
-        with open(log_file, 'r', encoding='utf-8') as f:
+        with open(log_file, encoding='utf-8') as f:
             lines = f.readlines()
             for line in lines[-10:]:
                 print(line.strip())

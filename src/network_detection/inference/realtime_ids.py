@@ -21,22 +21,19 @@ Kullanım:
 """
 
 import os
-import sys
-import time
-import json
 import queue
 import threading
-import numpy as np
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Optional, Callable, Any, Tuple
-from dataclasses import dataclass, field
+import time
 from collections import deque
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
+from pathlib import Path
+
+import numpy as np
 
 # Proje yolu
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -80,12 +77,12 @@ class Alert:
     attack_type: AttackType
     severity: AlertSeverity
     confidence: float
-    source_ip: Optional[str] = None
-    dest_ip: Optional[str] = None
+    source_ip: str | None = None
+    dest_ip: str | None = None
     description: str = ""
-    raw_features: Optional[np.ndarray] = None
+    raw_features: np.ndarray | None = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "timestamp": self.timestamp.isoformat(),
@@ -109,7 +106,7 @@ class IDSMetrics:
     processing_time_avg: float = 0.0
     packets_per_second: float = 0.0
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "total_packets": self.total_packets,
             "normal_packets": self.normal_packets,
@@ -133,13 +130,13 @@ class ConceptDriftDetector:
         self.ground_truth = deque(maxlen=window_size)
         self.error_rates = deque(maxlen=100)
 
-    def update(self, prediction: int, true_label: Optional[int] = None):
+    def update(self, prediction: int, true_label: int | None = None):
         """Prediction ekle"""
         self.predictions.append(prediction)
         if true_label is not None:
             self.ground_truth.append(true_label)
 
-    def check_drift(self) -> Tuple[bool, float]:
+    def check_drift(self) -> tuple[bool, float]:
         """
         Drift var mı kontrol et
 
@@ -193,11 +190,11 @@ class RealTimeIDS:
 
     def __init__(
         self,
-        model_path: Optional[str] = None,
+        model_path: str | None = None,
         threshold: float = 0.5,
         buffer_size: int = 100,
         window_size: int = 10,
-        alert_callback: Optional[Callable[[Alert], None]] = None,
+        alert_callback: Callable[[Alert], None] | None = None,
         verbose: bool = True,
     ):
         self.model_path = model_path
@@ -207,7 +204,7 @@ class RealTimeIDS:
         self.alert_callback = alert_callback
         self.verbose = verbose
 
-        self.model: Optional[keras.Model] = None
+        self.model: keras.Model | None = None
         self.scaler = None
         self.is_running = False
 
@@ -218,17 +215,17 @@ class RealTimeIDS:
 
         # Metrics
         self.metrics = IDSMetrics()
-        self.start_time: Optional[datetime] = None
+        self.start_time: datetime | None = None
 
         # Drift detection
         self.drift_detector = ConceptDriftDetector()
 
         # Alerts
-        self.recent_alerts: List[Alert] = []
+        self.recent_alerts: list[Alert] = []
         self.alert_counter = 0
 
         # Threading
-        self._processing_thread: Optional[threading.Thread] = None
+        self._processing_thread: threading.Thread | None = None
         self._lock = threading.Lock()
 
         # Model yükle
@@ -275,8 +272,8 @@ class RealTimeIDS:
             print("⏹️ Real-time IDS durduruldu")
 
     def process(
-        self, features: np.ndarray, metadata: Optional[Dict] = None
-    ) -> Optional[Alert]:
+        self, features: np.ndarray, metadata: dict | None = None
+    ) -> Alert | None:
         """
         Tek bir paket/flow işle
 
@@ -352,7 +349,7 @@ class RealTimeIDS:
 
         return alert
 
-    def process_batch(self, features_batch: np.ndarray) -> List[Alert]:
+    def process_batch(self, features_batch: np.ndarray) -> list[Alert]:
         """Batch işleme"""
         alerts = []
         for features in features_batch:
@@ -366,19 +363,23 @@ class RealTimeIDS:
         while self.is_running:
             try:
                 if self.packet_buffer:
-                    features = self.packet_buffer.popleft()
-                    self.process(features)
+                    item = self.packet_buffer.popleft()
+                    if isinstance(item, tuple) and len(item) == 2:
+                        features, metadata = item
+                        self.process(features, metadata)
+                    else:
+                        self.process(item)
                 else:
                     time.sleep(0.001)  # 1ms wait
             except Exception as e:
                 if self.verbose:
                     print(f"⚠️ Processing error: {e}")
 
-    def add_to_buffer(self, features: np.ndarray, metadata: Optional[Dict] = None):
+    def add_to_buffer(self, features: np.ndarray, metadata: dict | None = None):
         """Packet buffer'a ekle"""
         self.packet_buffer.append((features, metadata))
 
-    def get_metrics(self) -> Dict:
+    def get_metrics(self) -> dict:
         """Güncel metrikleri döndür"""
         with self._lock:
             if self.start_time:
@@ -389,12 +390,12 @@ class RealTimeIDS:
                     )
             return self.metrics.to_dict()
 
-    def get_recent_alerts(self, limit: int = 10) -> List[Dict]:
+    def get_recent_alerts(self, limit: int = 10) -> list[dict]:
         """Son alert'leri döndür"""
         with self._lock:
             return [a.to_dict() for a in self.recent_alerts[-limit:]]
 
-    def check_drift(self) -> Tuple[bool, float]:
+    def check_drift(self) -> tuple[bool, float]:
         """Concept drift kontrol et"""
         return self.drift_detector.check_drift()
 

@@ -25,15 +25,15 @@ export default function Tabs({
         pills: (isActive) => `
       px-4 py-2 rounded-lg text-sm font-medium transition-all
       ${isActive
-                ? 'bg-blue-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                ? 'bg-blue-600 text-[var(--hud-text)]'
+                : 'text-slate-400 hover:text-[var(--hud-text)] hover:bg-slate-800'
             }
     `,
         underline: (isActive) => `
       pb-3 text-sm font-medium transition-colors border-b-2 -mb-px
       ${isActive
                 ? 'text-blue-400 border-blue-400'
-                : 'text-slate-400 hover:text-white border-transparent'
+                : 'text-slate-400 hover:text-[var(--hud-text)] border-transparent'
             }
     `,
     };

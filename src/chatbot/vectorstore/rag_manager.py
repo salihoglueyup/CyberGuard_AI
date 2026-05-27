@@ -4,13 +4,13 @@ Retrieval Augmented Generation sistemi
 Döküman yönetimi ve akıllı sorgulama
 """
 
+import hashlib
 import os
-from typing import List, Dict
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-import hashlib
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 class RAGManager:
@@ -37,7 +37,7 @@ class RAGManager:
                 embedding_function=self.embeddings
             )
             print(f"✅ VectorStore yüklendi: {self._get_doc_count()} döküman")
-        except:
+        except Exception:
             self.vectorstore = None
             print("⚠️ VectorStore oluşturuluyor...")
 
@@ -45,10 +45,10 @@ class RAGManager:
         """Döküman sayısı"""
         try:
             return len(self.vectorstore.get()['ids'])
-        except:
+        except (AttributeError, KeyError, TypeError):
             return 0
 
-    def add_text_document(self, text: str, metadata: Dict = None) -> bool:
+    def add_text_document(self, text: str, metadata: dict = None) -> bool:
         """
         Metin döküman ekle
 
@@ -103,7 +103,7 @@ class RAGManager:
             print(f"❌ Döküman eklenemedi: {e}")
             return False
 
-    def add_pdf_document(self, pdf_path: str, metadata: Dict = None) -> bool:
+    def add_pdf_document(self, pdf_path: str, metadata: dict = None) -> bool:
         """
         PDF döküman ekle
 
@@ -135,7 +135,7 @@ class RAGManager:
             print(f"❌ PDF eklenemedi: {e}")
             return False
 
-    def search(self, query: str, k: int = 3) -> List[Dict]:
+    def search(self, query: str, k: int = 3) -> list[dict]:
         """
         Benzer dökümanları ara
 
@@ -203,7 +203,7 @@ class RAGManager:
         except Exception as e:
             print(f"❌ Silme hatası: {e}")
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """İstatistikler"""
         try:
             doc_count = self._get_doc_count()
@@ -213,7 +213,7 @@ class RAGManager:
                 'vectorstore_active': self.vectorstore is not None,
                 'persist_directory': self.persist_directory
             }
-        except:
+        except Exception:
             return {
                 'total_documents': 0,
                 'vectorstore_active': False,

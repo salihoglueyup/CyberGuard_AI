@@ -13,9 +13,10 @@ Avantajlar:
     - False positive azaltma
 """
 
-import numpy as np
-from typing import Dict, List, Optional, Tuple, Any
 from collections import Counter
+from typing import Any
+
+import numpy as np
 
 
 class EnsembleIDSModel:
@@ -27,17 +28,17 @@ class EnsembleIDSModel:
 
     def __init__(
         self,
-        models: List[Any] = None,
-        model_names: List[str] = None,
+        models: list[Any] = None,
+        model_names: list[str] = None,
         voting: str = "soft",  # "hard" or "soft"
-        weights: List[float] = None,
+        weights: list[float] = None,
     ):
         self.models = models or []
         self.model_names = model_names or []
         self.voting = voting
         self.weights = weights
 
-        print(f"🎯 Ensemble IDS başlatılıyor...")
+        print("🎯 Ensemble IDS başlatılıyor...")
         print(f"   Voting: {voting}")
         print(f"   Models: {len(self.models)}")
 
@@ -106,13 +107,13 @@ class EnsembleIDSModel:
 
         return np.array(final_predictions)
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> Dict:
+    def evaluate(self, X: np.ndarray, y: np.ndarray) -> dict:
         """Ensemble değerlendirmesi"""
         from sklearn.metrics import (
             accuracy_score,
+            f1_score,
             precision_score,
             recall_score,
-            f1_score,
         )
 
         y_pred = self.predict(X)
@@ -129,7 +130,7 @@ class EnsembleIDSModel:
 
     def get_individual_accuracies(
         self, X: np.ndarray, y: np.ndarray
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Her modelin ayrı accuracy'si"""
         from sklearn.metrics import accuracy_score
 
@@ -140,7 +141,7 @@ class EnsembleIDSModel:
                 pred = np.argmax(proba, axis=1)
                 acc = accuracy_score(y, pred)
                 accuracies[self.model_names[i]] = acc
-            except:
+            except Exception:
                 accuracies[self.model_names[i]] = 0.0
 
         return accuracies
@@ -154,7 +155,7 @@ class StackingEnsemble:
     Daha güçlü ama daha yavaş.
     """
 
-    def __init__(self, base_models: List[Any] = None, meta_model: Any = None):
+    def __init__(self, base_models: list[Any] = None, meta_model: Any = None):
         self.base_models = base_models or []
         self.meta_model = meta_model
 
@@ -200,7 +201,7 @@ class StackingEnsemble:
 
 # Helper function
 def create_ensemble_from_paths(
-    model_paths: List[str], names: List[str] = None
+    model_paths: list[str], names: list[str] = None
 ) -> EnsembleIDSModel:
     """Kayıtlı modellerden ensemble oluştur"""
     from tensorflow import keras

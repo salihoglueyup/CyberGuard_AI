@@ -3,8 +3,8 @@ TensorFlow Model Training Script - CyberGuard AI
 Mock data kullanarak TensorFlow modelini eğitir (Model Manager Entegreli)
 """
 
-import sys
 import os
+import sys
 
 # Proje kök dizinini ekle
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,21 +12,20 @@ project_root = os.path.dirname(os.path.dirname(current_dir))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
+import pickle
 import sqlite3
-import pandas as pd
+from datetime import datetime
+
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from datetime import datetime
-from typing import Dict, List, Tuple, Optional
-import json
-import pickle
 
 # Import models
 try:
-    from src.models.tensorflow_model import CyberThreatNeuralNetwork
     from src.models.model_evaluator import ModelEvaluator
     from src.models.model_manager import ModelManager
+    from src.models.tensorflow_model import CyberThreatNeuralNetwork
 except ImportError:
     print("⚠️  Import hatası - Lokal import deneniyor...")
     import importlib.util
@@ -84,8 +83,12 @@ class TensorFlowTrainer:
             self.db_path = os.path.join(project_root, db_path)
         else:
             self.db_path = db_path
-        
+
         self.table = table  # attacks veya defences
+        # Validate table name to prevent SQL injection
+        allowed_tables = {'attacks', 'defences'}
+        if self.table not in allowed_tables:
+            raise ValueError(f"Geçersiz tablo adı: {self.table}. İzin verilenler: {allowed_tables}")
         self.model_name = model_name or f"CyberThreat_{datetime.now().strftime('%Y%m%d')}"
         self.description = description or f"TensorFlow Model for {table.title()} Analysis"
 
@@ -95,7 +98,7 @@ class TensorFlowTrainer:
         self.class_names = None
 
         # Model Manager
-        self.model_manager = ModelManager(base_dir='models')
+        self.model_manager = ModelManager(base_dir='model_artifacts')
         self.model_id = None
         self.model_dir = None
 
@@ -112,26 +115,29 @@ class TensorFlowTrainer:
             raise FileNotFoundError(f"❌ Database bulunamadı: {self.db_path}")
 
         conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT COUNT(*) FROM {self.table}")
-        total_records = cursor.fetchone()[0]
+        try:
+            cursor = conn.cursor()
+            # Table name is validated in __init__ against allowlist
+            cursor.execute(f"SELECT COUNT(*) FROM [{self.table}]")
+            total_records = cursor.fetchone()[0]
 
-        print(f"📊 Toplam kayıt ({self.table}): {total_records:,}")
+            print(f"📊 Toplam kayıt ({self.table}): {total_records:,}")
 
-        # CRITICAL FIX: Veri yoksa hata ver
-        if total_records == 0:
+            # CRITICAL FIX: Veri yoksa hata ver
+            if total_records == 0:
+                raise ValueError(f"❌ {self.table} tablosunda hiç kayıt yok! Mock data generator'ı çalıştırın.")
+
+            if random_sample and limit and limit < total_records:
+                query = f"SELECT * FROM [{self.table}] ORDER BY RANDOM() LIMIT ?"
+                df = pd.read_sql_query(query, conn, params=(limit,))
+            elif limit:
+                query = f"SELECT * FROM [{self.table}] LIMIT ?"
+                df = pd.read_sql_query(query, conn, params=(limit,))
+            else:
+                query = f"SELECT * FROM [{self.table}]"
+                df = pd.read_sql_query(query, conn)
+        finally:
             conn.close()
-            raise ValueError(f"❌ {self.table} tablosunda hiç kayıt yok! Mock data generator'ı çalıştırın.")
-
-        if random_sample and limit and limit < total_records:
-            query = f"SELECT * FROM {self.table} ORDER BY RANDOM() LIMIT {limit}"
-        elif limit:
-            query = f"SELECT * FROM {self.table} LIMIT {limit}"
-        else:
-            query = f"SELECT * FROM {self.table}"
-
-        df = pd.read_sql_query(query, conn)
-        conn.close()
 
         print(f"✅ {len(df):,} kayıt yüklendi")
         return df
@@ -204,7 +210,7 @@ class TensorFlowTrainer:
         print(f"✅ Sınıflar: {self.class_names}")
         return y
 
-    def initialize_model_tracking(self, hyperparameters: Dict, training_config: Dict):
+    def initialize_model_tracking(self, hyperparameters: dict, training_config: dict):
         """Model tracking başlat"""
         self.model_id = self.model_manager.generate_model_id(
             model_name=self.model_name,
@@ -242,11 +248,13 @@ class TensorFlowTrainer:
             y_val: np.ndarray,
             epochs: int = 100,
             batch_size: int = 32,
-            hidden_layers: List[int] = [256, 128, 64, 32],
+            hidden_layers: list[int] | None = None,
             dropout_rate: float = 0.3,
             learning_rate: float = 0.001
     ):
         """Modeli eğit"""
+        if hidden_layers is None:
+            hidden_layers = [256, 128, 64, 32]
         hyperparameters = {
             'epochs': epochs,
             'batch_size': batch_size,
@@ -284,7 +292,7 @@ class TensorFlowTrainer:
         self.model_manager.update_model_status(self.model_id, 'trained')
         return history
 
-    def evaluate_model(self, X_test: np.ndarray, y_test: np.ndarray) -> Dict:
+    def evaluate_model(self, X_test: np.ndarray, y_test: np.ndarray) -> dict:
         """Modeli değerlendir"""
         X_test_scaled = self.scaler.transform(X_test)
         y_pred = self.model.predict(X_test_scaled)
@@ -329,11 +337,13 @@ class TensorFlowTrainer:
             val_size: float = 0.1,
             epochs: int = 100,
             batch_size: int = 32,
-            hidden_layers: List[int] = [256, 128, 64, 32],
+            hidden_layers: list[int] | None = None,
             dropout_rate: float = 0.3,
             learning_rate: float = 0.001
     ):
         """Tam eğitim pipeline'ı"""
+        if hidden_layers is None:
+            hidden_layers = [256, 128, 64, 32]
         df = self.load_data_from_db(limit=limit, random_sample=random_sample)
         X = self.prepare_features(df)
         y = self.prepare_labels(df)
@@ -380,7 +390,7 @@ def get_training_params():
     """Eğitim parametrelerini kullanıcıdan al"""
     print("\n📝 Eğitim Parametreleri:")
     print("-" * 40)
-    
+
     # Tablo seçimi
     print("\n🗂️  Hangi tabloyu eğitmek istiyorsunuz?")
     print("  1. 🗡️  Saldırılar (attacks)")
@@ -388,30 +398,30 @@ def get_training_params():
     table_choice = input("Seçiminiz (1-2) [1]: ").strip()
     table = 'defences' if table_choice == '2' else 'attacks'
     print(f"✅ Seçilen tablo: {table}")
-    
+
     # Veri sayısı
     limit_input = input("\n📊 Kaç kayıt kullanılsın? (boş=tümü, örn: 50000): ").strip()
     limit = int(limit_input) if limit_input else None
-    
+
     # Random sample
     if limit:
         random_input = input("🎲 Rastgele seçim yapılsın mı? (E/H) [E]: ").strip().upper()
         random_sample = random_input != 'H'
     else:
         random_sample = False
-    
+
     # Epoch sayısı
     epochs_input = input("🔄 Epoch sayısı? [50]: ").strip()
     epochs = int(epochs_input) if epochs_input else 50
-    
+
     # Batch size
     batch_input = input("📦 Batch size? [32]: ").strip()
     batch_size = int(batch_input) if batch_input else 32
-    
+
     # Model adı
     name_input = input("🏷️  Model adı? (boş=otomatik): ").strip()
     model_name = name_input if name_input else None
-    
+
     return {
         'table': table,
         'limit': limit,
@@ -425,7 +435,7 @@ def get_training_params():
 def create_model():
     """Yeni model oluştur"""
     params = get_training_params()
-    
+
     print("\n" + "=" * 60)
     print("🚀 Model eğitimi başlatılıyor...")
     print("=" * 60)
@@ -435,24 +445,24 @@ def create_model():
     print(f"   🔄 Epochs: {params['epochs']}")
     print(f"   📦 Batch size: {params['batch_size']}")
     print("=" * 60)
-    
+
     confirm = input("\n▶️  Devam etmek istiyor musunuz? (E/H): ").strip().upper()
     if confirm != 'E':
         print("❌ İptal edildi.")
         return
-    
+
     trainer = TensorFlowTrainer(
         model_name=params['model_name'],
         table=params['table']
     )
-    
+
     model_id, results = trainer.run_full_pipeline(
         limit=params['limit'],
         random_sample=params['random_sample'],
         epochs=params['epochs'],
         batch_size=params['batch_size']
     )
-    
+
     print("\n" + "=" * 60)
     print("🎉 MODEL BAŞARIYLA OLUŞTURULDU!")
     print("=" * 60)
@@ -463,43 +473,43 @@ def create_model():
 
 def list_models():
     """Mevcut modelleri listele"""
-    mm = ModelManager(base_dir='models')
+    mm = ModelManager(base_dir='model_artifacts')
     models = mm.list_models()
-    
+
     print("\n" + "=" * 60)
     print("📋 MEVCUT MODELLER")
     print("=" * 60)
-    
+
     if not models:
         print("❌ Henüz model yok!")
         return
-    
+
     for i, model in enumerate(models, 1):
         name = model.get('name', 'Unknown')
         status = model.get('status', 'unknown')
         acc = model.get('metrics', {}).get('accuracy', 0)
         created = model.get('created_at', 'N/A')[:10]
-        
+
         status_icon = "✅" if status == 'deployed' else "🔄" if status == 'training' else "📦"
-        
+
         print(f"\n  {i}. {status_icon} {name}")
         print(f"      Status: {status} | Accuracy: {acc*100:.1f}% | Tarih: {created}")
-    
+
     print("\n" + "=" * 60)
     print(f"Toplam: {len(models)} model")
 
 
 def delete_model():
     """Model sil"""
-    mm = ModelManager(base_dir='models')
+    mm = ModelManager(base_dir='model_artifacts')
     models = mm.list_models()
-    
+
     if not models:
         print("❌ Silinecek model yok!")
         return
-    
+
     list_models()
-    
+
     model_num = input("\n🗑️  Silmek istediğiniz model numarası: ").strip()
     try:
         idx = int(model_num) - 1
@@ -520,22 +530,22 @@ def delete_model():
 def show_db_info():
     """Veritabanı bilgisi göster"""
     db_path = os.path.join(project_root, 'src', 'database', 'cyberguard.db')
-    
+
     if not os.path.exists(db_path):
         print("❌ Veritabanı bulunamadı!")
         return
-    
+
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    
+
     cursor.execute("SELECT COUNT(*) FROM attacks")
     total = cursor.fetchone()[0]
-    
+
     cursor.execute("SELECT attack_type, COUNT(*) FROM attacks GROUP BY attack_type")
     by_type = cursor.fetchall()
-    
+
     conn.close()
-    
+
     print("\n" + "=" * 60)
     print("📊 VERİTABANI BİLGİSİ")
     print("=" * 60)
@@ -550,7 +560,7 @@ def show_db_info():
 def main():
     """Ana fonksiyon - Command line veya İnteraktif menü"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description='TensorFlow Model Training')
     parser.add_argument('--db', type=str, default=None, help='Database path')
     parser.add_argument('--name', type=str, default=None, help='Model name')
@@ -561,15 +571,15 @@ def main():
     parser.add_argument('--batch-size', type=int, default=32, help='Batch size')
     parser.add_argument('--random', action='store_true', help='Random sample')
     parser.add_argument('--interactive', '-i', action='store_true', help='Interactive mode')
-    
+
     args = parser.parse_args()
-    
+
     # Argüman varsa CLI modunda çalış
     if args.name:
         print("\n" + "=" * 60)
         print("🚀 CLI MODE - TensorFlow Model Training")
         print("=" * 60)
-        
+
         try:
             trainer = TensorFlowTrainer(
                 db_path=args.db,
@@ -577,21 +587,21 @@ def main():
                 description=args.desc or "TensorFlow Model",
                 table=args.table
             )
-            
+
             model_id, results = trainer.run_full_pipeline(
                 limit=args.limit,
                 random_sample=args.random,
                 epochs=args.epochs,
                 batch_size=args.batch_size
             )
-            
+
             print("\n" + "=" * 60)
-            print(f"✅ Model eğitimi tamamlandı!")
+            print("✅ Model eğitimi tamamlandı!")
             print(f"📁 Model ID: {model_id}")
             if results and 'summary' in results:
                 print(f"🎯 Accuracy: {results['summary'].get('accuracy', 0):.4f}")
             print("=" * 60 + "\n")
-            
+
         except Exception as e:
             print(f"\n❌ Training hatası: {e}")
             import traceback
@@ -601,7 +611,7 @@ def main():
         # İnteraktif menü modu
         while True:
             choice = show_menu()
-            
+
             if choice == '1':
                 create_model()
             elif choice == '2':
@@ -615,7 +625,7 @@ def main():
                 break
             else:
                 print("❌ Geçersiz seçim!")
-            
+
             input("\n⏎ Devam etmek için Enter'a basın...")
 
 
